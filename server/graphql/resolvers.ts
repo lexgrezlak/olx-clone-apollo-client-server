@@ -29,7 +29,7 @@ let postings: Posting[] = [
   },
   {
     id: 3,
-    title: 'Buty Nike',
+    title: 'Nike Shoes',
     views: 323,
     user_id: 456,
     price: 40,
