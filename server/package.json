@@ -5,15 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.ts",
-    "ts-start": "ts-node index.ts"
+    "dev": "ts-node-dev index.ts",
+    "start": "ts-node index.ts"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^13.13.4",
-    "nodemon": "^2.0.3",
     "ts-node": "^8.9.1",
+    "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.3"
   },
   "dependencies": {
