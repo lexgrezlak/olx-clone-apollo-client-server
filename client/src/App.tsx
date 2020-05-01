@@ -1,11 +1,14 @@
 import React from 'react';
-import Navigation from './components/Navigation';
+import { Link } from 'react-router-dom';
+import Postings from './components/Postings';
 
 const App: React.FC = () => {
   return (
     <div>
-      hello world
-      <Navigation />
+      <nav>
+        <Link to="/">Home</Link>
+      </nav>
+      <Postings />
     </div>
   );
 };
