@@ -1,29 +1,25 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
-import Posting from './Posting';
+import { Posting } from './Posting';
 import { ALL_POSTINGS } from '../graphql/queries';
+import { Item } from '../common/types';
 
-interface PostingInterface {
-  title: string;
-  id: number;
-}
-
-const Postings: React.FC = () => {
+export const Postings: React.FC = () => {
   const postingsQuery = useQuery(ALL_POSTINGS);
 
   if (postingsQuery.loading) {
     return <div>loading</div>;
   }
 
-  const postings = postingsQuery.data.allPostings;
+  const items = postingsQuery.data.allPostings;
 
   return (
     <div>
-      {postings.map((posting: PostingInterface) => (
-        <Posting key={posting.id} posting={posting} />
-      ))}
+      <ul>
+        {items.map((item: Item) => (
+          <Posting key={item.id} item={item} />
+        ))}
+      </ul>
     </div>
   );
 };
-
-export default Postings;

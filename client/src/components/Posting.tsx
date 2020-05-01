@@ -1,18 +1,17 @@
 import React from 'react';
+import { Item } from '../common/types';
 
-interface PostingProps {
-  posting: Posting;
+interface Props {
+  item: Item;
 }
 
-const Posting: React.FC<PostingProps> = ({ posting }) => {
+export const Posting: React.FC<Props> = ({ item }) => {
   return (
-    <div>
-      <div>price: {posting.price}</div>
-      <div>title: {posting.title}</div>
-      <div>location: {posting.location}</div>
-      <div>date: {posting.date}</div>
-    </div>
+    <li>
+      <div>price: {item.price}</div>
+      <div>title: {item.title}</div>
+      <div>location: {item.location}</div>
+      <div>date: {item.date}</div>
+    </li>
   );
 };
-
-export default Posting;
