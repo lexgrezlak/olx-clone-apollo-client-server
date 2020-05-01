@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useField } from '../hooks/index';
 
-const Search = () => {
+interface Props {
+  filter: object;
+}
+
+const Search: React.FC<Props> = ({ filter }) => {
   return (
     <div>
       <input
-        type="text"
+        {...filter}
         name="search"
         placeholder="Find something for yourself"
       />
