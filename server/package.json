@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "json-graphql-server db.js --p 3001"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "json-graphql-server": "^2.1.3"
+  },
+  "dependencies": {
+    "apollo-server": "^2.12.0",
+    "graphql": "^15.0.0"
+  }
+}
