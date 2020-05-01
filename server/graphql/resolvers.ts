@@ -41,9 +41,19 @@ let postings: Posting[] = [
 const resolvers = {
   Query: {
     postingCount: () => postings.length,
-    allPostings: () => postings,
-    findPostings: (root: Posting, args: any) => {
-      postings.find((posting) => posting.title === args.title);
+    postings: (root: Posting, args: any) => {
+      // no args returns all postings
+      if (Object.keys(args).length === 0) return postings;
+
+      // check for filters
+      let foundPostings: Posting[] = [...postings];
+      if (args.title) {
+        foundPostings = foundPostings.filter((posting) =>
+          posting.title.toLowerCase().includes(args.title.toLowerCase()),
+        );
+      }
+
+      return foundPostings;
     },
   },
 };
