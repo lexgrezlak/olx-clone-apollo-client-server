@@ -13,8 +13,7 @@ const typeDefs = gql`
 
   type Query {
     postingCount: Int!
-    allPostings: [Posting!]!
-    findPostings(title: String!): Posting
+    postings(title: String, price: Int): [Posting!]!
   }
 `;
 
