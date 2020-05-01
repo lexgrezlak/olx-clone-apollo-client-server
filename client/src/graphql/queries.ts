@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const ALL_POSTINGS = gql`
-  query {
-    allPostings {
+export const GET_POSTINGS = gql`
+  query Postings($title: String, $price: Int) {
+    postings(title: $title, price: $price) {
       id
       title
       location
