@@ -6,15 +6,23 @@ import { GET_POSTINGS } from '../graphql/queries';
 import { useField } from '../hooks/index';
 import Search from './Search';
 
-interface Props {}
+interface Props {
+  needToRefetch: boolean;
+  setNeedToRefetch: Function;
+}
 
-const Postings: React.FC<Props> = () => {
+const Postings: React.FC<Props> = ({ needToRefetch, setNeedToRefetch }) => {
   const filter = useField('text');
-  const { data, loading, error } = useQuery(GET_POSTINGS, {
+  const { data, loading, error, refetch } = useQuery(GET_POSTINGS, {
     variables: { title: filter.value },
   });
 
-  console.log(filter.value);
+  const makeRefetch = async () => {
+    await refetch();
+    setNeedToRefetch(false);
+  };
+
+  if (needToRefetch) makeRefetch();
 
   return (
     <div>
