@@ -1,19 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useField } from '../hooks/index';
-import Select from 'react-select';
+import Select, { ValueType } from 'react-select';
+import { useMutation } from '@apollo/client';
+import { ADD_POSTING, GET_POSTINGS } from '../graphql/queries';
+import { useHistory } from 'react-router-dom';
 
-export const NewPosting: React.FC<{}> = () => {
+// interface Category {
+//   value: string;
+//   label: string;
+// }
+
+interface Props {
+  setNeedToRefetch: Function;
+}
+
+type Category = { label: string; value: string };
+
+export const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
+  const history = useHistory();
+
   const title = useField('text');
   const description = useField('text');
   const price = useField('number');
   const phone = useField('tel');
+  const [category, setCategory] = useState<Category | { value: ''; label: '' }>(
+    { value: '', label: '' }
+  );
+
+  const [addPosting] = useMutation(ADD_POSTING);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('form sent');
+    console.log(category.value);
+
+    addPosting({
+      variables: {
+        title: title.value,
+        description: description.value,
+        price: Number(price.value),
+        phone: Number(phone.value),
+        category: category.value,
+      },
+    });
+
+    setNeedToRefetch(true);
+
+    history.push('/');
   };
 
-  const categories = [
+  const categories: Category[] = [
     { value: 'electronics', label: 'Electronics' },
     { value: 'fashion', label: 'Fashion' },
     { value: 'health and beauty', label: 'Health & Beauty' },
@@ -28,7 +63,10 @@ export const NewPosting: React.FC<{}> = () => {
       </div>
       <div>
         <label>Category: </label>
-        <Select options={categories} />
+        <Select
+          onChange={(selected: any) => setCategory(selected)}
+          options={categories}
+        />
       </div>
       <div>
         <label>Description: </label>
