@@ -1,47 +1,45 @@
+import { v1 as uuid } from 'uuid';
+
 interface Posting {
   id: number;
   title: string;
-  views: number;
+  description: string;
   price: number;
-  location: string;
-  user_id: number;
-  date: Date;
+  phone: number;
+  category: string;
 }
 
 let postings: Posting[] = [
   {
     id: 1,
     title: 'Suzuki GSX-F Katana',
-    views: 254,
-    user_id: 123,
+    description: 'interestring product',
     price: 20,
-    location: 'Warsaw',
-    date: new Date(),
+    phone: 123123324,
+    category: 'fashion',
   },
   {
     id: 2,
     title: 'HP Pavillion DV9700',
-    views: 65,
-    user_id: 456,
+    description: 'interestring product',
     price: 30,
-    location: 'Szczecin',
-    date: new Date(),
+    phone: 123123324,
+    category: 'fashion',
   },
   {
     id: 3,
     title: 'Nike Shoes',
-    views: 323,
-    user_id: 456,
+    description: 'interestring product',
     price: 40,
-    location: 'Krakow',
-    date: new Date(),
+    phone: 123123324,
+    category: 'fashion',
   },
 ];
 
 const resolvers = {
   Query: {
     postingCount: () => postings.length,
-    postings: (root: Posting, args: any) => {
+    postings: (root: any, args: any) => {
       // no args returns all postings
       if (Object.keys(args).length === 0) return postings;
 
@@ -54,6 +52,15 @@ const resolvers = {
       }
 
       return foundPostings;
+    },
+  },
+
+  Mutation: {
+    addPosting: (root: any, args: any) => {
+      const newPosting = { ...args, id: uuid() };
+      postings = [...postings, newPosting];
+
+      return newPosting;
     },
   },
 };

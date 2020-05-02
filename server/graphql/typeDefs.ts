@@ -2,18 +2,27 @@ import { gql } from 'apollo-server';
 
 const typeDefs = gql`
   type Posting {
-    id: Int!
+    id: ID!
     title: String!
-    views: Int!
-    user_id: Int!
+    description: String!
     price: Int!
-    location: String!
-    date: String!
+    phone: Int!
+    category: String!
   }
 
   type Query {
     postingCount: Int!
     postings(title: String, price: Int): [Posting!]!
+  }
+
+  type Mutation {
+    addPosting(
+      title: String!
+      description: String!
+      price: Int!
+      phone: Int!
+      category: String!
+    ): Posting
   }
 `;
 
