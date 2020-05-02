@@ -14,7 +14,8 @@
     "@types/node": "^13.13.4",
     "ts-node": "^8.9.1",
     "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "uuid": "^8.0.0"
   },
   "dependencies": {
     "apollo-server": "^2.12.0",
