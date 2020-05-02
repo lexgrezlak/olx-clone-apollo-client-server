@@ -5,6 +5,7 @@ import { Item } from '../common/types';
 import { GET_POSTINGS } from '../graphql/queries';
 import { useField } from '../hooks/index';
 import Search from './Search';
+import { List } from '@material-ui/core';
 
 interface Props {
   needToRefetch: boolean;
@@ -28,11 +29,11 @@ const Postings: React.FC<Props> = ({ needToRefetch, setNeedToRefetch }) => {
     <div>
       <Search filter={filter} />
       {!loading && !error && (
-        <ul>
+        <List>
           {data.postings.map((item: Item) => (
             <Posting key={item.id} item={item} />
           ))}
-        </ul>
+        </List>
       )}
     </div>
   );

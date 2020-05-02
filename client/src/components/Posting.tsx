@@ -1,5 +1,6 @@
 import React from 'react';
 import { Item } from '../common/types';
+import { Typography, List, ListItem, ListItemText } from '@material-ui/core';
 
 interface Props {
   item: Item;
@@ -7,12 +8,12 @@ interface Props {
 
 export const Posting: React.FC<Props> = ({ item }) => {
   return (
-    <li>
-      <div>title: {item.title}</div>
-      <div>description: {item.description}</div>
-      <div>price: {item.price}</div>
-      <div>phone: {item.phone}</div>
-      <div>category: {item.category}</div>
-    </li>
+    <ListItem>
+      <ListItemText>title: {item.title}</ListItemText>
+      <ListItemText>description: {item.description}</ListItemText>
+      <ListItemText>price: {item.price}</ListItemText>
+      <ListItemText>phone: {item.phone}</ListItemText>
+      <ListItemText>category: {item.category}</ListItemText>
+    </ListItem>
   );
 };

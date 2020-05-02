@@ -24,6 +24,7 @@ const App: React.FC = () => {
         <Route path="/new-posting">
           <NewPosting setNeedToRefetch={setNeedToRefetch} />
         </Route>
+        <Route path="/account">{/* <Account /> */}</Route>
         <Route path="/">
           <Postings
             needToRefetch={needToRefetch}

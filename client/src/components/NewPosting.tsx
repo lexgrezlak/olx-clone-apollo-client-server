@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { useField } from '../hooks/index';
-import Select, { ValueType } from 'react-select';
+// import Select, { ValueType } from 'react-select';
 import { useMutation } from '@apollo/client';
 import { ADD_POSTING, GET_POSTINGS } from '../graphql/queries';
 import { useHistory } from 'react-router-dom';
-
-// interface Category {
-//   value: string;
-//   label: string;
-// }
+import {
+  Button,
+  TextField,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from '@material-ui/core';
 
 interface Props {
   setNeedToRefetch: Function;
@@ -23,15 +27,16 @@ export const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
   const description = useField('text');
   const price = useField('number');
   const phone = useField('tel');
-  const [category, setCategory] = useState<Category | { value: ''; label: '' }>(
-    { value: '', label: '' }
-  );
+  const [category, setCategory] = useState<string | unknown>('');
+  // const [category, setCategory] = useState<Category | { value: ''; label: '' }>(
+  //   { value: '', label: '' }
+  // );
 
   const [addPosting] = useMutation(ADD_POSTING);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(category.value);
+    console.log(category);
 
     addPosting({
       variables: {
@@ -39,7 +44,7 @@ export const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
         description: description.value,
         price: Number(price.value),
         phone: Number(phone.value),
-        category: category.value,
+        category: category,
       },
     });
 
@@ -48,41 +53,51 @@ export const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
     history.push('/');
   };
 
-  const categories: Category[] = [
-    { value: 'electronics', label: 'Electronics' },
-    { value: 'fashion', label: 'Fashion' },
-    { value: 'health and beauty', label: 'Health & Beauty' },
-    { value: 'motors', label: 'Motors' },
-  ];
+  // const categories: Category[] = [
+  //   { value: 'electronics', label: 'Electronics' },
+  //   { value: 'fashion', label: 'Fashion' },
+  //   { value: 'health and beauty', label: 'Health & Beauty' },
+  //   { value: 'motors', label: 'Motors' },
+  // ];
 
+  const categories = ['Fashion', 'Electronics', 'Health'];
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Title: </label>
-        <input name="title" {...title} />
-      </div>
-      <div>
-        <label>Category: </label>
+    <form style={{ margin: '20px' }} onSubmit={handleSubmit}>
+      <Typography variant="h3">Add new posting</Typography>
+      <TextField fullWidth variant="outlined" label="Title" {...title} />
+      {/* <Select
+        onChange={(selected: any) => setCategory(selected)}
+        options={categories}
+        placeholder="Category"
+        styles={customStyles}
+      /> */}
+      <FormControl fullWidth variant="outlined">
+        <InputLabel id="category-label">Category</InputLabel>
         <Select
-          onChange={(selected: any) => setCategory(selected)}
-          options={categories}
-        />
-      </div>
-      <div>
-        <label>Description: </label>
-        <input name="description" {...description} />
-      </div>
-      <div>
-        <label>Price: </label>
-        <input name="price" {...price} />
-      </div>
-      <div>
-        <label>Phone number: </label>
-        <input name="phone" {...phone} />
-      </div>
-      <div>
-        <button type="submit">Add new posting</button>
-      </div>
+          labelId="category-label"
+          id="category"
+          value={category}
+          onChange={({ target }) => setCategory(target.value)}
+        >
+          {categories.map((category) => (
+            <MenuItem key={category} value={category}>
+              {category}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <TextField
+        fullWidth
+        variant="outlined"
+        label="Description"
+        {...description}
+      />
+      <TextField fullWidth variant="outlined" label="Price" {...price} />
+      <TextField fullWidth variant="outlined" label="Phone" {...phone} />
+
+      <Button color="primary" size="large" variant="contained" type="submit">
+        Add
+      </Button>
     </form>
   );
 };
