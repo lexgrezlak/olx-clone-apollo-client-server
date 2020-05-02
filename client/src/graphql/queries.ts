@@ -5,9 +5,35 @@ export const GET_POSTINGS = gql`
     postings(title: $title, price: $price) {
       id
       title
-      location
-      date
+      description
       price
+      phone
+      category
+    }
+  }
+`;
+
+export const ADD_POSTING = gql`
+  mutation addPosting(
+    $title: String!
+    $description: String!
+    $price: Int!
+    $phone: Int!
+    $category: String!
+  ) {
+    addPosting(
+      title: $title
+      description: $description
+      price: $price
+      phone: $phone
+      category: $category
+    ) {
+      id
+      title
+      description
+      price
+      phone
+      category
     }
   }
 `;
