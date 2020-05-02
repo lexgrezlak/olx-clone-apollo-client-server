@@ -8,6 +8,8 @@ import { useQuery } from '@apollo/client';
 import { Item } from './common/types';
 
 const App: React.FC = () => {
+  const [needToRefetch, setNeedToRefetch] = useState(false);
+
   return (
     <div>
       <nav>
@@ -20,10 +22,13 @@ const App: React.FC = () => {
       </nav>
       <Switch>
         <Route path="/new-posting">
-          <NewPosting />
+          <NewPosting setNeedToRefetch={setNeedToRefetch} />
         </Route>
         <Route path="/">
-          <Postings />
+          <Postings
+            needToRefetch={needToRefetch}
+            setNeedToRefetch={setNeedToRefetch}
+          />
         </Route>
       </Switch>
     </div>

@@ -1,7 +1,8 @@
 export interface Item {
-  price: number;
-  title: string;
-  location: string;
-  date: string;
   id: number;
+  title: string;
+  description: string;
+  price: number;
+  phone: number;
+  category: string;
 }
