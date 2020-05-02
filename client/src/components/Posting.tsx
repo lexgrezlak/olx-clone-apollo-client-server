@@ -8,10 +8,11 @@ interface Props {
 export const Posting: React.FC<Props> = ({ item }) => {
   return (
     <li>
-      <div>price: {item.price}</div>
       <div>title: {item.title}</div>
-      <div>location: {item.location}</div>
-      <div>date: {item.date}</div>
+      <div>description: {item.description}</div>
+      <div>price: {item.price}</div>
+      <div>phone: {item.phone}</div>
+      <div>category: {item.category}</div>
     </li>
   );
 };
