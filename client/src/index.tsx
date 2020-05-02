@@ -8,6 +8,13 @@ import {
   InMemoryCache,
   HttpLink,
 } from '@apollo/client';
+import { createGlobalStyle } from 'styled-components';
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0
+  }
+`;
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
@@ -19,6 +26,7 @@ const client = new ApolloClient({
 ReactDOM.render(
   <ApolloProvider client={client}>
     <Router>
+      <GlobalStyle />
       <App />
     </Router>
   </ApolloProvider>,
