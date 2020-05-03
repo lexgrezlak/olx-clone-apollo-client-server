@@ -16,4 +16,5 @@ switch (process.env.NODE_ENV) {
 
 dotenv.config({ path });
 
-export const MONGODB_URI = process.env.MONGODB_URI;
+export const MONGODB_URI: string = process.env.MONGODB_URI as string;
+export const JWT_SECRET: string = process.env.JWT_SECRET as string;

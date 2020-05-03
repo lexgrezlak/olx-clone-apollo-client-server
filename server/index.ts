@@ -5,11 +5,12 @@ import resolvers from './graphql/resolvers';
 import mongoose from 'mongoose';
 
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 console.log('connecting to', MONGODB_URI);
 
 mongoose
-  .connect(`${MONGODB_URI}`, {
+  .connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
