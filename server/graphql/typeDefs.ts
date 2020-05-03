@@ -14,16 +14,16 @@ const typeDefs = gql`
     id: ID!
     name: String!
     username: String!
-    password: String!
     postings: [Posting!]!
   }
 
-  type Token {
-    value: String!
+  type LoginResponse {
+    token: String
+    user: User
   }
 
   type Query {
-    me: User
+    currentUser: User!
     postingCount: Int!
     postings(title: String, price: Int): [Posting!]!
   }
@@ -37,7 +37,7 @@ const typeDefs = gql`
       category: String!
     ): Posting
     register(username: String!, password: String!, name: String!): User
-    login(username: String!, password: String!): Token
+    login(username: String!, password: String!): LoginResponse!
   }
 `;
 

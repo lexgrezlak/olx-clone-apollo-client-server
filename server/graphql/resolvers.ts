@@ -5,18 +5,9 @@ import { UserInputError } from 'apollo-server';
 import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-interface Posting {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  phone: number;
-  category: string;
-}
-
 const resolvers = {
   Query: {
-    me: (_root: any, _args: any, context: any) => {
+    currentUser: (_root: any, _args: any, context: any) => {
       return context.currentUser;
     },
     postingCount: () => Posting.collection.countDocuments(),
@@ -27,7 +18,7 @@ const resolvers = {
 
       // check for filters
       if (args.title) {
-        allPostings = allPostings.filter((posting: Posting) =>
+        allPostings = allPostings.filter((posting: any) =>
           posting.title.toLowerCase().includes(args.title.toLowerCase()),
         );
       }
@@ -78,12 +69,20 @@ const resolvers = {
         throw new UserInputError('Wrong username or password.');
       }
 
-      const userForToken = {
-        username: user.username,
-        id: user._id,
-      };
+      const token = jwt.sign(
+        {
+          id: user._id,
+          username: user.username,
+        },
+        JWT_SECRET,
+        {
+          expiresIn: '30d',
+        },
+      );
 
-      return { value: jwt.sign(userForToken, JWT_SECRET) };
+      console.log(token, user);
+
+      return { token, user };
     },
   },
 };
