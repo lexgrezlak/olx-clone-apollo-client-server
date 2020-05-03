@@ -1,7 +1,11 @@
 import React from 'react';
-import { User, Account } from '../common/types';
+import { User } from '../common/types';
 
-const AccountFollowed: React.FC<Account> = ({ user }) => {
+interface Props {
+  user: User;
+}
+
+const AccountFollowed: React.FC<Props> = ({ user }) => {
   return <div>followed</div>;
 };
 
