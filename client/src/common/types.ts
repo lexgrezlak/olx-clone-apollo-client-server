@@ -9,10 +9,6 @@ export interface Item {
 
 export interface User {
   id: number;
-  name: string;
   username: string;
-}
-
-export interface Account {
-  user: User | null;
+  __typename: string;
 }
