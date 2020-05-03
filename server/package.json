@@ -24,6 +24,8 @@
     "@types/jsonwebtoken": "^8.3.9",
     "@types/mongoose": "^5.7.14",
     "@types/mongoose-unique-validator": "^1.0.4",
+    "apollo-link-context": "^1.0.20",
+    "apollo-link-http": "^1.5.17",
     "apollo-server": "^2.12.0",
     "bcrypt": "^4.0.1",
     "graphql": "^15.0.0",
