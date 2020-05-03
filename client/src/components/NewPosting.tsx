@@ -17,8 +17,6 @@ interface Props {
   setNeedToRefetch: Function;
 }
 
-type Category = { label: string; value: string };
-
 const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
   const history = useHistory();
 
@@ -27,9 +25,6 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
   const price = useField('number');
   const phone = useField('tel');
   const [category, setCategory] = useState<string | unknown>('');
-  // const [category, setCategory] = useState<Category | { value: ''; label: '' }>(
-  //   { value: '', label: '' }
-  // );
 
   const [addPosting] = useMutation(ADD_POSTING);
 
@@ -51,13 +46,6 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
 
     history.push('/');
   };
-
-  // const categories: Category[] = [
-  //   { value: 'electronics', label: 'Electronics' },
-  //   { value: 'fashion', label: 'Fashion' },
-  //   { value: 'health and beauty', label: 'Health & Beauty' },
-  //   { value: 'motors', label: 'Motors' },
-  // ];
 
   const categories = ['Fashion', 'Electronics', 'Health'];
   return (
