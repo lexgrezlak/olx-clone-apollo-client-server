@@ -8,11 +8,7 @@ interface Props {
 const Search: React.FC<Props> = ({ filter }) => {
   return (
     <div>
-      <input
-        {...filter}
-        name="search"
-        placeholder="Find something for yourself"
-      />
+      <input {...filter} name="search" placeholder="Search for anything" />
     </div>
   );
 };
