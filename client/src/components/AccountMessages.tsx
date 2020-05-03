@@ -1,7 +1,16 @@
 import React from 'react';
-import { User, Account } from '../common/types';
+import { User } from '../common/types';
+import { Redirect } from 'react-router-dom';
 
-const AccountMessages: React.FC<Account> = ({ user }) => {
+interface Props {
+  user: User | null;
+}
+
+const AccountMessages: React.FC<Props> = ({ user }) => {
+  if (user === null) {
+    return <Redirect to="/login" />;
+  }
+
   return <div>account messages</div>;
 };
 
