@@ -10,6 +10,18 @@ const typeDefs = gql`
     category: String!
   }
 
+  type User {
+    id: ID!
+    name: String!
+    username: String!
+    password: String!
+    postings: [Posting!]!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Query {
     postingCount: Int!
     postings(title: String, price: Int): [Posting!]!
@@ -23,6 +35,8 @@ const typeDefs = gql`
       phone: Int!
       category: String!
     ): Posting
+    register(username: String!, password: String!, name: String!): User
+    login(username: String!, password: String!): Token
   }
 `;
 
