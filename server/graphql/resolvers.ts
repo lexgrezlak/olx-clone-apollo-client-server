@@ -1,4 +1,5 @@
 import Posting from '../models/Posting';
+import { UserInputError } from 'apollo-server';
 
 interface Posting {
   id: number;
@@ -30,10 +31,16 @@ const resolvers = {
   },
 
   Mutation: {
-    addPosting: (_root: any, args: any) => {
+    addPosting: async (_root: any, args: any) => {
       const newPosting = new Posting({ ...args });
 
-      return newPosting.save();
+      try {
+        newPosting.save();
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args });
+      }
+
+      return newPosting;
     },
   },
 };
