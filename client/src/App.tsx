@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Route, Switch, Redirect, useHistory } from 'react-router-dom';
+import { Link, Route, Switch, useHistory } from 'react-router-dom';
 import Postings from './components/Postings';
 import NewPosting from './components/NewPosting';
 import { useApolloClient } from '@apollo/client';
