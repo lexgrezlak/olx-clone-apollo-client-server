@@ -8,11 +8,7 @@ import Filters from './components/Filters';
 import AccountMessages from './components/AccountMessages';
 import AccountFollowed from './components/AccountFollowed';
 import Login from './components/Login';
-import styled from 'styled-components';
 import { User } from './common/types';
-const Header = styled.header`
-  width: 100%;
-`;
 
 const App: React.FC = () => {
   const [needToRefetch, setNeedToRefetch] = useState(false);
@@ -39,7 +35,7 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <Header>
+      <header>
         <nav>
           <Link to="/">Home</Link>
           <Link to="/new-posting">New Posting</Link>
@@ -48,7 +44,7 @@ const App: React.FC = () => {
           <Link to="/account/followed">Followed</Link>
           <Link to="/filtered">Filters</Link>
         </nav>
-      </Header>
+      </header>
       <main>
         <Switch>
           <Route path="/new-posting">
