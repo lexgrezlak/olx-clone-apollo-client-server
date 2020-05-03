@@ -23,6 +23,7 @@ const typeDefs = gql`
   }
 
   type Query {
+    me: User
     postingCount: Int!
     postings(title: String, price: Int): [Posting!]!
   }
