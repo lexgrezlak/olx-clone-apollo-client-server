@@ -1,11 +1,16 @@
 import React from 'react';
 import { User } from '../common/types';
+import { Redirect } from 'react-router-dom';
 
 interface Props {
-  user: User;
+  user: User | null;
 }
 
 const AccountFollowed: React.FC<Props> = ({ user }) => {
+  if (user === null) {
+    return <Redirect to="/login" />;
+  }
+
   return <div>followed</div>;
 };
 

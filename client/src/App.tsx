@@ -58,14 +58,10 @@ const App: React.FC = () => {
             <AccountMessages user={user} />
           </Route>
           <Route path="/account/followed">
-            {user ? <AccountFollowed user={user} /> : <Redirect to="/login" />}
+            <AccountFollowed user={user} />
           </Route>
           <Route path="/account">
-            {user !== null ? (
-              <AccountDashboard handleLogout={handleLogout} user={user} />
-            ) : (
-              <Redirect to="/login" />
-            )}
+            <AccountDashboard user={user} handleLogout={handleLogout} />
           </Route>
           <Route path="/filters">
             <Filters />
