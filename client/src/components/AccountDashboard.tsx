@@ -9,7 +9,7 @@ interface Props {
 
 const AccountDashboard: React.FC<Props> = ({ user, handleLogout }) => {
   if (user === null) {
-    return <Redirect to="/login" />;
+    return <Redirect push to="/login" />;
   }
 
   return (

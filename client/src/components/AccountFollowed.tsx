@@ -8,7 +8,7 @@ interface Props {
 
 const AccountFollowed: React.FC<Props> = ({ user }) => {
   if (user === null) {
-    return <Redirect to="/login" />;
+    return <Redirect push to="/login" />;
   }
 
   return <div>followed</div>;

@@ -12,12 +12,15 @@ import {
   FormControl,
   InputLabel,
 } from '@material-ui/core';
+import { User } from '../common/types';
+import { Redirect } from 'react-router-dom';
 
 interface Props {
   setNeedToRefetch: Function;
+  user: User | null;
 }
 
-const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
+const NewPosting: React.FC<Props> = ({ setNeedToRefetch, user }) => {
   const history = useHistory();
 
   const title = useField('text');
@@ -25,8 +28,13 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
   const price = useField('number');
   const phone = useField('tel');
   const [category, setCategory] = useState<string | unknown>('');
-
   const [addPosting] = useMutation(ADD_POSTING);
+
+  if (user === null) {
+    return <Redirect push to="/login" />;
+  }
+
+  const categories = ['Fashion', 'Electronics', 'Health'];
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -47,7 +55,6 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
     history.push('/');
   };
 
-  const categories = ['Fashion', 'Electronics', 'Health'];
   return (
     <form onSubmit={handleSubmit}>
       <Typography variant="h3" style={{ margin: '20px' }}>

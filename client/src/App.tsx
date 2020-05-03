@@ -52,7 +52,7 @@ const App: React.FC = () => {
       <main>
         <Switch>
           <Route path="/new-posting">
-            <NewPosting setNeedToRefetch={setNeedToRefetch} />
+            <NewPosting setNeedToRefetch={setNeedToRefetch} user={user} />
           </Route>
           <Route path="/account/messages">
             <AccountMessages user={user} />

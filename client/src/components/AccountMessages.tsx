@@ -8,7 +8,7 @@ interface Props {
 
 const AccountMessages: React.FC<Props> = ({ user }) => {
   if (user === null) {
-    return <Redirect to="/login" />;
+    return <Redirect push to="/login" />;
   }
 
   return <div>account messages</div>;
