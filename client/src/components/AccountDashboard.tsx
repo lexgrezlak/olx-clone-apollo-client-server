@@ -1,8 +1,18 @@
 import React from 'react';
-import { Account } from '../common/types';
+import { User } from '../common/types';
 
-const AccountDashboard: React.FC<Account> = ({ user }) => {
-  return <div>hello user</div>;
+interface Props {
+  user: User;
+  handleLogout: any;
+}
+
+const AccountDashboard: React.FC<Props> = ({ user, handleLogout }) => {
+  return (
+    <div>
+      hello {user ? user.username : null}
+      <button onClick={handleLogout}>logout</button>
+    </div>
+  );
 };
 
 export default AccountDashboard;
