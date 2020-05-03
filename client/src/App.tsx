@@ -1,32 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Route, Switch, Redirect } from 'react-router-dom';
+import { Link, Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import Postings from './components/Postings';
 import NewPosting from './components/NewPosting';
-import Search from './components/Search';
-import { GET_POSTINGS } from './graphql/queries';
-import { useQuery, useApolloClient } from '@apollo/client';
-import { Item } from './common/types';
+import { useApolloClient } from '@apollo/client';
 import AccountDashboard from './components/AccountDashboard';
 import Filters from './components/Filters';
 import AccountMessages from './components/AccountMessages';
 import AccountFollowed from './components/AccountFollowed';
 import Login from './components/Login';
 import styled from 'styled-components';
+import { User } from './common/types';
 const Header = styled.header`
   width: 100%;
 `;
 
 const App: React.FC = () => {
   const [needToRefetch, setNeedToRefetch] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState(null);
-  const [token, setToken] = useState(null);
   const client = useApolloClient();
+  const history = useHistory();
 
-  const logout = () => {
-    setToken(null);
-    localStorage.clear();
+  useEffect(() => {
+    const tokenAndUserJSON = window.localStorage.getItem('olx-clone-user');
+    if (tokenAndUserJSON) {
+      const tokenAndUser = JSON.parse(tokenAndUserJSON);
+      setUser(tokenAndUser.user);
+    }
+  }, []);
+
+  const handleLogout = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setUser(null);
+    window.localStorage.clear();
     client.resetStore();
+    history.push('/');
   };
 
   return (
@@ -47,19 +55,23 @@ const App: React.FC = () => {
             <NewPosting setNeedToRefetch={setNeedToRefetch} />
           </Route>
           <Route path="/account/messages">
-            {user ? <AccountMessages user={user} /> : <Redirect to="/login" />}
+            <AccountMessages user={user} />
           </Route>
           <Route path="/account/followed">
             {user ? <AccountFollowed user={user} /> : <Redirect to="/login" />}
           </Route>
           <Route path="/account">
-            {user ? <AccountDashboard user={user} /> : <Redirect to="/login" />}
+            {user !== null ? (
+              <AccountDashboard handleLogout={handleLogout} user={user} />
+            ) : (
+              <Redirect to="/login" />
+            )}
           </Route>
           <Route path="/filters">
             <Filters />
           </Route>
           <Route path="/login">
-            <Login setToken={setToken} setError={setError} />
+            <Login setUser={setUser} setError={setError} />
           </Route>
           <Route path="/">
             <Postings
