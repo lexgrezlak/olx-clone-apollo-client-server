@@ -3,29 +3,32 @@ import { Typography, TextField, Button } from '@material-ui/core';
 import { useField } from '../hooks/index';
 import { LOGIN } from '../graphql/queries';
 import { useMutation } from '@apollo/client';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   setError: Function;
-  setToken: Function;
+  setUser: Function;
 }
 
-const Login: React.FC<Props> = ({ setError, setToken }) => {
+const Login: React.FC<Props> = ({ setError, setUser }) => {
   const username = useField('text');
   const password = useField('password');
+  const history = useHistory();
 
   const [login, result] = useMutation(LOGIN, {
     onError: (error) => {
-      setError(error.graphQLErrors[0].message);
+      console.log(error.graphQLErrors[0].message);
     },
   });
 
   useEffect(() => {
     if (result.data) {
-      const token = result.data.login.value;
-      setToken(token);
-      localStorage.setItem('olx-clone-user-token', token);
+      const tokenAndUser = result.data.login;
+      setUser(tokenAndUser.user);
+      localStorage.setItem('olx-clone-user', JSON.stringify(tokenAndUser));
+      history.goBack();
     }
-  }, [result.data, setToken]);
+  }, [result.data, setUser]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
