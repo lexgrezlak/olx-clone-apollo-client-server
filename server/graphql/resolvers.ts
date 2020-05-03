@@ -16,6 +16,9 @@ interface Posting {
 
 const resolvers = {
   Query: {
+    me: (_root: any, _args: any, context: any) => {
+      return context.currentUser;
+    },
     postingCount: () => Posting.collection.countDocuments(),
     postings: async (_root: any, args: any) => {
       // no args returns all postings
@@ -23,7 +26,6 @@ const resolvers = {
       if (Object.keys(args).length === 0) return allPostings;
 
       // check for filters
-
       if (args.title) {
         allPostings = allPostings.filter((posting: Posting) =>
           posting.title.toLowerCase().includes(args.title.toLowerCase()),
