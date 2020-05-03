@@ -38,14 +38,13 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch, user }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(category);
 
     addPosting({
       variables: {
         title: title.value,
         description: description.value,
-        price: Number(price.value),
-        phone: Number(phone.value),
+        price: +price.value,
+        phone: +phone.value,
         category: category,
       },
     });
@@ -61,12 +60,6 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch, user }) => {
         Add new posting
       </Typography>
       <TextField fullWidth variant="outlined" label="Title" {...title} />
-      {/* <Select
-        onChange={(selected: any) => setCategory(selected)}
-        options={categories}
-        placeholder="Category"
-        styles={customStyles}
-      /> */}
       <FormControl fullWidth variant="outlined">
         <InputLabel id="category-label">Category</InputLabel>
         <Select
