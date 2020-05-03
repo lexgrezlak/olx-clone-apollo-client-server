@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Route, Switch, Redirect } from 'react-router-dom';
 import Postings from './components/Postings';
-import { NewPosting } from './components/NewPosting';
+import NewPosting from './components/NewPosting';
 import Search from './components/Search';
 import { GET_POSTINGS } from './graphql/queries';
-import { useQuery } from '@apollo/client';
+import { useQuery, useApolloClient } from '@apollo/client';
 import { Item } from './common/types';
 import AccountDashboard from './components/AccountDashboard';
 import Filters from './components/Filters';
@@ -19,6 +19,15 @@ const Header = styled.header`
 const App: React.FC = () => {
   const [needToRefetch, setNeedToRefetch] = useState(false);
   const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  const [token, setToken] = useState(null);
+  const client = useApolloClient();
+
+  const logout = () => {
+    setToken(null);
+    localStorage.clear();
+    client.resetStore();
+  };
 
   return (
     <div>
@@ -50,7 +59,7 @@ const App: React.FC = () => {
             <Filters />
           </Route>
           <Route path="/login">
-            <Login />
+            <Login setToken={setToken} setError={setError} />
           </Route>
           <Route path="/">
             <Postings

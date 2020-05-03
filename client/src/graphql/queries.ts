@@ -1,5 +1,13 @@
 import { gql } from '@apollo/client';
 
+export const LOGIN = gql`
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`;
+
 export const GET_POSTINGS = gql`
   query Postings($title: String, $price: Int) {
     postings(title: $title, price: $price) {

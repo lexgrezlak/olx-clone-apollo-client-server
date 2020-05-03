@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useField } from '../hooks/index';
-// import Select, { ValueType } from 'react-select';
 import { useMutation } from '@apollo/client';
-import { ADD_POSTING, GET_POSTINGS } from '../graphql/queries';
+import { ADD_POSTING } from '../graphql/queries';
 import { useHistory } from 'react-router-dom';
 import {
   Button,
@@ -20,7 +19,7 @@ interface Props {
 
 type Category = { label: string; value: string };
 
-export const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
+const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
   const history = useHistory();
 
   const title = useField('text');
@@ -62,8 +61,10 @@ export const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
 
   const categories = ['Fashion', 'Electronics', 'Health'];
   return (
-    <form style={{ margin: '20px' }} onSubmit={handleSubmit}>
-      <Typography variant="h3">Add new posting</Typography>
+    <form onSubmit={handleSubmit}>
+      <Typography variant="h3" style={{ margin: '20px' }}>
+        Add new posting
+      </Typography>
       <TextField fullWidth variant="outlined" label="Title" {...title} />
       {/* <Select
         onChange={(selected: any) => setCategory(selected)}
@@ -101,3 +102,5 @@ export const NewPosting: React.FC<Props> = ({ setNeedToRefetch }) => {
     </form>
   );
 };
+
+export default NewPosting;
