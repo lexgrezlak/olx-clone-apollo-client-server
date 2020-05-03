@@ -1,4 +1,4 @@
-import { v1 as uuid } from 'uuid';
+import Posting from '../models/Posting';
 
 interface Posting {
   id: number;
@@ -9,58 +9,31 @@ interface Posting {
   category: string;
 }
 
-let postings: Posting[] = [
-  {
-    id: 1,
-    title: 'Suzuki GSX-F Katana',
-    description: 'interestring product',
-    price: 20,
-    phone: 123123324,
-    category: 'fashion',
-  },
-  {
-    id: 2,
-    title: 'HP Pavillion DV9700',
-    description: 'interestring product',
-    price: 30,
-    phone: 123123324,
-    category: 'fashion',
-  },
-  {
-    id: 3,
-    title: 'Nike Shoes',
-    description: 'interestring product',
-    price: 40,
-    phone: 123123324,
-    category: 'fashion',
-  },
-];
-
 const resolvers = {
   Query: {
-    postingCount: () => postings.length,
-    postings: (root: any, args: any) => {
+    postingCount: () => Posting.collection.countDocuments(),
+    postings: async (_root: any, args: any) => {
       // no args returns all postings
-      if (Object.keys(args).length === 0) return postings;
+      let allPostings: any = await Posting.find({});
+      if (Object.keys(args).length === 0) return allPostings;
 
       // check for filters
-      let foundPostings: Posting[] = [...postings];
+
       if (args.title) {
-        foundPostings = foundPostings.filter((posting) =>
+        allPostings = allPostings.filter((posting: Posting) =>
           posting.title.toLowerCase().includes(args.title.toLowerCase()),
         );
       }
 
-      return foundPostings;
+      return allPostings;
     },
   },
 
   Mutation: {
-    addPosting: (root: any, args: any) => {
-      const newPosting = { ...args, id: uuid() };
-      postings = [...postings, newPosting];
+    addPosting: (_root: any, args: any) => {
+      const newPosting = new Posting({ ...args });
 
-      return newPosting;
+      return newPosting.save();
     },
   },
 };
