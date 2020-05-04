@@ -1,9 +1,21 @@
-import { JWT_SECRET } from './../utils/config';
+import { CloudinaryUploader } from './../lib/clouidinary';
+import {
+  JWT_SECRET,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+  CLOUDINARY_CLOUD_NAME,
+} from './../utils/config';
 import User from '../models/User';
 import Posting from '../models/Posting';
 import { UserInputError } from 'apollo-server';
 import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+
+const cloudinaryUploader = new CloudinaryUploader({
+  cloudname: CLOUDINARY_CLOUD_NAME,
+  apiKey: CLOUDINARY_API_KEY,
+  apiSecret: CLOUDINARY_API_SECRET,
+});
 
 const resolvers = {
   Query: {
@@ -101,7 +113,12 @@ const resolvers = {
       return { token, user };
     },
 
-    // helpers
+    singleUpload: cloudinaryUploader.singleFileUploadResolver.bind(
+      cloudinaryUploader,
+    ),
+    multipleUpload: cloudinaryUploader.multipleUploadsResolver.bind(
+      cloudinaryUploader,
+    ),
   },
 };
 

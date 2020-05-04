@@ -14,6 +14,8 @@ import {
 } from '@material-ui/core';
 import { User } from '../common/types';
 import { Redirect } from 'react-router-dom';
+import UploadPhotos from './UploadPhotos';
+import UploadedPhotos from './UploadedPhotos';
 
 interface Props {
   setNeedToRefetch: Function;
@@ -27,6 +29,7 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch, user }) => {
   const description = useField('text');
   const price = useField('number');
   const phone = useField('tel');
+  const [urls, setUrls] = useState<string[]>([]);
   const [category, setCategory] = useState<string | unknown>('');
   const [addPosting] = useMutation(ADD_POSTING);
 
@@ -46,6 +49,7 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch, user }) => {
         price: +price.value,
         phone: +phone.value,
         category: category,
+        imageUrls: urls,
       },
     });
 
@@ -76,6 +80,7 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch, user }) => {
         </Select>
       </FormControl>
       <TextField
+        multiline
         fullWidth
         variant="outlined"
         label="Description"
@@ -83,7 +88,8 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch, user }) => {
       />
       <TextField fullWidth variant="outlined" label="Price" {...price} />
       <TextField fullWidth variant="outlined" label="Phone" {...phone} />
-
+      <UploadPhotos urls={urls} setUrls={setUrls} />
+      <UploadedPhotos urls={urls} setUrls={setUrls} />
       <Button color="primary" size="large" variant="contained" type="submit">
         Add
       </Button>

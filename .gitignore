@@ -3,3 +3,4 @@
 .env.production
 .env.development
 .env.test
+.DS_STORE

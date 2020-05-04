@@ -26,7 +26,7 @@ export const GET_POSTINGS = gql`
 `;
 
 export const ADD_POSTING = gql`
-  mutation addPosting(
+  mutation AddPosting(
     $title: String!
     $description: String!
     $price: Int!
@@ -46,6 +46,17 @@ export const ADD_POSTING = gql`
       price
       phone
       category
+    }
+  }
+`;
+
+export const MULTIPLE_UPLOAD = gql`
+  mutation MultipleUpload($files: [Upload!]!) {
+    multipleUpload(files: $files) {
+      filename
+      mimetype
+      encoding
+      url
     }
   }
 `;

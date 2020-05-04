@@ -10,6 +10,7 @@ import {
   from,
   ApolloLink,
 } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client';
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -29,12 +30,13 @@ const authLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-const httpLink = new HttpLink({
+const httpLink = createUploadLink({
   uri: 'http://localhost:4000',
 });
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
+  // @ts-ignore
   link: from([authLink, httpLink]),
 });
 

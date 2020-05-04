@@ -6,15 +6,22 @@ const typeDefs = gql`
     title: String!
     category: String!
     description: String!
-    photos: [File!]!
+    imageUrls: [String!]!
     postingType: String!
     price: Int!
     isNegotiable: Boolean!
     isBusiness: Boolean!
-    isNew: Boolean!
-    location: String!
+    isUsed: Boolean!
+    city: String!
     phone: Int
     user: User!
+  }
+
+  type UploadedFileResponse {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+    url: String!
   }
 
   type File {
@@ -49,13 +56,13 @@ const typeDefs = gql`
       title: String!
       category: String!
       description: String!
-      photos: [Upload!]!
+      imageUrls: [String!]!
       postingType: String!
       price: Int!
       isNegotiable: Boolean!
       isBusiness: Boolean!
-      isNew: Boolean!
-      location: String!
+      isUsed: Boolean!
+      city: String!
       phone: Int
     ): Posting
 
@@ -63,8 +70,8 @@ const typeDefs = gql`
     register(email: String!, password: String!): User
     login(email: String!, password: String!): LoginResponse!
 
-    # helpers
-    singleUpload(file: Upload!): File!
+    singleUpload(file: Upload!): UploadedFileResponse!
+    multipleUpload(files: [Upload!]!): [UploadedFileResponse!]!
   }
 `;
 

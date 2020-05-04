@@ -6,21 +6,46 @@ const postingSchema = new mongoose.Schema({
     required: true,
     minlength: 3,
   },
+  category: {
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
     required: true,
     minlength: 10,
   },
+  imageUrls: {
+    type: [String],
+    required: true,
+    minlength: 1,
+  },
+  postingType: {
+    type: Boolean,
+    required: true,
+  },
   price: {
     type: Number,
     required: true,
   },
-  phone: {
-    type: Number,
+  isNegotiable: {
+    type: Boolean,
     required: true,
   },
-  category: {
-    type: String,
+  isBusiness: {
+    type: Boolean,
+    required: true,
+  },
+  isUsed: {
+    type: Boolean,
+    required: true,
+  },
+  city: {
+    type: Boolean,
+    required: true,
+  },
+  phone: {
+    type: Number,
     required: true,
   },
   user: {
