@@ -2,16 +2,14 @@ import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 
 const UserSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 3,
-  },
-  username: {
+  email: {
     type: String,
     required: true,
     unique: true,
-    minlength: 3,
+    minlength: 5,
+  },
+  name: {
+    type: String,
   },
   passwordHash: String,
   postings: [

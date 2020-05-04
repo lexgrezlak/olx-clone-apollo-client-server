@@ -11,7 +11,7 @@ interface Props {
 }
 
 const Login: React.FC<Props> = ({ setError, setUser }) => {
-  const username = useField('text');
+  const email = useField('email');
   const password = useField('password');
   const history = useHistory();
 
@@ -33,7 +33,7 @@ const Login: React.FC<Props> = ({ setError, setUser }) => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     login({
-      variables: { username: username.value, password: password.value },
+      variables: { email: email.value, password: password.value },
     });
   };
 
@@ -42,7 +42,7 @@ const Login: React.FC<Props> = ({ setError, setUser }) => {
       <Typography variant="h3" style={{ margin: '20px' }}>
         Login
       </Typography>
-      <TextField fullWidth label="username" variant="outlined" {...username} />
+      <TextField fullWidth label="email" variant="outlined" {...email} />
       <TextField fullWidth label="password" variant="outlined" {...password} />
       <Button color="primary" size="large" variant="contained" type="submit">
         Add

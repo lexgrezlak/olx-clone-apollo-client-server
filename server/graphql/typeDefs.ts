@@ -4,16 +4,30 @@ const typeDefs = gql`
   type Posting {
     id: ID!
     title: String!
-    description: String!
-    price: Int!
-    phone: Int!
     category: String!
+    description: String!
+    photos: [File!]!
+    postingType: String!
+    price: Int!
+    isNegotiable: Boolean!
+    isBusiness: Boolean!
+    isNew: Boolean!
+    location: String!
+    phone: Int
+    user: User!
+  }
+
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
   }
 
   type User {
     id: ID!
-    name: String!
-    username: String!
+    email: String!
+    name: String
+    phone: Int
     postings: [Posting!]!
   }
 
@@ -26,18 +40,31 @@ const typeDefs = gql`
     currentUser: User!
     postingCount: Int!
     postings(title: String, price: Int): [Posting!]!
+    uploads: [File]
   }
 
   type Mutation {
+    # postings related
     addPosting(
       title: String!
-      description: String!
-      price: Int!
-      phone: Int!
       category: String!
+      description: String!
+      photos: [Upload!]!
+      postingType: String!
+      price: Int!
+      isNegotiable: Boolean!
+      isBusiness: Boolean!
+      isNew: Boolean!
+      location: String!
+      phone: Int
     ): Posting
-    register(username: String!, password: String!, name: String!): User
-    login(username: String!, password: String!): LoginResponse!
+
+    # user related
+    register(email: String!, password: String!): User
+    login(email: String!, password: String!): LoginResponse!
+
+    # helpers
+    singleUpload(file: Upload!): File!
   }
 `;
 

@@ -28,6 +28,7 @@ const resolvers = {
   },
 
   Mutation: {
+    // postings related
     addPosting: async (_root: any, args: any) => {
       const newPosting = new Posting({ ...args });
 
@@ -39,31 +40,46 @@ const resolvers = {
 
       return newPosting;
     },
-    register: async (_root: any, args: any) => {
+
+    // # user related
+    register: async (
+      _root: any,
+      { email, password }: { email: string; password: string },
+    ) => {
+      if (password.length < 4)
+        throw new UserInputError(
+          'Password should be at least 4 characters long.',
+          {
+            invalidArgs: { password },
+          },
+        );
+
       const saltRounds = 10;
-      const passwordHash = await bcrypt.hash(args.password, saltRounds);
+      const passwordHash = await bcrypt.hash(password, saltRounds);
 
       const user = new User({
-        username: args.username,
+        email,
         passwordHash,
-        name: args.name,
       });
 
       try {
         return user.save();
       } catch (error) {
         throw new UserInputError(error.message, {
-          invalidArgs: args,
+          invalidArgs: { email, password },
         });
       }
     },
-    login: async (_root: any, args: any) => {
-      const user: any = await User.findOne({ username: args.username });
+    login: async (
+      _root: any,
+      { email, password }: { email: string; password: string },
+    ) => {
+      const user: any = await User.findOne({ email });
 
       const isPasswordCorrent =
         user === null
           ? false
-          : await bcrypt.compare(args.password, user.passwordHash);
+          : await bcrypt.compare(password, user.passwordHash);
 
       if (!user || !isPasswordCorrent) {
         throw new UserInputError('Wrong username or password.');
@@ -84,6 +100,8 @@ const resolvers = {
 
       return { token, user };
     },
+
+    // helpers
   },
 };
 
