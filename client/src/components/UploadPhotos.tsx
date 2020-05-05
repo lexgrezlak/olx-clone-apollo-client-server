@@ -30,6 +30,7 @@ export default function UploadPhotos({ urls, setUrls }: Props) {
   useEffect(() => {
     if (data)
       setUrls(urls.concat(data.multipleUpload.map((file: any) => file.url)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   if (loading) return <div>Loading...</div>;
