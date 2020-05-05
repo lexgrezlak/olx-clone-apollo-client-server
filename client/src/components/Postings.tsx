@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     gridList: {
       width: 500,
-      height: 450,
+      height: "auto",
       transform: "translateZ(0)",
     },
     icon: {
