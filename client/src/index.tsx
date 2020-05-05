@@ -1,17 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import { BrowserRouter as Router } from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import { BrowserRouter as Router } from "react-router-dom";
 import {
   ApolloClient,
-  HttpLink,
   InMemoryCache,
   ApolloProvider,
   from,
-  ApolloLink,
-} from '@apollo/client';
-import { createUploadLink } from 'apollo-upload-client';
-import { createGlobalStyle } from 'styled-components';
+  createHttpLink,
+  NormalizedCacheObject,
+} from "@apollo/client";
+import { createUploadLink } from "apollo-upload-client";
+import { createGlobalStyle } from "styled-components";
+import { setContext } from "apollo-link-context";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -19,25 +20,29 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const authLink = new ApolloLink((operation, forward) => {
-  const token = localStorage.getItem('olx-clone-user-token');
-  operation.setContext(({ headers }: any) => ({
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem("token");
+
+  return {
     headers: {
-      authorization: token ? `bearer ${token}` : null,
       ...headers,
+      authorization: token ? `Bearer ${token}` : "",
     },
-  }));
-  return forward(operation);
+  };
 });
 
-const httpLink = createUploadLink({
-  uri: 'http://localhost:4000',
+// const httpLink = createHttpLink({
+//   uri: "http://localhost:3000",
+// });
+
+const uploadLink = createUploadLink({
+  uri: "http://localhost:4000",
 });
 
-const client = new ApolloClient({
+const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   cache: new InMemoryCache(),
   // @ts-ignore
-  link: from([authLink, httpLink]),
+  link: from([authLink, uploadLink]),
 });
 
 ReactDOM.render(
@@ -47,5 +52,5 @@ ReactDOM.render(
       <App />
     </Router>
   </ApolloProvider>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
