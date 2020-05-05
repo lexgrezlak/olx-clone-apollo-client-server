@@ -55,7 +55,7 @@ const Postings: React.FC<Props> = ({ needToRefetch, setNeedToRefetch }) => {
       {!loading && !error && (
         <GridList cellHeight={200} className={classes.gridList}>
           {data.postings.map((item: any) => (
-            <GridListTile key={item.url} cols={1} rows={1}>
+            <GridListTile key={item.id} cols={1} rows={1}>
               <img src={item.imageUrls[0] || ""} alt={item.title} />
               <GridListTileBar
                 title={"$" + item.price}
