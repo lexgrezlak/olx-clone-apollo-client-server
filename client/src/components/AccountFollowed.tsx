@@ -1,13 +1,12 @@
-import React from 'react';
-import { User } from '../common/types';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { Redirect } from "react-router-dom";
 
 interface Props {
-  user: User | null;
+  isLoggedIn: boolean;
 }
 
-const AccountFollowed: React.FC<Props> = ({ user }) => {
-  if (user === null) {
+const AccountFollowed: React.FC<Props> = ({ isLoggedIn }) => {
+  if (!isLoggedIn) {
     return <Redirect push to="/login" />;
   }
 
