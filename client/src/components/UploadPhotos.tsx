@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Button from '@material-ui/core/Button';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { useMutation } from '@apollo/client';
-import { MULTIPLE_UPLOAD } from '../graphql/queries';
-import { PhotoCamera } from '@material-ui/icons';
+import React, { useEffect } from "react";
+import Button from "@material-ui/core/Button";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { useMutation } from "@apollo/client";
+import { MULTIPLE_UPLOAD } from "../graphql/queries";
+import { PhotoCamera } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     input: {
-      display: 'none',
+      display: "none",
     },
   })
 );

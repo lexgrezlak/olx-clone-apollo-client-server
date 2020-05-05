@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useField } from '../hooks/index';
+import React from "react";
+import { TextField } from "@material-ui/core";
 
-interface Props {
-  filter: object;
-}
-
-const Search: React.FC<Props> = ({ filter }) => {
+export default function Search({ filter }: any) {
   return (
-    <div>
-      <input {...filter} name="search" placeholder="Search for anything" />
-    </div>
+    <TextField
+      variant="outlined"
+      fullWidth
+      id="standard-search"
+      label="Search for anything"
+      {...filter}
+    />
   );
-};
-
-export default Search;
+}

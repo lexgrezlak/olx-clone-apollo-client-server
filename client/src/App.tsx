@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Link, Route, Switch, useHistory } from 'react-router-dom';
-import Postings from './components/Postings';
-import NewPosting from './components/NewPosting';
-import { useApolloClient } from '@apollo/client';
-import AccountDashboard from './components/AccountDashboard';
-import Filters from './components/Filters';
-import AccountMessages from './components/AccountMessages';
-import AccountFollowed from './components/AccountFollowed';
-import Login from './components/Login';
-import { User } from './common/types';
+import React, { useState, useEffect } from "react";
+import { Link, Route, Switch, useHistory } from "react-router-dom";
+import Postings from "./components/Postings";
+import NewPosting from "./components/NewPosting";
+import { useApolloClient } from "@apollo/client";
+import AccountDashboard from "./components/AccountDashboard";
+import Filters from "./components/Filters";
+import AccountMessages from "./components/AccountMessages";
+import AccountFollowed from "./components/AccountFollowed";
+import Login from "./components/Login";
+import { User } from "./common/types";
+import Navigation from "./components/Navigation";
 
 const App: React.FC = () => {
   const [needToRefetch, setNeedToRefetch] = useState(false);
@@ -18,7 +19,7 @@ const App: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    const tokenAndUserJSON = window.localStorage.getItem('olx-clone-user');
+    const tokenAndUserJSON = window.localStorage.getItem("olx-clone-user");
     if (tokenAndUserJSON) {
       const tokenAndUser = JSON.parse(tokenAndUserJSON);
       setUser(tokenAndUser.user);
@@ -30,20 +31,21 @@ const App: React.FC = () => {
     setUser(null);
     window.localStorage.clear();
     client.resetStore();
-    history.push('/');
+    history.push("/");
   };
 
   return (
     <div>
       <header>
-        <nav>
+        <Navigation />
+        {/* <nav>
           <Link to="/">Home</Link>
           <Link to="/new-posting">New Posting</Link>
           <Link to="/account">Account</Link>
           <Link to="/account/messages">Messages</Link>
           <Link to="/account/followed">Followed</Link>
           <Link to="/filtered">Filters</Link>
-        </nav>
+        </nav> */}
       </header>
       <main>
         <Switch>

@@ -1,20 +1,19 @@
-import React from 'react';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
+import React from "react";
+import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'space-around',
-      overflow: 'hidden',
-      width: '100%',
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "space-around",
+      overflow: "hidden",
       backgroundColor: theme.palette.background.paper,
     },
     gridList: {
@@ -22,12 +21,12 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 450,
     },
     icon: {
-      color: 'rgba(255, 255, 255, 0.54)',
+      color: "rgba(255, 255, 255, 0.54)",
     },
     tileBar: {
       background:
-        'linear-gradient(to top, rgba(0,0,0,0.7) 0%, ' +
-        'rgba(0,0,0,0.4) 70%, rgba(0,0,0,0) 100%)',
+        "linear-gradient(to top, rgba(0,0,0,0.7) 0%, " +
+        "rgba(0,0,0,0.4) 70%, rgba(0,0,0,0) 100%)",
     },
   })
 );
@@ -50,7 +49,7 @@ export default function Photos({ urls, setUrls }: Props) {
                   onClick={() =>
                     setUrls(urls.filter((oldUrl: string) => oldUrl !== url))
                   }
-                  aria-label={'delete button'}
+                  aria-label={"delete button"}
                   className={classes.icon}
                 >
                   <DeleteIcon />
