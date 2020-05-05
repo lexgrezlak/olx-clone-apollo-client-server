@@ -12,6 +12,15 @@ export const LOGIN = gql`
   }
 `;
 
+export const GET_CURRENT_USER = gql`
+  query CurrentUser {
+    currentUser {
+      id
+      email
+    }
+  }
+`;
+
 export const GET_POSTINGS = gql`
   query Postings($title: String, $price: Int) {
     postings(title: $title, price: $price) {
