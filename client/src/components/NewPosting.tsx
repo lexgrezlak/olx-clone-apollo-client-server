@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useField } from "../hooks/index";
 import { useMutation } from "@apollo/client";
 import { ADD_POSTING } from "../graphql/queries";
-import { useHistory } from "react-router-dom";
 import {
   Button,
   TextField,
@@ -12,20 +11,17 @@ import {
   FormControl,
   InputLabel,
 } from "@material-ui/core";
-import { User } from "../common/types";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import UploadPhotos from "./UploadPhotos";
 import UploadedPhotos from "./UploadedPhotos";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 interface Props {
   setNeedToRefetch: Function;
-  user: User | null;
+  isLoggedIn: boolean;
 }
 
-const NewPosting: React.FC<Props> = ({ setNeedToRefetch, user }) => {
-  const history = useHistory();
-
+const NewPosting: React.FC<Props> = ({ setNeedToRefetch, isLoggedIn }) => {
   const title = useField("text");
   const description = useField("text");
   const price = useField("number");
@@ -35,8 +31,9 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch, user }) => {
   const category = useField("radio");
   const [addPosting] = useMutation(ADD_POSTING);
   const condition = useField("radio");
+  const history = useHistory();
 
-  if (user === null) {
+  if (!isLoggedIn) {
     return <Redirect push to="/login" />;
   }
 
