@@ -1,20 +1,19 @@
-import React from 'react';
-import { User } from '../common/types';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { Redirect } from "react-router-dom";
 
 interface Props {
-  user: User | null;
   handleLogout: any;
+  isLoggedIn: boolean;
 }
 
-const AccountDashboard: React.FC<Props> = ({ user, handleLogout }) => {
-  if (user === null) {
+const AccountDashboard: React.FC<Props> = ({ isLoggedIn, handleLogout }) => {
+  if (!isLoggedIn) {
     return <Redirect push to="/login" />;
   }
 
   return (
     <div>
-      hello {user.username}
+      hello man
       <button onClick={handleLogout}>logout</button>
     </div>
   );
