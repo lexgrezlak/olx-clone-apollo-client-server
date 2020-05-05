@@ -1,15 +1,15 @@
-import { CloudinaryUploader } from './../lib/clouidinary';
+import { CloudinaryUploader } from "./../lib/clouidinary";
 import {
   JWT_SECRET,
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
   CLOUDINARY_CLOUD_NAME,
-} from './../utils/config';
-import User from '../models/User';
-import Posting from '../models/Posting';
-import { UserInputError } from 'apollo-server';
-import * as jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+} from "./../utils/config";
+import User from "../models/User";
+import Posting from "../models/Posting";
+import { UserInputError, AuthenticationError } from "apollo-server";
+import * as jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const cloudinaryUploader = new CloudinaryUploader({
   cloudname: CLOUDINARY_CLOUD_NAME,
@@ -19,11 +19,14 @@ const cloudinaryUploader = new CloudinaryUploader({
 
 const resolvers = {
   Query: {
-    currentUser: (_root: any, _args: any, context: any) => {
-      return context.currentUser;
+    currentUser: (_parent: any, _args: any, { user }: any) => {
+      if (!user) throw new AuthenticationError("Not authenticated");
+      return user;
     },
     postingCount: () => Posting.collection.countDocuments(),
-    postings: async (_root: any, args: any) => {
+    postings: async (_parent: any, args: any, context: any) => {
+      console.log(context);
+      // if (!context.currentUser) return null;
       // no args returns all postings
       let allPostings: any = await Posting.find({});
       if (Object.keys(args).length === 0) return allPostings;
@@ -60,7 +63,7 @@ const resolvers = {
     ) => {
       if (password.length < 4)
         throw new UserInputError(
-          'Password should be at least 4 characters long.',
+          "Password should be at least 4 characters long.",
           {
             invalidArgs: { password },
           },
@@ -94,21 +97,19 @@ const resolvers = {
           : await bcrypt.compare(password, user.passwordHash);
 
       if (!user || !isPasswordCorrent) {
-        throw new UserInputError('Wrong username or password.');
+        throw new UserInputError("Wrong username or password.");
       }
 
       const token = jwt.sign(
         {
           id: user._id,
-          username: user.username,
+          email: user.email,
         },
         JWT_SECRET,
         {
-          expiresIn: '30d',
+          expiresIn: "30d",
         },
       );
-
-      console.log(token, user);
 
       return { token, user };
     },
