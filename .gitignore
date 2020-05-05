@@ -4,3 +4,4 @@
 .env.development
 .env.test
 .DS_STORE
+node_modules

@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from "apollo-server";
 
 const typeDefs = gql`
   type Posting {
@@ -7,11 +7,8 @@ const typeDefs = gql`
     category: String!
     description: String!
     imageUrls: [String!]!
-    postingType: String!
     price: Int!
-    isNegotiable: Boolean!
-    isBusiness: Boolean!
-    isUsed: Boolean!
+    condition: String!
     city: String!
     phone: Int
     user: User!
@@ -57,11 +54,8 @@ const typeDefs = gql`
       category: String!
       description: String!
       imageUrls: [String!]!
-      postingType: String!
       price: Int!
-      isNegotiable: Boolean!
-      isBusiness: Boolean!
-      isUsed: Boolean!
+      condition: String!
       city: String!
       phone: Int
     ): Posting

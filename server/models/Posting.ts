@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const postingSchema = new mongoose.Schema({
   title: {
@@ -13,35 +13,22 @@ const postingSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
-    minlength: 10,
   },
   imageUrls: {
     type: [String],
     required: true,
     minlength: 1,
   },
-  postingType: {
-    type: Boolean,
-    required: true,
-  },
   price: {
     type: Number,
     required: true,
   },
-  isNegotiable: {
-    type: Boolean,
-    required: true,
-  },
-  isBusiness: {
-    type: Boolean,
-    required: true,
-  },
-  isUsed: {
-    type: Boolean,
+  condition: {
+    type: String,
     required: true,
   },
   city: {
-    type: Boolean,
+    type: String,
     required: true,
   },
   phone: {
@@ -50,8 +37,8 @@ const postingSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
 });
 
-export default mongoose.model('Posting', postingSchema);
+export default mongoose.model("Posting", postingSchema);
