@@ -1,34 +1,35 @@
-import React, { useEffect } from 'react';
-import { Typography, TextField, Button } from '@material-ui/core';
-import { useField } from '../hooks/index';
-import { LOGIN } from '../graphql/queries';
-import { useMutation } from '@apollo/client';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { Typography, TextField, Button } from "@material-ui/core";
+import { useField } from "../hooks/index";
+import { LOGIN } from "../graphql/queries";
+import { useMutation } from "@apollo/client";
+import { useHistory } from "react-router-dom";
 
 interface Props {
-  setError: Function;
-  setUser: Function;
+  setIsLoggedIn: Function;
+  isLoggedIn: boolean;
 }
 
-const Login: React.FC<Props> = ({ setError, setUser }) => {
-  const email = useField('email');
-  const password = useField('password');
+const Login: React.FC<Props> = ({ setIsLoggedIn, isLoggedIn }) => {
+  const email = useField("email");
+  const password = useField("password");
   const history = useHistory();
 
-  const [login, result] = useMutation(LOGIN, {
+  const [login, { data }] = useMutation(LOGIN, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
   });
 
   useEffect(() => {
-    if (result.data) {
-      const tokenAndUser = result.data.login;
-      setUser(tokenAndUser.user);
-      localStorage.setItem('olx-clone-user', JSON.stringify(tokenAndUser));
-      history.goBack();
+    if (data && data.login) {
+      const { token } = data.login;
+      localStorage.setItem("token", token);
+      setIsLoggedIn(true);
     }
-  }, [result.data, setUser]);
+  }, [data, setIsLoggedIn]);
+
+  if (isLoggedIn) history.goBack();
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -39,7 +40,7 @@ const Login: React.FC<Props> = ({ setError, setUser }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Typography variant="h3" style={{ margin: '20px' }}>
+      <Typography variant="h3" style={{ margin: "20px" }}>
         Login
       </Typography>
       <TextField fullWidth label="email" variant="outlined" {...email} />
