@@ -1,4 +1,4 @@
-import { ReadStream } from "fs";
+import { ReadStream } from 'fs';
 
 export namespace ApolloServerFileUploads {
   export type File = {
@@ -17,12 +17,12 @@ export namespace ApolloServerFileUploads {
 
   export interface IUploader {
     singleFileUploadResolver: (
-      parent: any,
-      { file }: { file: File }
+      parent,
+      { file }: { file: File },
     ) => Promise<UploadedFileResponse>;
     multipleUploadsResolver: (
-      parent: any,
-      { files }: { files: File[] }
+      parent,
+      { files }: { files: File[] },
     ) => Promise<UploadedFileResponse[]>;
   }
 }
