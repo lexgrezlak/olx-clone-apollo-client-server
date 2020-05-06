@@ -7,7 +7,6 @@ import * as jwt from "jsonwebtoken";
 import User from "./models/User";
 
 mongoose.set("useFindAndModify", false);
-mongoose.set("useCreateIndex", true);
 
 console.log("connecting to", MONGODB_URI);
 
@@ -15,6 +14,7 @@ mongoose
   .connect(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   })
   .then(() => console.log("connected to MongoDB"))
   .catch((error: any) =>
