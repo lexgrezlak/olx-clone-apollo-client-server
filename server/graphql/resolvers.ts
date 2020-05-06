@@ -26,7 +26,6 @@ const resolvers = {
     postingCount: () => Posting.collection.countDocuments(),
     postings: async (_parent: any, args: any, context: any) => {
       console.log(context);
-      // if (!context.currentUser) return null;
       // no args returns all postings
       let allPostings: any = await Posting.find({});
       if (Object.keys(args).length === 0) return allPostings;
@@ -50,6 +49,8 @@ const resolvers = {
 
       try {
         await newPosting.save();
+        user.postings = user.postings.concat(newPosting);
+        await user.save();
       } catch (error) {
         throw new UserInputError(error.message, { invalidArgs: args });
       }

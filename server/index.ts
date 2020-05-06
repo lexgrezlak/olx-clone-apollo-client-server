@@ -4,6 +4,7 @@ import typeDefs from "./graphql/typeDefs";
 import resolvers from "./graphql/resolvers";
 import mongoose from "mongoose";
 import * as jwt from "jsonwebtoken";
+import User from "./models/User";
 
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
@@ -17,7 +18,7 @@ mongoose
   })
   .then(() => console.log("connected to MongoDB"))
   .catch((error: any) =>
-    console.log("connecting to MongoDB failed:", error.message),
+    console.log("connecting to MongoDB failed:", error.message)
   );
 
 const getUser = (token: string) => {
@@ -38,9 +39,16 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     const tokenWithBearer = req.headers.authorization || "";
     const token = tokenWithBearer.split(" ")[1] || "";
-    const user = getUser(token);
+    const decodedToken: any = getUser(token);
 
-    return { user };
+    if (decodedToken && decodedToken.id) {
+      const user = await User.findById(decodedToken.id).populate("postings");
+      return { user };
+    }
+
+    console.log("there");
+
+    return null;
   },
 });
 
