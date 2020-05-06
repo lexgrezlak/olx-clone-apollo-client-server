@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import Postings from "./components/Postings";
 import NewPosting from "./components/NewPosting";
 import AccountDashboard from "./components/AccountDashboard";
@@ -12,8 +12,8 @@ import Navigation from "./components/Navigation";
 import { GET_CURRENT_USER } from "./graphql/queries";
 
 const App: React.FC = () => {
-  const [needToRefetch, setNeedToRefetch] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const client = useApolloClient();
   const { data } = useQuery(GET_CURRENT_USER, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
@@ -21,15 +21,15 @@ const App: React.FC = () => {
   });
 
   useEffect(() => {
-    if (data && data.currentUser) {
-      setIsLoggedIn(true);
+    if (data?.currentUser) {
+      setUser(data.currentUser);
     }
-  }, [data, setIsLoggedIn]);
+  }, [data]);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    setIsLoggedIn(false);
-  };
+  function handleLogout() {
+    window.localStorage.clear();
+    setUser(null);
+  }
 
   return (
     <div>
@@ -39,34 +39,25 @@ const App: React.FC = () => {
       <main>
         <Switch>
           <Route path="/new-posting">
-            <NewPosting
-              setNeedToRefetch={setNeedToRefetch}
-              isLoggedIn={isLoggedIn}
-            />
+            <NewPosting user={user} />
           </Route>
           <Route path="/account/messages">
-            <AccountMessages isLoggedIn={isLoggedIn} />
+            <AccountMessages user={user} />
           </Route>
           <Route path="/account/followed">
-            <AccountFollowed isLoggedIn={isLoggedIn} />
+            <AccountFollowed user={user} />
           </Route>
           <Route path="/account">
-            <AccountDashboard
-              handleLogout={handleLogout}
-              isLoggedIn={isLoggedIn}
-            />
+            <AccountDashboard user={user} handleLogout={handleLogout} />
           </Route>
           <Route path="/filters">
             <Filters />
           </Route>
           <Route path="/login">
-            <Login setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
+            <Login user={user} />
           </Route>
           <Route path="/">
-            <Postings
-              needToRefetch={needToRefetch}
-              setNeedToRefetch={setNeedToRefetch}
-            />
+            <Postings />
           </Route>
         </Switch>
       </main>
