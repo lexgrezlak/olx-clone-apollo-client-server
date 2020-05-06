@@ -18,7 +18,10 @@ export const GET_CURRENT_USER = gql`
       id
       email
       postings {
+        id
         title
+        imageUrls
+        price
       }
     }
   }
