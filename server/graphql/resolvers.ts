@@ -44,7 +44,8 @@ const resolvers = {
 
   Mutation: {
     // postings related
-    addPosting: async (_root: any, args: any) => {
+    addPosting: async (_root: any, args: any, { user }: any) => {
+      if (!user) throw new AuthenticationError("Not authenticated");
       const newPosting = new Posting({ ...args });
 
       try {
