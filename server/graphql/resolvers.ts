@@ -24,8 +24,7 @@ const resolvers = {
       return user;
     },
     postingCount: () => Posting.collection.countDocuments(),
-    postings: async (_parent: any, args: any, context: any) => {
-      console.log(context);
+    postings: async (_parent: any, args: any) => {
       // no args returns all postings
       let allPostings: any = await Posting.find({});
       if (Object.keys(args).length === 0) return allPostings;
