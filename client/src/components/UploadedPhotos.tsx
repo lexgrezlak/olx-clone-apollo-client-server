@@ -48,7 +48,7 @@ export default function Photos({ urls, setUrls }: Props) {
                   onClick={() =>
                     setUrls(urls.filter((oldUrl: string) => oldUrl !== url))
                   }
-                  aria-label={"delete button"}
+                  aria-label="delete button"
                   className={classes.icon}
                 >
                   <DeleteIcon />

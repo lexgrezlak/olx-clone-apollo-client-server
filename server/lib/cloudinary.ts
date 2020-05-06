@@ -1,20 +1,16 @@
-import cloudinary from 'cloudinary';
-import { ApolloServerFileUploads } from './index';
+import cloudinary from "cloudinary";
+import { ApolloServerFileUploads } from "./index";
 
 type CloudinaryUploadConfig = {
-  cloudname: string;
+  cloudName: string;
   apiKey: any;
   apiSecret: string;
 };
 
 export class CloudinaryUploader implements ApolloServerFileUploads.IUploader {
-  private config: CloudinaryUploadConfig;
-
   constructor(config: CloudinaryUploadConfig) {
-    this.config = config;
-
     cloudinary.v2.config({
-      cloud_name: config.cloudname,
+      cloud_name: config.cloudName,
       api_key: config.apiKey,
       api_secret: config.apiSecret,
     });
@@ -29,13 +25,13 @@ export class CloudinaryUploader implements ApolloServerFileUploads.IUploader {
 
       //@ts-ignore
       { public_id: fileName },
-      (error, file) => cb(error, file),
+      (error, file) => cb(error, file)
     );
   }
 
   async singleFileUploadResolver(
-    parent: any,
-    { file }: { file: ApolloServerFileUploads.File },
+    _parent: any,
+    { file }: { file: ApolloServerFileUploads.File }
   ): Promise<ApolloServerFileUploads.UploadedFileResponse> {
     const { stream, filename, mimetype, encoding } = await file;
 
@@ -50,7 +46,7 @@ export class CloudinaryUploader implements ApolloServerFileUploads.IUploader {
             encoding,
             url: result.url,
           } as ApolloServerFileUploads.UploadedFileResponse);
-        },
+        }
       );
 
       stream!.pipe(uploadStream);
@@ -58,11 +54,11 @@ export class CloudinaryUploader implements ApolloServerFileUploads.IUploader {
   }
 
   async multipleUploadsResolver(
-    parent: any,
-    { files }: { files: ApolloServerFileUploads.File[] },
+    _parent: any,
+    { files }: { files: ApolloServerFileUploads.File[] }
   ): Promise<ApolloServerFileUploads.UploadedFileResponse[]> {
     return Promise.all(
-      files.map((f) => this.singleFileUploadResolver(null, { file: f })),
+      files.map((f) => this.singleFileUploadResolver(null, { file: f }))
     );
   }
 }

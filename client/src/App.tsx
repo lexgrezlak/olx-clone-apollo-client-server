@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
+import { useQuery } from "@apollo/client";
 import Postings from "./components/Postings";
 import NewPosting from "./components/NewPosting";
-import { useQuery, useApolloClient } from "@apollo/client";
 import AccountDashboard from "./components/AccountDashboard";
 import Filters from "./components/Filters";
 import AccountMessages from "./components/AccountMessages";
@@ -14,10 +14,9 @@ import { GET_CURRENT_USER } from "./graphql/queries";
 const App: React.FC = () => {
   const [needToRefetch, setNeedToRefetch] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const client = useApolloClient();
   const { data } = useQuery(GET_CURRENT_USER, {
     onError: (error) => {
-      console.log(error.graphQLErrors[0].message, "dpdd");
+      console.log(error.graphQLErrors[0].message);
     },
   });
 
@@ -27,7 +26,7 @@ const App: React.FC = () => {
     }
   }, [data, setIsLoggedIn]);
 
-  const handleLogout = (event: React.MouseEvent) => {
+  const handleLogout = () => {
     localStorage.clear();
     setIsLoggedIn(false);
   };

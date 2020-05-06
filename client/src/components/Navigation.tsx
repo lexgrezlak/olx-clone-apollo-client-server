@@ -39,14 +39,14 @@ export default function MenuAppBar() {
             color="inherit"
             aria-label="filters"
             component={Link}
-            to={"/filters"}
+            to="/filters"
           >
             <TuneIcon fontSize="large" />
           </IconButton>
 
           <Typography
             component={Link}
-            to={"/"}
+            to="/"
             variant="h5"
             className={classes.title}
             color="inherit"
@@ -60,7 +60,7 @@ export default function MenuAppBar() {
             aria-haspopup="true"
             color="inherit"
             component={Link}
-            to={"/new-posting"}
+            to="/new-posting"
           >
             <AddIcon fontSize="large" />
           </IconButton>
@@ -70,7 +70,7 @@ export default function MenuAppBar() {
             aria-haspopup="true"
             color="inherit"
             component={Link}
-            to={"/account"}
+            to="/account"
           >
             <AccountCircle fontSize="large" />
           </IconButton>
@@ -80,7 +80,7 @@ export default function MenuAppBar() {
             aria-haspopup="true"
             color="inherit"
             component={Link}
-            to={"/account/messages"}
+            to="/account/messages"
           >
             <EmailIcon fontSize="large" />
           </IconButton>
@@ -90,7 +90,7 @@ export default function MenuAppBar() {
             aria-haspopup="true"
             color="inherit"
             component={Link}
-            to={"/account/followed"}
+            to="/account/followed"
           >
             <StarIcon fontSize="large" />
           </IconButton>

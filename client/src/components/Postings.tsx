@@ -1,14 +1,14 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { GET_POSTINGS } from "../graphql/queries";
-import { useField } from "../hooks/index";
-import Search from "./Search";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import IconButton from "@material-ui/core/IconButton";
 import StarIconBorder from "@material-ui/icons/StarBorder";
+import { useField } from "../hooks/index";
+import { GET_POSTINGS } from "../graphql/queries";
+import Search from "./Search";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,7 +58,7 @@ const Postings: React.FC<Props> = ({ needToRefetch, setNeedToRefetch }) => {
             <GridListTile key={item.id} cols={1} rows={1}>
               <img src={item.imageUrls[0] || ""} alt={item.title} />
               <GridListTileBar
-                title={"$" + item.price}
+                title={`$${item.price}`}
                 subtitle={<span>{item.title}</span>}
                 actionIcon={
                   <IconButton

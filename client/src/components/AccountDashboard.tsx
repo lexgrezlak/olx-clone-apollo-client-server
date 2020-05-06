@@ -14,7 +14,9 @@ const AccountDashboard: React.FC<Props> = ({ isLoggedIn, handleLogout }) => {
   return (
     <div>
       hello man
-      <button onClick={handleLogout}>logout</button>
+      <button type="button" onClick={handleLogout}>
+        logout
+      </button>
     </div>
   );
 };

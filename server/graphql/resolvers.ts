@@ -1,10 +1,10 @@
-import { CloudinaryUploader } from "./../lib/clouidinary";
+import { CloudinaryUploader } from "../lib/cloudinary";
 import {
   JWT_SECRET,
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
   CLOUDINARY_CLOUD_NAME,
-} from "./../utils/config";
+} from "../utils/config";
 import User from "../models/User";
 import Posting from "../models/Posting";
 import { UserInputError, AuthenticationError } from "apollo-server";
@@ -12,7 +12,7 @@ import * as jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 const cloudinaryUploader = new CloudinaryUploader({
-  cloudname: CLOUDINARY_CLOUD_NAME,
+  cloudName: CLOUDINARY_CLOUD_NAME,
   apiKey: CLOUDINARY_API_KEY,
   apiSecret: CLOUDINARY_API_SECRET,
 });
@@ -34,7 +34,7 @@ const resolvers = {
       // check for filters
       if (args.title) {
         allPostings = allPostings.filter((posting: any) =>
-          posting.title.toLowerCase().includes(args.title.toLowerCase()),
+          posting.title.toLowerCase().includes(args.title.toLowerCase())
         );
       }
 
@@ -48,7 +48,7 @@ const resolvers = {
       const newPosting = new Posting({ ...args });
 
       try {
-        newPosting.save();
+        await newPosting.save();
       } catch (error) {
         throw new UserInputError(error.message, { invalidArgs: args });
       }
@@ -59,14 +59,14 @@ const resolvers = {
     // # user related
     register: async (
       _root: any,
-      { email, password }: { email: string; password: string },
+      { email, password }: { email: string; password: string }
     ) => {
       if (password.length < 4)
         throw new UserInputError(
           "Password should be at least 4 characters long.",
           {
             invalidArgs: { password },
-          },
+          }
         );
 
       const saltRounds = 10;
@@ -87,16 +87,16 @@ const resolvers = {
     },
     login: async (
       _root: any,
-      { email, password }: { email: string; password: string },
+      { email, password }: { email: string; password: string }
     ) => {
       const user: any = await User.findOne({ email });
 
-      const isPasswordCorrent =
+      const isPasswordCorrect =
         user === null
           ? false
           : await bcrypt.compare(password, user.passwordHash);
 
-      if (!user || !isPasswordCorrent) {
+      if (!user || !isPasswordCorrect) {
         throw new UserInputError("Wrong username or password.");
       }
 
@@ -108,17 +108,17 @@ const resolvers = {
         JWT_SECRET,
         {
           expiresIn: "30d",
-        },
+        }
       );
 
       return { token, user };
     },
 
     singleUpload: cloudinaryUploader.singleFileUploadResolver.bind(
-      cloudinaryUploader,
+      cloudinaryUploader
     ),
     multipleUpload: cloudinaryUploader.multipleUploadsResolver.bind(
-      cloudinaryUploader,
+      cloudinaryUploader
     ),
   },
 };
