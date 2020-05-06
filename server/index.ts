@@ -6,8 +6,6 @@ import mongoose from "mongoose";
 import * as jwt from "jsonwebtoken";
 import User from "./models/User";
 
-mongoose.set("useFindAndModify", false);
-
 console.log("connecting to", MONGODB_URI);
 
 mongoose
@@ -15,6 +13,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
+    useFindAndModify: false,
   })
   .then(() => console.log("connected to MongoDB"))
   .catch((error: any) =>
