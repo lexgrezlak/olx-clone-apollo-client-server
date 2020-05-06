@@ -30,24 +30,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface Props {
-  needToRefetch: boolean;
-  setNeedToRefetch: Function;
-}
-
-const Postings: React.FC<Props> = ({ needToRefetch, setNeedToRefetch }) => {
+export default function Postings() {
   const filter = useField("search");
-  const { data, loading, error, refetch } = useQuery(GET_POSTINGS, {
+  const { data, loading, error } = useQuery(GET_POSTINGS, {
     variables: { title: filter.value },
   });
   const classes = useStyles();
-
-  const makeRefetch = async () => {
-    await refetch();
-    setNeedToRefetch(false);
-  };
-
-  if (needToRefetch) makeRefetch();
 
   return (
     <div className={classes.root}>
@@ -75,6 +63,4 @@ const Postings: React.FC<Props> = ({ needToRefetch, setNeedToRefetch }) => {
       )}
     </div>
   );
-};
-
-export default Postings;
+}
