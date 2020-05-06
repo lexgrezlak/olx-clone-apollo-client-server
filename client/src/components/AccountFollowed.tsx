@@ -2,11 +2,11 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 
 interface Props {
-  isLoggedIn: boolean;
+  user: any;
 }
 
-const AccountFollowed: React.FC<Props> = ({ isLoggedIn }) => {
-  if (!isLoggedIn) {
+const AccountFollowed: React.FC<Props> = ({ user }) => {
+  if (user === null) {
     return <Redirect push to="/login" />;
   }
 
