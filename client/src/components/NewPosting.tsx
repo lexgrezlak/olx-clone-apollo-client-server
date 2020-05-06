@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { useField } from "../hooks/index";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import { useMutation } from "@apollo/client";
-import { ADD_POSTING } from "../graphql/queries";
 import {
   Button,
   TextField,
@@ -12,16 +11,16 @@ import {
   InputLabel,
 } from "@material-ui/core";
 import { Redirect, useHistory } from "react-router-dom";
+import { ADD_POSTING } from "../graphql/queries";
+import { useField } from "../hooks/index";
 import UploadPhotos from "./UploadPhotos";
 import UploadedPhotos from "./UploadedPhotos";
-import InputAdornment from "@material-ui/core/InputAdornment";
 
 interface Props {
-  setNeedToRefetch: Function;
-  isLoggedIn: boolean;
+  user: any;
 }
 
-const NewPosting: React.FC<Props> = ({ setNeedToRefetch, isLoggedIn }) => {
+const NewPosting: React.FC<Props> = ({ user }) => {
   const title = useField("text");
   const description = useField("text");
   const price = useField("number");
@@ -33,7 +32,7 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch, isLoggedIn }) => {
   const condition = useField("radio");
   const history = useHistory();
 
-  if (!isLoggedIn) {
+  if (user === null) {
     return <Redirect push to="/login" />;
   }
 
@@ -55,8 +54,6 @@ const NewPosting: React.FC<Props> = ({ setNeedToRefetch, isLoggedIn }) => {
         phone: +phone.value,
       },
     });
-
-    setNeedToRefetch(true);
 
     history.push("/");
   };
