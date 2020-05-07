@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Postings from "./components/Postings";
 import NewPosting from "./components/NewPosting";
@@ -11,9 +11,20 @@ import Navigation from "./components/Navigation";
 import Box from "@material-ui/core/Box";
 import Copyright from "./components/Copyright";
 import SignUpPage from "./components/SignUpPage";
+import { GET_CURRENT_USER } from "./graphql/queries";
+import { useApolloClient, useQuery } from "@apollo/client";
 
 const App: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const client = useApolloClient();
+  const [user, setUser] = useState(null);
+  const { data } = useQuery(GET_CURRENT_USER);
+
+  useEffect(() => {
+    if (data && data.currentUser) {
+      console.log(data.currentUser);
+      setUser(data.currentUser);
+    }
+  }, [client, data]);
 
   return (
     <div>
@@ -23,17 +34,17 @@ const App: React.FC = () => {
       <main>
         <Switch>
           <Route path="/newposting">
-            {isLoggedIn ? <NewPosting /> : <Redirect push to="/signin" />}
+            {user ? <NewPosting /> : <Redirect push to="/signin" />}
           </Route>
           <Route path="/account/messages">
-            {isLoggedIn ? <AccountMessages /> : <Redirect push to="/signin" />}
+            {user ? <AccountMessages /> : <Redirect push to="/signin" />}
           </Route>
           <Route path="/account/followed">
-            {isLoggedIn ? <AccountFollowed /> : <Redirect push to="/signin" />}
+            {user ? <AccountFollowed /> : <Redirect push to="/signin" />}
           </Route>
           <Route path="/account">
-            {isLoggedIn ? (
-              <AccountDashboard setIsLoggedIn={setIsLoggedIn} />
+            {user ? (
+              <AccountDashboard setUser={setUser} user={user} />
             ) : (
               <Redirect push to="/signin" />
             )}
@@ -42,18 +53,10 @@ const App: React.FC = () => {
             <Filters />
           </Route>
           <Route path="/signin">
-            {!isLoggedIn ? (
-              <SignInPage setIsLoggedIn={setIsLoggedIn} />
-            ) : (
-              <Redirect to="/" />
-            )}
+            {!user ? <SignInPage /> : <Redirect to="/" />}
           </Route>
           <Route path="/signup">
-            {!isLoggedIn ? (
-              <SignUpPage setIsLoggedIn={setIsLoggedIn} />
-            ) : (
-              <Redirect to="/" />
-            )}
+            {!user ? <SignUpPage /> : <Redirect to="/" />}
           </Route>
           <Route exact path="/">
             <Postings />
