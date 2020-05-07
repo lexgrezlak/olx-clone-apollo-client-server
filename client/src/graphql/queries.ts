@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
-export const LOGIN = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
+export const SIGN_IN = gql`
+  mutation SignIn($input: SignInInput!) {
+    signIn(input: $input) {
       token
       user {
         id
@@ -17,19 +17,13 @@ export const GET_CURRENT_USER = gql`
     currentUser {
       id
       email
-      postings {
-        id
-        title
-        imageUrls
-        price
-      }
     }
   }
 `;
 
-export const GET_POSTINGS = gql`
-  query Postings($title: String, $price: Int) {
-    postings(title: $title, price: $price) {
+export const GET_ALL_POSTINGS = gql`
+  query AllPostings {
+    allPostings {
       id
       title
       category
@@ -39,6 +33,17 @@ export const GET_POSTINGS = gql`
       condition
       city
       phone
+    }
+  }
+`;
+
+export const GET_CURRENT_USER_POSTINGS = gql`
+  query CurrentUserPostings {
+    currentUserPostings {
+      id
+      title
+      imageUrls
+      price
     }
   }
 `;
