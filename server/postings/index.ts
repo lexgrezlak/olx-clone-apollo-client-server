@@ -58,6 +58,8 @@ export const postingTypeDefs = gql`
       phone: Int!
     ): Posting
 
+    deletePosting(id: ID!): Posting!
+
     singleUpload(file: Upload!): UploadedFileResponse!
     multipleUpload(files: [Upload!]!): [UploadedFileResponse!]!
   }
@@ -86,6 +88,34 @@ export const postingResolvers = {
       }
 
       return newPosting;
+    },
+
+    deletePosting: async (_parent: Parent, { id }: any, { user }: any) => {
+      if (!user) throw new AuthenticationError("Not authenticated");
+
+      const posting = (await Posting.findById(id)) as any;
+      if (!posting) throw new Error("This posting has already been deleted");
+
+      const userPostingsIds = user.postings.map(
+        (userPosting: any) => userPosting.id
+      );
+
+      if (userPostingsIds.includes(posting.id)) {
+        try {
+          await Posting.deleteOne(posting);
+          user.postings = user.postings.filter(
+            (userPosting: any) => userPosting.id !== posting.id
+          );
+
+          await user.save();
+
+          return posting;
+        } catch (error) {
+          throw new Error(error.message);
+        }
+      } else {
+        throw new AuthenticationError("Not authenticated");
+      }
     },
 
     singleUpload: cloudinaryUploader.singleFileUploadResolver.bind(
