@@ -10,17 +10,13 @@ import {
   FormControl,
   InputLabel,
 } from "@material-ui/core";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { ADD_POSTING } from "../graphql/queries";
 import { useField } from "../hooks/index";
 import UploadPhotos from "./UploadPhotos";
 import UploadedPhotos from "./UploadedPhotos";
 
-interface Props {
-  user: any;
-}
-
-const NewPosting: React.FC<Props> = ({ user }) => {
+function NewPosting() {
   const title = useField("text");
   const description = useField("text");
   const price = useField("number");
@@ -32,12 +28,8 @@ const NewPosting: React.FC<Props> = ({ user }) => {
   const condition = useField("radio");
   const history = useHistory();
 
-  if (user === null) {
-    return <Redirect push to="/login" />;
-  }
-
-  const categories = ["Fashion", "Electronics", "Health"];
-  const conditions = ["New", "Used"];
+  const CATEGORIES = ["Fashion", "Electronics", "Health"];
+  const CONDITIONS = ["New", "Used"];
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -55,6 +47,7 @@ const NewPosting: React.FC<Props> = ({ user }) => {
       },
     });
 
+    // TODO push to the posting
     history.push("/");
   };
   return (
@@ -68,7 +61,7 @@ const NewPosting: React.FC<Props> = ({ user }) => {
         {
           // @ts-ignore
           <Select labelId="category-label" id="category" {...category}>
-            {categories.map((thisCategory) => (
+            {CATEGORIES.map((thisCategory) => (
               <MenuItem key={thisCategory} value={thisCategory}>
                 {thisCategory}
               </MenuItem>
@@ -97,7 +90,7 @@ const NewPosting: React.FC<Props> = ({ user }) => {
         {
           // @ts-ignore
           <Select labelId="condition-label" id="condition" {...condition}>
-            {conditions.map((thisCondition) => (
+            {CONDITIONS.map((thisCondition) => (
               <MenuItem key={thisCondition} value={thisCondition}>
                 {thisCondition}
               </MenuItem>
@@ -114,6 +107,6 @@ const NewPosting: React.FC<Props> = ({ user }) => {
       </Button>
     </form>
   );
-};
+}
 
 export default NewPosting;
