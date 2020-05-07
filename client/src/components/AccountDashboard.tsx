@@ -1,5 +1,4 @@
 import React from "react";
-import { Redirect, useHistory } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import {
   Button,
@@ -8,11 +7,14 @@ import {
   CardMedia,
   createStyles,
   IconButton,
-  useTheme,
 } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Delete } from "@material-ui/icons";
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
+import {
+  GET_CURRENT_USER,
+  GET_CURRENT_USER_POSTINGS,
+} from "../graphql/queries";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,23 +44,24 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function AccountDashboard({
-  user,
-  handleLogout,
-}: {
-  user: any;
-  handleLogout: any;
-}) {
+export default function AccountDashboard({ setIsLoggedIn }: any) {
   const classes = useStyles();
-  const theme = useTheme();
   const client = useApolloClient();
-  const history = useHistory();
 
-  if (user === null) {
-    return <Redirect push to="/login" />;
+  const postingsQuery = useQuery(GET_CURRENT_USER_POSTINGS);
+  const userQuery = useQuery(GET_CURRENT_USER);
+
+  function handleLogout() {
+    window.localStorage.clear();
+    setIsLoggedIn(false);
+    client.resetStore();
   }
 
-  const { postings } = user;
+  if (postingsQuery.error || userQuery.error) return <div>error</div>;
+  if (postingsQuery.loading || userQuery.loading) return <div>loading</div>;
+
+  const postings = postingsQuery.data.currentUserPostings;
+  const user = userQuery.data.currentUser;
 
   return (
     <div>
