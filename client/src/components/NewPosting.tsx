@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import { useMutation } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
 import {
   Button,
   TextField,
@@ -27,14 +27,15 @@ function NewPosting() {
   const [addPosting] = useMutation(ADD_POSTING);
   const condition = useField("radio");
   const history = useHistory();
+  const client = useApolloClient();
 
   const CATEGORIES = ["Fashion", "Electronics", "Health"];
   const CONDITIONS = ["New", "Used"];
 
-  const handleSubmit = (event: React.FormEvent) => {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
-    addPosting({
+    await addPosting({
       variables: {
         title: title.value,
         category: category.value,
@@ -46,10 +47,10 @@ function NewPosting() {
         phone: +phone.value,
       },
     });
-
+    client.resetStore();
     // TODO push to the posting
     history.push("/");
-  };
+  }
   return (
     <form onSubmit={handleSubmit}>
       <Typography variant="h3" style={{ margin: "20px" }}>
