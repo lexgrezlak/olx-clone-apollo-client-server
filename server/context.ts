@@ -1,8 +1,9 @@
 import { verify } from "jsonwebtoken";
 import { JWT_SECRET } from "./utils/config";
+import User from "./models/User";
 
 export interface IContext {
-  user?: null | object;
+  user: null | object;
 }
 
 function getUser(token: string): null | object {
@@ -17,10 +18,16 @@ function getUser(token: string): null | object {
   }
 }
 
-export default ({ req }: any): IContext => {
+export default async ({ req }: any): Promise<IContext> => {
   const tokenWithBearer = req.headers.authorization || "";
   const token = tokenWithBearer.split(" ")[1];
-  const user = getUser(token);
+  const decodedUser = getUser(token) as any;
 
+  if (decodedUser === null) {
+    const user = null;
+    return { user };
+  }
+
+  const user = await User.findById(decodedUser.id).populate("postings");
   return { user };
 };
