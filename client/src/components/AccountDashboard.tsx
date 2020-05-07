@@ -10,11 +10,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Delete } from "@material-ui/icons";
-import { useApolloClient, useQuery } from "@apollo/client";
-import {
-  GET_CURRENT_USER,
-  GET_CURRENT_USER_POSTINGS,
-} from "../graphql/queries";
+import { useApolloClient } from "@apollo/client";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,24 +40,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function AccountDashboard({ setIsLoggedIn }: any) {
+export default function AccountDashboard({ user, setUser }: any) {
   const classes = useStyles();
   const client = useApolloClient();
 
-  const postingsQuery = useQuery(GET_CURRENT_USER_POSTINGS);
-  const userQuery = useQuery(GET_CURRENT_USER);
-
   function handleLogout() {
     window.localStorage.clear();
-    setIsLoggedIn(false);
+    setUser(null);
     client.resetStore();
   }
 
-  if (postingsQuery.error || userQuery.error) return <div>error</div>;
-  if (postingsQuery.loading || userQuery.loading) return <div>loading</div>;
-
-  const postings = postingsQuery.data.currentUserPostings;
-  const user = userQuery.data.currentUser;
+  const { postings } = user;
 
   return (
     <div>
