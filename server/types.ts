@@ -1,4 +1,4 @@
-import { ReadStream } from 'fs';
+import { ReadStream } from "fs";
 
 export type File = {
   filename: string;
@@ -17,6 +17,8 @@ export type UploadedFileResponse = {
 export interface IUploader {
   singleFileUploadResolver: (
     parent: any,
-    { file }: { file: File },
+    { file }: { file: File }
   ) => Promise<UploadedFileResponse>;
 }
+
+export type Parent = any;
