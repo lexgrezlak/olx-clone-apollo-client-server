@@ -10,9 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useApolloClient, useMutation } from "@apollo/client";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import { useField } from "../hooks";
 import { SIGN_IN } from "../graphql/queries";
-import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInPage({ setIsLoggedIn }: any) {
+export default function SignInPage() {
   const classes = useStyles();
   const email = useField("email");
   const password = useField("password");
@@ -51,18 +51,16 @@ export default function SignInPage({ setIsLoggedIn }: any) {
     if (data && data.signIn) {
       const { token } = data.signIn;
       localStorage.setItem("token", token);
-      setIsLoggedIn(true);
-      client.resetStore();
-      history.goBack();
+      client.resetStore().then((_) => history.goBack());
     }
-  }, [client, data, history, setIsLoggedIn]);
+  }, [client, data, history]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     signIn({
       variables: { input: { email: email.value, password: password.value } },
     });
-  };
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -114,7 +112,7 @@ export default function SignInPage({ setIsLoggedIn }: any) {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/signup" variant="body2">
+              <Link variant="body2" component={RouterLink} to="/signup">
                 Don&apos;t have an account? Sign Up
               </Link>
             </Grid>
