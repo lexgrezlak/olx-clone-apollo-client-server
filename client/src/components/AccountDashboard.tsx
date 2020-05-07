@@ -10,7 +10,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Delete } from "@material-ui/icons";
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useMutation } from "@apollo/client";
+import { DELETE_POSTING } from "../graphql/queries";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,10 +44,20 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function AccountDashboard({ user, setUser }: any) {
   const classes = useStyles();
   const client = useApolloClient();
+  const [deletePosting] = useMutation(DELETE_POSTING, {
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message);
+    },
+  });
 
   function handleLogout() {
     window.localStorage.clear();
     setUser(null);
+    client.resetStore();
+  }
+
+  async function handleDelete(id: string) {
+    await deletePosting({ variables: { id } });
     client.resetStore();
   }
 
@@ -79,7 +90,10 @@ export default function AccountDashboard({ user, setUser }: any) {
               </Typography>
             </CardContent>
             <div className={classes.controls}>
-              <IconButton aria-label="delete">
+              <IconButton
+                aria-label="delete"
+                onClick={() => handleDelete(posting.id)}
+              >
                 <Delete className={classes.deleteIcon} />
               </IconButton>
             </div>
