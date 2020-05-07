@@ -12,6 +12,18 @@ export const SIGN_IN = gql`
   }
 `;
 
+export const SIGN_UP = gql`
+  mutation SignUp($input: SignUpInput!) {
+    signUp(input: $input) {
+      token
+      user {
+        id
+        email
+      }
+    }
+  }
+`;
+
 export const GET_CURRENT_USER = gql`
   query CurrentUser {
     currentUser {
