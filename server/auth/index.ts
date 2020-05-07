@@ -14,6 +14,7 @@ interface ISignInInput {
 
 interface ISignUpInput {
   input: {
+    name: string;
     email: string;
     password: string;
   };
@@ -21,13 +22,14 @@ interface ISignUpInput {
 
 export const authTypeDefs = gql`
   input SignInInput {
-    email: String
-    password: String
+    email: String!
+    password: String!
   }
 
   input SignUpInput {
-    email: String
-    password: String
+    name: String
+    email: String!
+    password: String!
   }
 
   type SignOutput {
@@ -36,8 +38,8 @@ export const authTypeDefs = gql`
   }
 
   extend type Mutation {
-    signIn(input: SignInInput!): SignOutput
-    signUp(input: SignUpInput!): SignOutput
+    signIn(input: SignInInput!): SignOutput!
+    signUp(input: SignUpInput!): SignOutput!
   }
 `;
 
@@ -72,7 +74,7 @@ export const authResolvers = {
 
     signUp: async (
       _parent: Parent,
-      { input: { email, password } }: ISignUpInput
+      { input: { name, email, password } }: ISignUpInput
     ) => {
       if (password.length < 4)
         throw new UserInputError(
@@ -85,12 +87,21 @@ export const authResolvers = {
       const passwordHash = await hash(password, 10);
 
       const user = new User({
+        name,
         email: email.toLowerCase(),
         passwordHash,
       });
 
       try {
-        return user.save();
+        const savedUser = (await user.save()) as any;
+        const token = sign(
+          { id: savedUser._id, email: savedUser.email },
+          JWT_SECRET,
+          {
+            expiresIn: "30d",
+          }
+        );
+        return { token, savedUser };
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: { email, password },
