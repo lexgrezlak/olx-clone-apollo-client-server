@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import uniqueValidator from 'mongoose-unique-validator';
+import mongoose from "mongoose";
+import uniqueValidator from "mongoose-unique-validator";
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -15,13 +15,21 @@ const UserSchema = new mongoose.Schema({
   postings: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Posting',
+      ref: "Posting",
     },
   ],
 });
 
+UserSchema.set("toJSON", {
+  transform: (_document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
 UserSchema.plugin(uniqueValidator);
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model("User", UserSchema);
 
 export default User;
