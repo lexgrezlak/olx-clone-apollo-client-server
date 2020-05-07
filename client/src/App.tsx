@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import { useApolloClient, useQuery } from "@apollo/client";
+import Box from "@material-ui/core/Box";
 import Postings from "./components/Postings";
 import NewPosting from "./components/NewPosting";
 import AccountDashboard from "./components/AccountDashboard";
@@ -8,23 +10,22 @@ import AccountMessages from "./components/AccountMessages";
 import AccountFollowed from "./components/AccountFollowed";
 import SignInPage from "./components/SignInPage";
 import Navigation from "./components/Navigation";
-import Box from "@material-ui/core/Box";
 import Copyright from "./components/Copyright";
 import SignUpPage from "./components/SignUpPage";
 import { GET_CURRENT_USER } from "./graphql/queries";
-import { useApolloClient, useQuery } from "@apollo/client";
 
 const App: React.FC = () => {
   const client = useApolloClient();
   const [user, setUser] = useState(null);
-  const { data } = useQuery(GET_CURRENT_USER);
+  const { data, loading } = useQuery(GET_CURRENT_USER);
 
   useEffect(() => {
     if (data && data.currentUser) {
-      console.log(data.currentUser);
       setUser(data.currentUser);
     }
   }, [client, data]);
+
+  if (loading) return null;
 
   return (
     <div>
