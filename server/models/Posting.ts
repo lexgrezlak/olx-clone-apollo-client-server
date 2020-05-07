@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const postingSchema = new mongoose.Schema({
+const PostingSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -41,4 +41,12 @@ const postingSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Posting", postingSchema);
+PostingSchema.set("toJSON", {
+  transform: (_document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
+export default mongoose.model("Posting", PostingSchema);
