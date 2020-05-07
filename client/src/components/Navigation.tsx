@@ -60,7 +60,7 @@ export default function MenuAppBar() {
             aria-haspopup="true"
             color="inherit"
             component={Link}
-            to="/new-posting"
+            to="/newposting"
           >
             <AddIcon fontSize="large" />
           </IconButton>
