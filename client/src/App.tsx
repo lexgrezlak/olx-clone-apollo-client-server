@@ -10,6 +10,7 @@ import SignInPage from "./components/SignInPage";
 import Navigation from "./components/Navigation";
 import Box from "@material-ui/core/Box";
 import Copyright from "./components/Copyright";
+import SignUpPage from "./components/SignUpPage";
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -47,15 +48,18 @@ const App: React.FC = () => {
               <Redirect to="/" />
             )}
           </Route>
-          {/*<Route path="/signup">*/}
-          {/*  {!isLoggedIn ? (*/}
-          {/*    <SignUpPage setIsLoggedIn={setIsLoggedIn} />*/}
-          {/*  ) : (*/}
-          {/*    <Redirect to="/" />*/}
-          {/*  )}*/}
-          {/*</Route>*/}
-          <Route path="/">
+          <Route path="/signup">
+            {!isLoggedIn ? (
+              <SignUpPage setIsLoggedIn={setIsLoggedIn} />
+            ) : (
+              <Redirect to="/" />
+            )}
+          </Route>
+          <Route exact path="/">
             <Postings />
+          </Route>
+          <Route path="/">
+            <div>Page not found</div>
           </Route>
         </Switch>
       </main>
