@@ -1,10 +1,9 @@
-import { MONGODB_URI, JWT_SECRET } from "./utils/config";
+import { MONGODB_URI } from "./utils/config";
 import { ApolloServer } from "apollo-server";
-import typeDefs from "./graphql/typeDefs";
-import resolvers from "./graphql/resolvers";
+import typeDefs from "./typeDefs";
+import resolvers from "./resolvers";
 import mongoose from "mongoose";
-import * as jwt from "jsonwebtoken";
-import User from "./models/User";
+import context from "./context";
 
 console.log("connecting to", MONGODB_URI);
 
@@ -20,35 +19,10 @@ mongoose
     console.log("connecting to MongoDB failed:", error.message)
   );
 
-const getUser = (token: string) => {
-  try {
-    if (token) {
-      return jwt.verify(token, JWT_SECRET);
-    }
-
-    return null;
-  } catch (error) {
-    return null;
-  }
-};
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: async ({ req }) => {
-    const tokenWithBearer = req.headers.authorization || "";
-    const token = tokenWithBearer.split(" ")[1] || "";
-    const decodedToken: any = getUser(token);
-
-    if (decodedToken && decodedToken.id) {
-      const user = await User.findById(decodedToken.id).populate("postings");
-      return { user };
-    }
-
-    console.log("there");
-
-    return null;
-  },
+  context,
 });
 
 server.listen().then(({ url }: any) => {
