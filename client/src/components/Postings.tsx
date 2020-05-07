@@ -36,7 +36,7 @@ export default function Postings() {
   const classes = useStyles();
 
   if (loading) return <div>loading</div>;
-  if (error) return <div>error</div>;
+  if (error) return <div>error: {JSON.stringify(error)}</div>;
 
   const postings = data.allPostings;
 
