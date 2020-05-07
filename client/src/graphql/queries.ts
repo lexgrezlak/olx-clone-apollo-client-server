@@ -101,6 +101,14 @@ export const ADD_POSTING = gql`
   }
 `;
 
+export const DELETE_POSTING = gql`
+  mutation DeletePosting($id: ID!) {
+    deletePosting(id: $id) {
+      title
+    }
+  }
+`;
+
 export const MULTIPLE_UPLOAD = gql`
   mutation MultipleUpload($files: [Upload!]!) {
     multipleUpload(files: $files) {
