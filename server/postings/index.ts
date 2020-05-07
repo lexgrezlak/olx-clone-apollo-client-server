@@ -7,7 +7,6 @@ import {
   CLOUDINARY_CLOUD_NAME,
 } from "../utils/config";
 import { Parent } from "../types";
-import User from "../models/User";
 
 const cloudinaryUploader = new CloudinaryUploader({
   cloudName: CLOUDINARY_CLOUD_NAME,
@@ -44,7 +43,6 @@ export const postingTypeDefs = gql`
 
   extend type Query {
     allPostings: [Posting!]!
-    currentUserPostings: [Posting!]!
     postingsByTitle(title: String): [Posting!]!
   }
 
@@ -70,22 +68,19 @@ export const postingResolvers = {
     //TODO args interface
     allPostings: () => Posting.find({}),
     // TODO
-    currentUserPostings: (_parent: Parent, _args: any, { user: { id } }: any) =>
-      Posting.find({}),
     postingsByTitle: async (_parent: Parent, { title }: any) =>
       Posting.find({ title }),
   },
 
   Mutation: {
-    addPosting: async (_root: any, args: any, { user }: any) => {
+    addPosting: async (_parent: Parent, args: any, { user }: any) => {
       if (!user) throw new AuthenticationError("Not authenticated");
       const newPosting = new Posting({ ...args });
 
       try {
         await newPosting.save();
-        const userInDb = (await User.findById(user.id)) as any;
-        userInDb.postings = userInDb.postings.concat(newPosting);
-        await userInDb.save();
+        user.postings = user.postings.concat(newPosting);
+        await user.save();
       } catch (error) {
         throw new UserInputError(error.message, { invalidArgs: args });
       }
