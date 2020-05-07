@@ -1,35 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Route, Switch } from "react-router-dom";
-import { useApolloClient, useQuery } from "@apollo/client";
+import React, { useState } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Postings from "./components/Postings";
 import NewPosting from "./components/NewPosting";
 import AccountDashboard from "./components/AccountDashboard";
 import Filters from "./components/Filters";
 import AccountMessages from "./components/AccountMessages";
 import AccountFollowed from "./components/AccountFollowed";
-import Login from "./components/Login";
+import SignInPage from "./components/SignInPage";
 import Navigation from "./components/Navigation";
-import { GET_CURRENT_USER } from "./graphql/queries";
+import Box from "@material-ui/core/Box";
+import Copyright from "./components/Copyright";
 
 const App: React.FC = () => {
-  const [user, setUser] = useState(null);
-  const client = useApolloClient();
-  const { data } = useQuery(GET_CURRENT_USER, {
-    onError: (error) => {
-      console.log(error.graphQLErrors[0].message);
-    },
-  });
-
-  useEffect(() => {
-    if (data?.currentUser) {
-      setUser(data.currentUser);
-    }
-  }, [data]);
-
-  function handleLogout() {
-    window.localStorage.clear();
-    setUser(null);
-  }
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <div>
@@ -38,30 +21,49 @@ const App: React.FC = () => {
       </header>
       <main>
         <Switch>
-          <Route path="/new-posting">
-            <NewPosting user={user} />
+          <Route path="/newposting">
+            {isLoggedIn ? <NewPosting /> : <Redirect push to="/signin" />}
           </Route>
           <Route path="/account/messages">
-            <AccountMessages user={user} />
+            {isLoggedIn ? <AccountMessages /> : <Redirect push to="/signin" />}
           </Route>
           <Route path="/account/followed">
-            <AccountFollowed user={user} />
+            {isLoggedIn ? <AccountFollowed /> : <Redirect push to="/signin" />}
           </Route>
           <Route path="/account">
-            <AccountDashboard user={user} handleLogout={handleLogout} />
+            {isLoggedIn ? (
+              <AccountDashboard setIsLoggedIn={setIsLoggedIn} />
+            ) : (
+              <Redirect push to="/signin" />
+            )}
           </Route>
           <Route path="/filters">
             <Filters />
           </Route>
-          <Route path="/login">
-            <Login user={user} />
+          <Route path="/signin">
+            {!isLoggedIn ? (
+              <SignInPage setIsLoggedIn={setIsLoggedIn} />
+            ) : (
+              <Redirect to="/" />
+            )}
           </Route>
+          {/*<Route path="/signup">*/}
+          {/*  {!isLoggedIn ? (*/}
+          {/*    <SignUpPage setIsLoggedIn={setIsLoggedIn} />*/}
+          {/*  ) : (*/}
+          {/*    <Redirect to="/" />*/}
+          {/*  )}*/}
+          {/*</Route>*/}
           <Route path="/">
             <Postings />
           </Route>
         </Switch>
       </main>
-      <footer></footer>
+      <footer>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </footer>
     </div>
   );
 };
