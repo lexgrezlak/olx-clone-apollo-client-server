@@ -1,11 +1,12 @@
-import { model, Schema, Document, Model } from "mongoose";
+import { model, Schema, Document } from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
+import { IPosting } from "./Posting";
 
 export interface IUser extends Document {
-  name: String;
-  email: String;
-  passwordHash: String;
-  postings: [Schema.Types.ObjectId];
+  name: string;
+  email: string;
+  passwordHash: string;
+  postings: [IPosting["_id"]];
 }
 
 const UserSchema = new Schema({
@@ -35,4 +36,4 @@ UserSchema.set("toJSON", {
 
 UserSchema.plugin(uniqueValidator);
 
-export const User: Model<IUser> = model<IUser>("User", UserSchema);
+export default model<IUser>("User", UserSchema);

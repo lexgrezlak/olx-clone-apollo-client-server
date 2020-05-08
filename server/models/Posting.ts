@@ -1,22 +1,24 @@
-import { Schema, Document, model, Model } from "mongoose";
+import { Schema, Document, model } from "mongoose";
+import { IUser } from "./User";
 
 export interface IPosting extends Document {
-  title: String;
-  category: String;
-  description: String;
-  imageUrls: [String];
-  price: Number;
-  condition: String;
-  city: String;
-  phone: String;
-  user: Schema.Types.ObjectId;
+  title: string;
+  category: string;
+  description: string;
+  imageUrls: string[];
+  price: number;
+  condition: string;
+  city: string;
+  phone: string;
+  user: IUser["_id"];
 }
 
-export const PostingSchema = new Schema({
+const PostingSchema = new Schema({
   title: {
     type: String,
     required: true,
     minlength: 3,
+    maxlength: 20,
   },
   category: {
     type: String,
@@ -25,11 +27,13 @@ export const PostingSchema = new Schema({
   description: {
     type: String,
     required: true,
+    maxlength: 200,
   },
   imageUrls: {
     type: [String],
     required: true,
     minlength: 1,
+    maxlength: 8,
   },
   price: {
     type: Number,
@@ -42,10 +46,12 @@ export const PostingSchema = new Schema({
   city: {
     type: String,
     required: true,
+    maxlength: 20,
   },
   phone: {
     type: Number,
     required: true,
+    maxlength: 20,
   },
   user: {
     type: Schema.Types.ObjectId,
@@ -61,7 +67,4 @@ PostingSchema.set("toJSON", {
   },
 });
 
-export const Posting: Model<IPosting> = model<IPosting>(
-  "Posting",
-  PostingSchema
-);
+export default model<IPosting>("Posting", PostingSchema);
