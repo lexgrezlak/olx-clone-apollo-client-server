@@ -1,5 +1,5 @@
 import { gql, AuthenticationError, UserInputError } from "apollo-server";
-import { Posting } from "../models/Posting";
+import Posting from "../models/Posting";
 import { CloudinaryUploader } from "../lib/cloudinary";
 import {
   CLOUDINARY_API_KEY,
@@ -7,6 +7,7 @@ import {
   CLOUDINARY_CLOUD_NAME,
 } from "../utils/config";
 import { Parent } from "../types";
+import { IPostingIdArgs, IPostingTitleArgs } from "./types";
 
 const cloudinaryUploader = new CloudinaryUploader({
   cloudName: CLOUDINARY_CLOUD_NAME,
@@ -70,7 +71,7 @@ export const postingResolvers = {
     //TODO args interface
     allPostings: () => Posting.find({}),
     // TODO
-    postingsByTitle: async (_parent: Parent, { title }: any) =>
+    postingsByTitle: async (_parent: Parent, { title }: IPostingTitleArgs) =>
       Posting.find({ title }),
   },
 
@@ -90,7 +91,11 @@ export const postingResolvers = {
       return newPosting;
     },
 
-    deletePosting: async (_parent: Parent, { id }: any, { user }: any) => {
+    deletePosting: async (
+      _parent: Parent,
+      { id }: IPostingIdArgs,
+      { user }: any
+    ) => {
       if (!user) throw new AuthenticationError("Not authenticated");
 
       const posting = (await Posting.findById(id)) as any;

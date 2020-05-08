@@ -1,6 +1,6 @@
 import { verify } from "jsonwebtoken";
 import { JWT_SECRET } from "./utils/config";
-import { User } from "./models/User";
+import User from "./models/User";
 
 export interface IContext {
   user: null | object;
