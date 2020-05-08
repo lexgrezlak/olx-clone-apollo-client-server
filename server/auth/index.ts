@@ -1,6 +1,6 @@
 import { gql, UserInputError } from "apollo-server";
 import { Parent } from "../types";
-import User from "../models/User";
+import { User } from "../models/User";
 import { compare, hash } from "bcrypt";
 import { JWT_SECRET } from "../utils/config";
 import { sign } from "jsonwebtoken";

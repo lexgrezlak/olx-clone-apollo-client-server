@@ -1,6 +1,18 @@
-import mongoose from "mongoose";
+import { Schema, Document, model, Model } from "mongoose";
 
-const PostingSchema = new mongoose.Schema({
+export interface IPosting extends Document {
+  title: String;
+  category: String;
+  description: String;
+  imageUrls: [String];
+  price: Number;
+  condition: String;
+  city: String;
+  phone: String;
+  user: Schema.Types.ObjectId;
+}
+
+export const PostingSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -36,7 +48,7 @@ const PostingSchema = new mongoose.Schema({
     required: true,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
   },
 });
@@ -49,4 +61,7 @@ PostingSchema.set("toJSON", {
   },
 });
 
-export default mongoose.model("Posting", PostingSchema);
+export const Posting: Model<IPosting> = model<IPosting>(
+  "Posting",
+  PostingSchema
+);

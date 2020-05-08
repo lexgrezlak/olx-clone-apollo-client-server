@@ -1,20 +1,25 @@
-import mongoose from "mongoose";
+import { model, Schema, Document, Model } from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 
-const UserSchema = new mongoose.Schema({
+export interface IUser extends Document {
+  name: String;
+  email: String;
+  passwordHash: String;
+  postings: [Schema.Types.ObjectId];
+}
+
+const UserSchema = new Schema({
+  name: String,
   email: {
     type: String,
     required: true,
     unique: true,
     minlength: 5,
   },
-  name: {
-    type: String,
-  },
   passwordHash: String,
   postings: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Posting",
     },
   ],
@@ -30,6 +35,4 @@ UserSchema.set("toJSON", {
 
 UserSchema.plugin(uniqueValidator);
 
-const User = mongoose.model("User", UserSchema);
-
-export default User;
+export const User: Model<IUser> = model<IUser>("User", UserSchema);

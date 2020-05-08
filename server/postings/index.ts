@@ -1,5 +1,5 @@
 import { gql, AuthenticationError, UserInputError } from "apollo-server";
-import Posting from "../models/Posting";
+import { Posting } from "../models/Posting";
 import { CloudinaryUploader } from "../lib/cloudinary";
 import {
   CLOUDINARY_API_KEY,
