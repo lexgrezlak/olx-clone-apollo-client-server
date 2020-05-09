@@ -8,6 +8,7 @@ import {
 } from "../utils/config";
 import { Parent } from "../types";
 import { IPostingIdArgs, IPostingTitleArgs } from "./types";
+import { GraphQLDateTime } from "graphql-iso-date";
 
 const cloudinaryUploader = new CloudinaryUploader({
   cloudName: CLOUDINARY_CLOUD_NAME,
@@ -26,6 +27,7 @@ export const postingTypeDefs = gql`
     condition: String!
     city: String!
     phone: Int
+    updatedAt: DateTime!
     user: User!
   }
 
@@ -41,6 +43,8 @@ export const postingTypeDefs = gql`
     encoding: String!
     url: String!
   }
+
+  scalar DateTime
 
   extend type Query {
     allPostings: [Posting!]!
@@ -69,8 +73,9 @@ export const postingTypeDefs = gql`
 `;
 
 export const postingResolvers = {
+  DateTime: GraphQLDateTime,
   Query: {
-    allPostings: () => Posting.find({}),
+    allPostings: () => Posting.find({}).sort({ updatedAt: -1 }),
     postingById: async (_parent: Parent, { id }: any) => Posting.findById(id),
     postingsByTitle: async (_parent: Parent, { title }: IPostingTitleArgs) =>
       Posting.find({ title }),
@@ -95,7 +100,7 @@ export const postingResolvers = {
     followPosting: async (
       _parent: Parent,
       { id }: IPostingIdArgs,
-      { user }: any,
+      { user }: any
     ) => {
       if (!user) throw new AuthenticationError("Not authenticated");
 
@@ -103,12 +108,12 @@ export const postingResolvers = {
       if (!posting) throw new Error("Posting not found");
 
       const userFollowedPostingsIds = user.followedPostings.map(
-        (followedPosting: any) => followedPosting.id,
+        (followedPosting: any) => followedPosting.id
       );
 
       if (userFollowedPostingsIds.includes(posting.id)) {
         user.followedPostings = user.followedPostings.filter(
-          (userFollowedPosting: any) => userFollowedPosting.id !== posting.id,
+          (userFollowedPosting: any) => userFollowedPosting.id !== posting.id
         );
       } else {
         user.followedPostings = user.followedPostings.concat(posting);
@@ -125,7 +130,7 @@ export const postingResolvers = {
     deletePosting: async (
       _parent: Parent,
       { id }: IPostingIdArgs,
-      { user }: any,
+      { user }: any
     ) => {
       if (!user) throw new AuthenticationError("Not authenticated");
 
@@ -133,14 +138,14 @@ export const postingResolvers = {
       if (!posting) throw new Error("This posting has already been deleted");
 
       const userPostingsIds = user.ownPostings.map(
-        (userPosting: any) => userPosting.id,
+        (userPosting: any) => userPosting.id
       );
 
       if (userPostingsIds.includes(posting.id)) {
         try {
           await Posting.deleteOne(posting);
           user.ownPostings = user.ownPostings.filter(
-            (userPosting: any) => userPosting.id !== posting.id,
+            (userPosting: any) => userPosting.id !== posting.id
           );
 
           await user.save();
@@ -155,10 +160,10 @@ export const postingResolvers = {
     },
 
     singleUpload: cloudinaryUploader.singleFileUploadResolver.bind(
-      cloudinaryUploader,
+      cloudinaryUploader
     ),
     multipleUpload: cloudinaryUploader.multipleUploadsResolver.bind(
-      cloudinaryUploader,
+      cloudinaryUploader
     ),
   },
 };
