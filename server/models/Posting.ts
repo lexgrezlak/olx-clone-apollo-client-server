@@ -70,4 +70,6 @@ PostingSchema.set("toJSON", {
   },
 });
 
+PostingSchema.index({ title: "text" });
+
 export default model<IPosting>("Posting", PostingSchema);

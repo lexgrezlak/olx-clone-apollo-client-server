@@ -78,8 +78,11 @@ export const postingResolvers = {
   Query: {
     allPostings: () => Posting.find({}).sort({ updatedAt: -1 }),
     postingById: async (_parent: Parent, { id }: any) => Posting.findById(id),
-    postingsByTitle: async (_parent: Parent, { title }: IPostingTitleArgs) =>
-      Posting.find({ title }),
+    postingsByTitle: async (_parent: Parent, { title }: IPostingTitleArgs) => {
+      if (title === "") return Posting.find({});
+      // return Posting.find({ title: { $regex: title, $options: "i" } });
+      return Posting.find({ $text: { $search: title } });
+    },
   },
 
   Mutation: {
