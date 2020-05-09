@@ -16,6 +16,7 @@ import {
   FOLLOW_POSTING,
   GET_CURRENT_USER_FOLLOWED_POSTINGS,
 } from "../graphql/queries";
+import LastUpdated from "../components/LastUpdated";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function AccountFollowed() {
+export default function Followed() {
   const classes = useStyles();
   const client = useApolloClient();
   const { data, loading } = useQuery(GET_CURRENT_USER_FOLLOWED_POSTINGS, {
@@ -73,42 +74,48 @@ export default function AccountFollowed() {
 
   return (
     <div>
-      {followedPostings.map((posting: any) => (
-        <Card key={posting.id} className={classes.root}>
-          <CardMedia
-            className={classes.cover}
-            title={posting.title}
-            image={posting.imageUrls[0]}
-          />
-          <div className={classes.details}>
-            <CardContent className={classes.content}>
-              <Typography variant="h5" component="h5">
-                {posting.title}
-              </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-                ${posting.price}
-              </Typography>
-            </CardContent>
-            <div className={classes.controls}>
-              <IconButton
-                aria-label={`open the posting: ${posting.title}`}
-                className={classes.launch}
-                component={Link}
-                to={`/posting/${posting.id}`}
-              >
-                <LaunchIcon />
-              </IconButton>
-              <IconButton
-                aria-label={`follow the posting: ${posting.title}`}
-                className={classes.icon}
-                onClick={() => handleUnfollow(posting.id)}
-              >
-                <Star />
-              </IconButton>
+      <Typography component="h4" variant="h4">
+        Your followed postings
+      </Typography>
+      <div>
+        {followedPostings.map((posting: any) => (
+          <Card key={posting.id} className={classes.root}>
+            <CardMedia
+              className={classes.cover}
+              title={posting.title}
+              image={posting.imageUrls[0]}
+            />
+            <div className={classes.details}>
+              <CardContent className={classes.content}>
+                <Typography variant="h5" component="h5">
+                  {posting.title}
+                </Typography>
+                <Typography variant="subtitle1" color="textSecondary">
+                  ${posting.price}
+                </Typography>
+                <LastUpdated updatedAt={posting.updatedAt} />
+              </CardContent>
+              <div className={classes.controls}>
+                <IconButton
+                  aria-label={`open the posting: ${posting.title}`}
+                  className={classes.launch}
+                  component={Link}
+                  to={`/posting/${posting.id}`}
+                >
+                  <LaunchIcon />
+                </IconButton>
+                <IconButton
+                  aria-label={`follow the posting: ${posting.title}`}
+                  className={classes.icon}
+                  onClick={() => handleUnfollow(posting.id)}
+                >
+                  <Star />
+                </IconButton>
+              </div>
             </div>
-          </div>
-        </Card>
-      ))}
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
