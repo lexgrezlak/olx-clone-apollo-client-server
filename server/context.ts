@@ -28,6 +28,11 @@ export default async ({ req }: any): Promise<IContext> => {
     return { user };
   }
 
-  const user = await User.findById(decodedUser.id).populate("postings");
+  const user = await User.findById(decodedUser.id)
+    .populate("ownPostings")
+    .populate("followedPostings");
+
+  console.log(user);
+
   return { user };
 };
