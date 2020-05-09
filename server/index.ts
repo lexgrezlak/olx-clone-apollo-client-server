@@ -19,7 +19,7 @@ mongoose
     console.log("connecting to MongoDB failed:", error.message)
   );
 
-const server = new ApolloServer({
+export const server = new ApolloServer({
   typeDefs,
   resolvers,
   context,
