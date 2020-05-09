@@ -47,7 +47,7 @@ function NewPosting() {
         phone: +phone.value,
       },
     });
-    client.resetStore();
+    await client.resetStore();
     // TODO push to the posting
     history.push("/");
   }
