@@ -10,9 +10,10 @@ import {
 } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Delete } from "@material-ui/icons";
-import { useApolloClient, useMutation } from "@apollo/client";
-import { DELETE_POSTING } from "../graphql/queries";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { useHistory } from "react-router-dom";
+import { DELETE_POSTING, GET_CURRENT_USER } from "../graphql/queries";
+import SignOutButton from "../components/SignOutButton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,27 +43,29 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function Dashboard({ user, setUser }: any) {
+export default function Dashboard() {
   const classes = useStyles();
   const client = useApolloClient();
   const history = useHistory();
+  const { data, loading } = useQuery(GET_CURRENT_USER, {
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message);
+    },
+  });
   const [deletePosting] = useMutation(DELETE_POSTING, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
   });
 
-  async function handleLogout() {
-    window.localStorage.clear();
-    setUser(null);
-    await client.resetStore();
-    history.push("/");
-  }
-
   async function handleDelete(id: string) {
     await deletePosting({ variables: { id } });
     client.resetStore();
   }
+
+  if (loading) return null;
+
+  const user = data.currentUser;
 
   const { ownPostings } = user;
 
@@ -72,9 +75,7 @@ export default function Dashboard({ user, setUser }: any) {
         <Typography component="h4" variant="h4">
           Welcome {user.email}
         </Typography>
-        <Button onClick={handleLogout} variant="outlined">
-          logout
-        </Button>
+        <SignOutButton />
       </div>
       {ownPostings.map((posting: any) => (
         <Card key={posting.id} className={classes.root}>
