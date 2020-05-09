@@ -61,7 +61,7 @@ export default function AccountDashboard({ user, setUser }: any) {
     client.resetStore();
   }
 
-  const { postings } = user;
+  const { ownPostings } = user;
 
   return (
     <div>
@@ -73,7 +73,7 @@ export default function AccountDashboard({ user, setUser }: any) {
           logout
         </Button>
       </div>
-      {postings.map((posting: any) => (
+      {ownPostings.map((posting: any) => (
         <Card key={posting.id} className={classes.root}>
           <CardMedia
             className={classes.cover}
