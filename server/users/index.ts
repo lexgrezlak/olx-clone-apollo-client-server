@@ -13,6 +13,7 @@ export const userTypeDefs = gql`
 
   extend type Query {
     currentUser: User
+    isLoggedIn: Boolean!
     currentUserFollowedPostings: [Posting!]!
   }
 `;
@@ -20,6 +21,8 @@ export const userTypeDefs = gql`
 export const userResolvers = {
   Query: {
     currentUser: (_parent: Parent, _args: any, { user }: IContext) => user,
+    isLoggedIn: (_parent: Parent, _args: any, { user }: IContext) =>
+      user ? true : false,
     currentUserFollowedPostings: (
       _parent: Parent,
       _args: any,
