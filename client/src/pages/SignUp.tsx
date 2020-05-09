@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUpPage() {
+export default function SignUp() {
   const classes = useStyles();
   const client = useApolloClient();
   const history = useHistory();
