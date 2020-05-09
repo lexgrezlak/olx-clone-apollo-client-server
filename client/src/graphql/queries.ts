@@ -1,5 +1,11 @@
 import { gql } from "@apollo/client";
 
+export const GET_IS_LOGGED_IN = gql`
+  query IsLoggedIn {
+    isLoggedIn
+  }
+`;
+
 export const SIGN_IN = gql`
   mutation SignIn($input: SignInInput!) {
     signIn(input: $input) {
@@ -93,7 +99,15 @@ export const GET_CURRENT_USER_POSTINGS = gql`
 export const FOLLOW_POSTING = gql`
   mutation FollowPosting($id: ID!) {
     followPosting(id: $id) {
-      title
+      id
+    }
+  }
+`;
+
+export const UNFOLLOW_POSTING = gql`
+  mutation UnfollowPosting($id: ID!) {
+    unfollowPosting(id: $id) {
+      id
     }
   }
 `;

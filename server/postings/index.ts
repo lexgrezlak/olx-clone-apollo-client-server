@@ -65,6 +65,7 @@ export const postingTypeDefs = gql`
     ): Posting
 
     followPosting(id: ID!): Posting!
+    unfollowPosting(id: ID!): Posting!
     deletePosting(id: ID!): Posting!
 
     singleUpload(file: Upload!): UploadedFileResponse!
@@ -111,14 +112,36 @@ export const postingResolvers = {
         (followedPosting: any) => followedPosting.id
       );
 
+      if (!userFollowedPostingsIds.includes(posting.id)) {
+        user.followedPostings = user.followedPostings.concat(posting);
+      }
+
+      try {
+        await user.save();
+        return posting;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+
+    unfollowPosting: async (
+      _parent: Parent,
+      { id }: IPostingIdArgs,
+      { user }: any
+    ) => {
+      if (!user) throw new AuthenticationError("Not authenticated");
+
+      const posting = (await Posting.findById(id)) as any;
+      if (!posting) throw new Error("Posting not found");
+
+      const userFollowedPostingsIds = user.followedPostings.map(
+        (followedPosting: any) => followedPosting.id
+      );
       if (userFollowedPostingsIds.includes(posting.id)) {
         user.followedPostings = user.followedPostings.filter(
           (userFollowedPosting: any) => userFollowedPosting.id !== posting.id
         );
-      } else {
-        user.followedPostings = user.followedPostings.concat(posting);
       }
-
       try {
         await user.save();
         return posting;
