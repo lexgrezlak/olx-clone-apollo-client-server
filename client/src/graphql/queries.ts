@@ -30,7 +30,13 @@ export const GET_CURRENT_USER = gql`
       id
       email
       name
-      postings {
+      ownPostings {
+        id
+        title
+        imageUrls
+        price
+      }
+      followedPostings {
         id
         title
         imageUrls
@@ -67,6 +73,14 @@ export const GET_CURRENT_USER_POSTINGS = gql`
   }
 `;
 
+export const FOLLOW_POSTING = gql`
+  mutation FollowPosting($id: ID!) {
+    followPosting(id: $id) {
+      title
+    }
+  }
+`;
+
 export const ADD_POSTING = gql`
   mutation AddPosting(
     $title: String!
@@ -89,6 +103,21 @@ export const ADD_POSTING = gql`
       phone: $phone
     ) {
       id
+      title
+      category
+      description
+      imageUrls
+      price
+      condition
+      city
+      phone
+    }
+  }
+`;
+
+export const GET_POSTING_BY_ID = gql`
+  query PostingById($id: ID!) {
+    postingById(id: $id) {
       title
       category
       description
