@@ -57,6 +57,8 @@ export default function SignIn({ isLoggedIn }: any) {
     }
   }, [client, data, history]);
 
+  if (isLoggedIn !== false) return null;
+
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     signIn({
