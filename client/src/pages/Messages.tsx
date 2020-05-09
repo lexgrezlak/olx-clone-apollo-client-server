@@ -1,7 +1,7 @@
 import React from "react";
 
-function AccountMessages() {
+function Messages() {
   return <div>hello messages </div>;
 }
 
-export default AccountMessages;
+export default Messages;
