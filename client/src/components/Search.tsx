@@ -1,13 +1,69 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import {
+  createStyles,
+  fade,
+  Theme,
+  makeStyles,
+} from "@material-ui/core/styles";
+import TextField, { TextFieldProps } from "@material-ui/core/TextField";
+import { OutlinedInputProps } from "@material-ui/core/OutlinedInput";
 
-export default function Search({ filter }: any) {
+const useStylesReddit = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      border: "1px solid #e2e2e1",
+      overflow: "hidden",
+      borderRadius: 4,
+      backgroundColor: "#fcfcfb",
+      transition: theme.transitions.create(["border-color", "box-shadow"]),
+      "&:hover": {
+        backgroundColor: "#fff",
+      },
+      "&$focused": {
+        backgroundColor: "#fff",
+        boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
+        borderColor: theme.palette.primary.main,
+      },
+    },
+    focused: {},
+  })
+);
+
+function RedditTextField(props: TextFieldProps) {
+  const classes = useStylesReddit();
+
   return (
     <TextField
-      variant="outlined"
-      fullWidth
-      id="standard-search"
+      InputProps={
+        { classes, disableUnderline: true } as Partial<OutlinedInputProps>
+      }
+      {...props}
+    />
+  );
+}
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: "flex",
+      flexWrap: "wrap",
+    },
+    margin: {
+      margin: theme.spacing(0.05),
+    },
+  })
+);
+
+export default function Search({ filter }: any) {
+  const classes = useStyles();
+
+  return (
+    <RedditTextField
       label="Search for anything"
+      variant="filled"
+      id="reddit-input"
+      fullWidth
+      className={classes.margin}
       {...filter}
     />
   );
