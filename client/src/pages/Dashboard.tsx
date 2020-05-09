@@ -12,6 +12,7 @@ import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Delete } from "@material-ui/icons";
 import { useApolloClient, useMutation } from "@apollo/client";
 import { DELETE_POSTING } from "../graphql/queries";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,19 +42,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function AccountDashboard({ user, setUser }: any) {
+export default function Dashboard({ user, setUser }: any) {
   const classes = useStyles();
   const client = useApolloClient();
+  const history = useHistory();
   const [deletePosting] = useMutation(DELETE_POSTING, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
   });
 
-  function handleLogout() {
+  async function handleLogout() {
     window.localStorage.clear();
     setUser(null);
-    client.resetStore();
+    await client.resetStore();
+    history.push("/");
   }
 
   async function handleDelete(id: string) {

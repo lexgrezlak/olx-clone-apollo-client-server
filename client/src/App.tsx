@@ -4,7 +4,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import Box from "@material-ui/core/Box";
 import AllPostings from "./pages/AllPostings";
 import NewPosting from "./pages/NewPosting";
-import AccountDashboard from "./components/AccountDashboard";
+import Dashboard from "./pages/Dashboard";
 import Filters from "./components/Filters";
 import AccountMessages from "./components/AccountMessages";
 import AccountFollowed from "./components/AccountFollowed";
@@ -14,6 +14,7 @@ import Copyright from "./components/Copyright";
 import SignUp from "./pages/SignUp";
 import { GET_CURRENT_USER } from "./graphql/queries";
 import FullPosting from "./pages/FullPosting";
+import PrivateRoute from "./components/PrivateRoute";
 
 export default function App() {
   const client = useApolloClient();
@@ -27,6 +28,8 @@ export default function App() {
       const { currentUser } = data;
       setUser(currentUser);
       setFollowedPostings(currentUser.followedPostings);
+    } else {
+      setFollowedPostings([]);
     }
   }, [client, data]);
 
@@ -40,37 +43,29 @@ export default function App() {
       </header>
       <main>
         <Switch>
-          <Route path="/newposting">
-            {user ? <NewPosting /> : <Redirect push to="/signin" />}
-          </Route>
+          <PrivateRoute user={user} path="/newposting">
+            <NewPosting />
+          </PrivateRoute>
           <Route path="/posting/:id">
             <FullPosting id={match ? match.params.id : null} />
           </Route>
-          <Route path="/account/messages">
-            {user ? <AccountMessages /> : <Redirect push to="/signin" />}
-          </Route>
-          <Route path="/account/followed">
-            {user ? (
-              <AccountFollowed followedPostings={followedPostings} />
-            ) : (
-              <Redirect push to="/signin" />
-            )}
-          </Route>
-          <Route path="/account">
-            {user ? (
-              <AccountDashboard setUser={setUser} user={user} />
-            ) : (
-              <Redirect push to="/signin" />
-            )}
-          </Route>
+          <PrivateRoute user={user} path="/account/messages">
+            <AccountMessages />
+          </PrivateRoute>
+          <PrivateRoute user={user} path="/account/followed">
+            <AccountFollowed followedPostings={followedPostings} />
+          </PrivateRoute>
+          <PrivateRoute user={user} path="/account">
+            <Dashboard setUser={setUser} user={user} />
+          </PrivateRoute>
           <Route path="/filters">
             <Filters />
           </Route>
           <Route path="/signin">
-            {!user ? <SignIn /> : <Redirect to="/" />}
+            {!user ? <SignIn /> : <Redirect to="/account" />}
           </Route>
           <Route path="/signup">
-            {!user ? <SignUp /> : <Redirect to="/" />}
+            {!user ? <SignUp /> : <Redirect to="/account" />}
           </Route>
           <Route exact path="/">
             <AllPostings

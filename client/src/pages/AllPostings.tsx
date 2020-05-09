@@ -7,11 +7,11 @@ import GridListTileBar from "@material-ui/core/GridListTileBar";
 import IconButton from "@material-ui/core/IconButton";
 import StarIconBorder from "@material-ui/icons/StarBorder";
 import { Star } from "@material-ui/icons";
-import { useRouteMatch, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import LaunchIcon from "@material-ui/icons/Launch";
 import { useField } from "../hooks";
 import { FOLLOW_POSTING, GET_ALL_POSTINGS } from "../graphql/queries";
 import Search from "../components/Search";
-import LaunchIcon from "@material-ui/icons/Launch";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
