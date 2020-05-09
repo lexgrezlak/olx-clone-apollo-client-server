@@ -23,15 +23,12 @@ export default function App() {
   const match = useRouteMatch("/posting/:id") as any;
 
   useEffect(() => {
-    console.log(data);
     if (data?.isLoggedIn) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
     }
   }, [client, data]);
-
-  if (isLoggedIn === null) return null;
 
   return (
     <div>
