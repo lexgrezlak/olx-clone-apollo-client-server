@@ -43,12 +43,14 @@ export const GET_CURRENT_USER = gql`
         title
         imageUrls
         price
+        updatedAt
       }
       followedPostings {
         id
         title
         imageUrls
         price
+        updatedAt
       }
     }
   }
@@ -61,6 +63,7 @@ export const GET_CURRENT_USER_FOLLOWED_POSTINGS = gql`
       title
       imageUrls
       price
+      updatedAt
     }
   }
 `;
