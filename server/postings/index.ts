@@ -44,7 +44,8 @@ export const postingTypeDefs = gql`
 
   extend type Query {
     allPostings: [Posting!]!
-    postingsByTitle(title: String): [Posting!]!
+    postingsByTitle(title: String!): [Posting!]!
+    postingById(id: ID!): Posting
   }
 
   extend type Mutation {
@@ -59,6 +60,7 @@ export const postingTypeDefs = gql`
       phone: Int!
     ): Posting
 
+    followPosting(id: ID!): Posting!
     deletePosting(id: ID!): Posting!
 
     singleUpload(file: Upload!): UploadedFileResponse!
@@ -68,9 +70,8 @@ export const postingTypeDefs = gql`
 
 export const postingResolvers = {
   Query: {
-    //TODO args interface
     allPostings: () => Posting.find({}),
-    // TODO
+    postingById: async (_parent: Parent, { id }: any) => Posting.findById(id),
     postingsByTitle: async (_parent: Parent, { title }: IPostingTitleArgs) =>
       Posting.find({ title }),
   },
@@ -82,7 +83,7 @@ export const postingResolvers = {
 
       try {
         await newPosting.save();
-        user.postings = user.postings.concat(newPosting);
+        user.ownPostings = user.ownPostings.concat(newPosting);
         await user.save();
       } catch (error) {
         throw new UserInputError(error.message, { invalidArgs: args });
@@ -91,25 +92,55 @@ export const postingResolvers = {
       return newPosting;
     },
 
+    followPosting: async (
+      _parent: Parent,
+      { id }: IPostingIdArgs,
+      { user }: any,
+    ) => {
+      if (!user) throw new AuthenticationError("Not authenticated");
+
+      const posting = (await Posting.findById(id)) as any;
+      if (!posting) throw new Error("Posting not found");
+
+      const userFollowedPostingsIds = user.followedPostings.map(
+        (followedPosting: any) => followedPosting.id,
+      );
+
+      if (userFollowedPostingsIds.includes(posting.id)) {
+        user.followedPostings = user.followedPostings.filter(
+          (userFollowedPosting: any) => userFollowedPosting.id !== posting.id,
+        );
+      } else {
+        user.followedPostings = user.followedPostings.concat(posting);
+      }
+
+      try {
+        await user.save();
+        return posting;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+
     deletePosting: async (
       _parent: Parent,
       { id }: IPostingIdArgs,
-      { user }: any
+      { user }: any,
     ) => {
       if (!user) throw new AuthenticationError("Not authenticated");
 
       const posting = (await Posting.findById(id)) as any;
       if (!posting) throw new Error("This posting has already been deleted");
 
-      const userPostingsIds = user.postings.map(
-        (userPosting: any) => userPosting.id
+      const userPostingsIds = user.ownPostings.map(
+        (userPosting: any) => userPosting.id,
       );
 
       if (userPostingsIds.includes(posting.id)) {
         try {
           await Posting.deleteOne(posting);
-          user.postings = user.postings.filter(
-            (userPosting: any) => userPosting.id !== posting.id
+          user.ownPostings = user.ownPostings.filter(
+            (userPosting: any) => userPosting.id !== posting.id,
           );
 
           await user.save();
@@ -124,10 +155,10 @@ export const postingResolvers = {
     },
 
     singleUpload: cloudinaryUploader.singleFileUploadResolver.bind(
-      cloudinaryUploader
+      cloudinaryUploader,
     ),
     multipleUpload: cloudinaryUploader.multipleUploadsResolver.bind(
-      cloudinaryUploader
+      cloudinaryUploader,
     ),
   },
 };
