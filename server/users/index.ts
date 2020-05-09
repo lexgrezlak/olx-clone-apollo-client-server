@@ -7,7 +7,8 @@ export const userTypeDefs = gql`
     id: ID!
     email: String!
     name: String
-    postings: [Posting!]!
+    ownPostings: [Posting!]!
+    followedPostings: [Posting!]!
   }
 
   extend type Query {
