@@ -30,6 +30,17 @@ export const SIGN_UP = gql`
   }
 `;
 
+export const GET_POSTINGS_BY_TITLE = gql`
+  query PostingsByTitle($title: String!) {
+    postingsByTitle(title: $title) {
+      id
+      title
+      imageUrls
+      price
+    }
+  }
+`;
+
 export const GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS = gql`
   query CurrentUserFollowedPostings {
     currentUserFollowedPostings {
