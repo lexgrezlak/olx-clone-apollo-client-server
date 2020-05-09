@@ -6,7 +6,7 @@ export default function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://localhost:3000/">
+      <Link color="inherit" href="localhost:3000/">
         Clolx
       </Link>{" "}
       {new Date().getFullYear()}.
