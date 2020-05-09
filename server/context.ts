@@ -1,9 +1,9 @@
 import { verify } from "jsonwebtoken";
 import { JWT_SECRET } from "./utils/config";
-import User from "./models/User";
+import User, { IUser } from "./models/User";
 
 export interface IContext {
-  user: null | object;
+  user: IUser | null;
 }
 
 function getUser(token: string): null | object {
@@ -31,8 +31,6 @@ export default async ({ req }: any): Promise<IContext> => {
   const user = await User.findById(decodedUser.id)
     .populate("ownPostings")
     .populate("followedPostings");
-
-  console.log(user);
 
   return { user };
 };
