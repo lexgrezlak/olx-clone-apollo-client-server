@@ -6,7 +6,8 @@ export interface IUser extends Document {
   name: string;
   email: string;
   passwordHash: string;
-  postings: [IPosting["_id"]];
+  ownPostings: [IPosting["_id"]];
+  followedPostings: [IPosting["_id"]];
 }
 
 const UserSchema = new Schema({
@@ -18,7 +19,13 @@ const UserSchema = new Schema({
     minlength: 5,
   },
   passwordHash: String,
-  postings: [
+  ownPostings: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Posting",
+    },
+  ],
+  followedPostings: [
     {
       type: Schema.Types.ObjectId,
       ref: "Posting",
