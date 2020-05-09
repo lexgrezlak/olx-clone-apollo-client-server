@@ -9,10 +9,13 @@ import {
 } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { Star } from "@material-ui/icons";
-import { useApolloClient, useMutation } from "@apollo/client";
-import { FOLLOW_POSTING } from "../graphql/queries";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import LaunchIcon from "@material-ui/icons/Launch";
 import { Link } from "react-router-dom";
+import {
+  FOLLOW_POSTING,
+  GET_CURRENT_USER_FOLLOWED_POSTINGS,
+} from "../graphql/queries";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,19 +47,29 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function AccountFollowed({ followedPostings }: any) {
+export default function AccountFollowed() {
   const classes = useStyles();
   const client = useApolloClient();
+  const { data, loading } = useQuery(GET_CURRENT_USER_FOLLOWED_POSTINGS, {
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message);
+    },
+  });
+
   const [unfollowPosting] = useMutation(FOLLOW_POSTING, {
     onError: (err) => {
       console.log(err.graphQLErrors[0].message);
     },
   });
 
+  if (loading) return null;
+
   async function handleUnfollow(id: string) {
     await unfollowPosting({ variables: { id } });
     client.resetStore();
   }
+
+  const followedPostings = data.currentUserFollowedPostings;
 
   return (
     <div>
