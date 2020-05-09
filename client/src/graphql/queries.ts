@@ -24,6 +24,14 @@ export const SIGN_UP = gql`
   }
 `;
 
+export const GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS = gql`
+  query CurrentUserFollowedPostings {
+    currentUserFollowedPostings {
+      id
+    }
+  }
+`;
+
 export const GET_CURRENT_USER = gql`
   query CurrentUser {
     currentUser {
@@ -46,18 +54,24 @@ export const GET_CURRENT_USER = gql`
   }
 `;
 
+export const GET_CURRENT_USER_FOLLOWED_POSTINGS = gql`
+  query CurrentUserFollowedPostings {
+    currentUserFollowedPostings {
+      id
+      title
+      imageUrls
+      price
+    }
+  }
+`;
+
 export const GET_ALL_POSTINGS = gql`
   query AllPostings {
     allPostings {
       id
       title
-      category
-      description
       imageUrls
       price
-      condition
-      city
-      phone
     }
   }
 `;

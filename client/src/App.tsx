@@ -19,7 +19,6 @@ import PrivateRoute from "./components/PrivateRoute";
 export default function App() {
   const client = useApolloClient();
   const [user, setUser] = useState(null);
-  const [followedPostings, setFollowedPostings] = useState([]);
   const { data, loading, error } = useQuery(GET_CURRENT_USER);
   const match = useRouteMatch("/posting/:id") as any;
 
@@ -27,9 +26,8 @@ export default function App() {
     if (data && data.currentUser) {
       const { currentUser } = data;
       setUser(currentUser);
-      setFollowedPostings(currentUser.followedPostings);
     } else {
-      setFollowedPostings([]);
+      setUser(null);
     }
   }, [client, data]);
 
@@ -53,10 +51,10 @@ export default function App() {
             <AccountMessages />
           </PrivateRoute>
           <PrivateRoute user={user} path="/account/followed">
-            <AccountFollowed followedPostings={followedPostings} />
+            <AccountFollowed />
           </PrivateRoute>
           <PrivateRoute user={user} path="/account">
-            <Dashboard setUser={setUser} user={user} />
+            <Dashboard />
           </PrivateRoute>
           <Route path="/filters">
             <Filters />
@@ -68,10 +66,7 @@ export default function App() {
             {!user ? <SignUp /> : <Redirect to="/account" />}
           </Route>
           <Route exact path="/">
-            <AllPostings
-              followedPostings={followedPostings}
-              setFollowedPostings={setFollowedPostings}
-            />
+            <AllPostings />
           </Route>
           <Route path="/">
             <div>Page not found</div>

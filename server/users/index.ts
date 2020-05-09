@@ -13,11 +13,20 @@ export const userTypeDefs = gql`
 
   extend type Query {
     currentUser: User
+    currentUserFollowedPostings: [Posting!]!
   }
 `;
 
 export const userResolvers = {
   Query: {
     currentUser: (_parent: Parent, _args: any, { user }: IContext) => user,
+    currentUserFollowedPostings: (
+      _parent: Parent,
+      _args: any,
+      { user }: IContext
+    ) => {
+      if (!user) return [];
+      return user.followedPostings;
+    },
   },
 };

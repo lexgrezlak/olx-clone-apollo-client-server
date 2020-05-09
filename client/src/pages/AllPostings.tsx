@@ -10,7 +10,11 @@ import { Star } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import LaunchIcon from "@material-ui/icons/Launch";
 import { useField } from "../hooks";
-import { FOLLOW_POSTING, GET_ALL_POSTINGS } from "../graphql/queries";
+import {
+  FOLLOW_POSTING,
+  GET_ALL_POSTINGS,
+  GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS,
+} from "../graphql/queries";
 import Search from "../components/Search";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,30 +40,45 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function AllPostings({ followedPostings }: any) {
+export default function AllPostings() {
   const classes = useStyles();
   const filter = useField("search");
   const client = useApolloClient();
-  const { data, loading, error } = useQuery(GET_ALL_POSTINGS);
+  const { data: postingsData, loading: postingsLoading } = useQuery(
+    GET_ALL_POSTINGS,
+    {
+      onError: (error) => {
+        console.log(error.graphQLErrors[0].message);
+      },
+    }
+  );
+
+  const { data: followedData, loading: followedLoading } = useQuery(
+    GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS,
+    {
+      onError: (error) => {
+        console.log(error.graphQLErrors[0].message);
+      },
+    }
+  );
+
   const [followPosting] = useMutation(FOLLOW_POSTING, {
-    onError: (err) => {
-      console.log(err.graphQLErrors[0].message);
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message);
     },
   });
 
-  if (loading) return <div>loading</div>;
-  if (error) return <div>error: {JSON.stringify(error)}</div>;
+  if (postingsLoading || followedLoading) return <div>loading</div>;
+  const followedPostingsIds = followedData.currentUserFollowedPostings.map(
+    (posting: any) => posting.id
+  );
 
-  const postings = data.allPostings;
+  const postings = postingsData.allPostings;
 
   async function handleFollow(id: string) {
     await followPosting({ variables: { id } });
     await client.resetStore();
   }
-
-  const followedPostingsIds = followedPostings.map(
-    (followedPosting: any) => followedPosting.id
-  );
 
   return (
     <div className={classes.root}>
