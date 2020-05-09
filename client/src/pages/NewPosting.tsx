@@ -12,9 +12,9 @@ import {
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { ADD_POSTING } from "../graphql/queries";
-import { useField } from "../hooks/index";
-import UploadPhotos from "./UploadPhotos";
-import UploadedPhotos from "./UploadedPhotos";
+import { useField } from "../hooks";
+import UploadPhotos from "../components/UploadPhotos";
+import UploadedPhotos from "../components/UploadedPhotos";
 
 function NewPosting() {
   const title = useField("text");
