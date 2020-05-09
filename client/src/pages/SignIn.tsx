@@ -34,12 +34,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn({ isLoggedIn }: any) {
+  const history = useHistory();
+  if (isLoggedIn) history.goBack();
+
   const classes = useStyles();
   const email = useField("email");
   const password = useField("password");
   const client = useApolloClient();
-  const history = useHistory();
 
   const [signIn, { data }] = useMutation(SIGN_IN, {
     onError: (error) => {
