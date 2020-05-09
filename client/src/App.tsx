@@ -6,8 +6,8 @@ import AllPostings from "./pages/AllPostings";
 import NewPosting from "./pages/NewPosting";
 import Dashboard from "./pages/Dashboard";
 import Filters from "./components/Filters";
-import AccountMessages from "./components/AccountMessages";
-import AccountFollowed from "./components/AccountFollowed";
+import Messages from "./pages/Messages";
+import Followed from "./pages/Followed";
 import SignIn from "./pages/SignIn";
 import Navigation from "./components/Navigation";
 import Copyright from "./components/Copyright";
@@ -48,10 +48,10 @@ export default function App() {
             <FullPosting id={match ? match.params.id : null} />
           </Route>
           <PrivateRoute user={user} path="/account/messages">
-            <AccountMessages />
+            <Messages />
           </PrivateRoute>
           <PrivateRoute user={user} path="/account/followed">
-            <AccountFollowed />
+            <Followed />
           </PrivateRoute>
           <PrivateRoute user={user} path="/account">
             <Dashboard />
