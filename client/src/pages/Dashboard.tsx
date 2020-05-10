@@ -1,11 +1,14 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { useQuery } from "@apollo/client";
-import { GET_CURRENT_USER } from "../graphql/queries";
+import { createStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  GET_CURRENT_USER,
+  GET_CURRENT_USER_AND_OWN_POSTINGS,
+} from "../graphql/queries";
 import SignOutButton from "../components/SignOutButton";
 import OwnPostings from "../components/OwnPostings";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import { createStyles } from "@material-ui/core";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -18,7 +21,7 @@ const useStyles = makeStyles(() =>
 
 export default function Dashboard() {
   const classes = useStyles();
-  const { data, loading } = useQuery(GET_CURRENT_USER, {
+  const { data, loading } = useQuery(GET_CURRENT_USER_AND_OWN_POSTINGS, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
@@ -28,12 +31,13 @@ export default function Dashboard() {
 
   const user = data.currentUser;
 
+  console.log(user);
   const postings = user.ownPostings;
 
   return (
     <div>
       <div className={classes.header}>
-        <Typography component="h4" variant="h4">
+        <Typography component="h5" variant="h5">
           Welcome {user.name ? user.name : user.email}
         </Typography>
         <SignOutButton />
