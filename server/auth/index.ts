@@ -86,22 +86,18 @@ export const authResolvers = {
 
       const passwordHash = await hash(password, 10);
 
-      const user = new User({
+      const newUser = new User({
         name,
         email: email.toLowerCase(),
         passwordHash,
       });
 
       try {
-        const savedUser = (await user.save()) as any;
-        const token = sign(
-          { id: savedUser._id, email: savedUser.email },
-          JWT_SECRET,
-          {
-            expiresIn: "30d",
-          }
-        );
-        return { token, savedUser };
+        const user = (await newUser.save()) as any;
+        const token = sign({ id: user._id, email: user.email }, JWT_SECRET, {
+          expiresIn: "30d",
+        });
+        return { token, user };
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: { email, password },
