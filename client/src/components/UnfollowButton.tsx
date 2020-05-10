@@ -26,7 +26,7 @@ function UnfollowButton({ postingId, postingTitle }: any) {
   });
 
   async function handleUnfollow(id: string) {
-    unfollowPosting({
+    await unfollowPosting({
       variables: { id },
       optimisticResponse: {
         __typename: "Mutation",
@@ -40,9 +40,6 @@ function UnfollowButton({ postingId, postingTitle }: any) {
         const data = proxy.readQuery({
           query: GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS,
         }) as any;
-        console.log(unfollowPosting);
-        console.log(data);
-        // console.log(data.currentUserFollowedPostings);
         proxy.writeQuery({
           query: GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS,
           data: {
