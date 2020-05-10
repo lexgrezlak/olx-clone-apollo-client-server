@@ -29,7 +29,11 @@ export const userResolvers = {
       { user }: IContext
     ) => {
       if (!user) return [];
-      return user.followedPostings;
+      // first are the most lately updated
+      const sortedPostings = user.followedPostings.sort(
+        (a, b) => b.updatedAt - a.updatedAt
+      );
+      return sortedPostings;
     },
   },
 };
