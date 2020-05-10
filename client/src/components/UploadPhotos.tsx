@@ -7,12 +7,12 @@ import { PhotoCamera } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    button: {
-      margin: theme.spacing(1),
-    },
-
     input: {
       display: "none",
+    },
+    button: {
+      marginTop: "16px",
+      marginBottom: "8px",
     },
   })
 );
@@ -48,10 +48,11 @@ export default function UploadPhotos({ urls, setUrls }: Props) {
       />
       <label htmlFor="contained-button-file">
         <Button
+          className={classes.button}
+          fullWidth
           component="span"
           variant="contained"
           color="default"
-          className={classes.button}
           startIcon={<PhotoCamera />}
         >
           Upload
