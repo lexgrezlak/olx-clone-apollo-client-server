@@ -107,6 +107,22 @@ export const GET_CURRENT_USER_POSTINGS = gql`
   }
 `;
 
+export const GET_CURRENT_USER_AND_OWN_POSTINGS = gql`
+  query CurrentUser {
+    currentUser {
+      name
+      email
+      ownPostings {
+        id
+        title
+        price
+        updatedAt
+        imageUrls
+      }
+    }
+  }
+`;
+
 export const FOLLOW_POSTING = gql`
   mutation FollowPosting($id: ID!) {
     followPosting(id: $id) {
@@ -145,14 +161,6 @@ export const ADD_POSTING = gql`
       phone: $phone
     ) {
       id
-      title
-      category
-      description
-      imageUrls
-      price
-      condition
-      city
-      phone
     }
   }
 `;
@@ -168,6 +176,34 @@ export const GET_POSTING_BY_ID = gql`
       condition
       city
       phone
+    }
+  }
+`;
+
+export const EDIT_POSTING = gql`
+  mutation EditPosting(
+    $id: ID!
+    $title: String!
+    $category: String!
+    $description: String!
+    $imageUrls: [String!]!
+    $price: Int!
+    $condition: String!
+    $city: String!
+    $phone: Int!
+  ) {
+    editPosting(
+      id: $id
+      title: $title
+      category: $category
+      description: $description
+      imageUrls: $imageUrls
+      price: $price
+      condition: $condition
+      city: $city
+      phone: $phone
+    ) {
+      id
     }
   }
 `;
