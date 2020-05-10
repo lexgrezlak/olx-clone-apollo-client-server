@@ -19,7 +19,7 @@ const PostingSchema = new Schema(
       type: String,
       required: true,
       minlength: 3,
-      maxlength: 20,
+      maxlength: 30,
     },
     category: {
       type: String,
