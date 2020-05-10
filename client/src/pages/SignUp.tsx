@@ -48,11 +48,12 @@ export default function SignUp() {
   });
 
   useEffect(() => {
-    if (data && data.signUp) {
+    if (data?.signUp) {
       const { token } = data.signUp;
       localStorage.setItem("token", token);
-      client.resetStore();
-      history.push("/");
+      client.resetStore().then(() => {
+        history.push("/");
+      });
     }
   }, [client, data, history]);
 
