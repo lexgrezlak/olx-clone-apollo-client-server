@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import DeletePostingButton from "./DeletePostingButton";
 import LastUpdated from "./LastUpdated";
+import EditPostingButton from "./EditPostingButton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,10 +26,16 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
       paddingLeft: theme.spacing(1),
       paddingBottom: theme.spacing(1),
+      marginRight: theme.spacing(1),
     },
-    deleteIcon: {
-      height: 38,
-      width: 38,
+    icon: {
+      height: 30,
+      width: 30,
+    },
+    rest: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
     },
   })
 );
@@ -51,13 +58,13 @@ function OwnPosting({ posting }: any) {
           <Typography variant="subtitle1" color="textSecondary">
             ${posting.price}
           </Typography>
-          <LastUpdated updatedAt={posting.updatedAt} />
         </CardContent>
-        <div className={classes.controls}>
-          <DeletePostingButton
-            postingId={posting.id}
-            css={classes.deleteIcon}
-          />
+        <div className={classes.rest}>
+          <div className={classes.controls}>
+            <EditPostingButton id={posting.id} css={classes.icon} />
+            <DeletePostingButton postingId={posting.id} css={classes.icon} />
+          </div>
+          <LastUpdated updatedAt={posting.updatedAt} />
         </div>
       </div>
     </Card>
