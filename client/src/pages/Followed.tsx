@@ -56,7 +56,7 @@ export default function Followed() {
 
   return (
     <div>
-      <Typography component="h4" variant="h4">
+      <Typography component="h5" variant="h5">
         Your followed postings
       </Typography>
       <div>

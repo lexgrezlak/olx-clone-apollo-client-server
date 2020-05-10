@@ -25,7 +25,7 @@ function FollowButton({ postingId, postingTitle }: any) {
   });
 
   async function handleFollow(id: string) {
-    followPosting({
+    await followPosting({
       variables: { id },
       optimisticResponse: {
         __typename: "Mutation",
