@@ -24,25 +24,8 @@ const useStyles = makeStyles(() =>
   })
 );
 
-function Postings({ postings }: any) {
+function Postings({ postings, followedPostingsIds }: any) {
   const classes = useStyles();
-  const client = useApolloClient();
-  const [followedPostingsIds, setFollowedPostingsIds] = useState<string[]>([]);
-
-  const { data } = useQuery(GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS, {
-    onError: (error) => {
-      console.log(error.graphQLErrors[0].message);
-    },
-  });
-
-  useEffect(() => {
-    if (data?.currentUserFollowedPostings) {
-      const ids = data.currentUserFollowedPostings.map(
-        (posting: any) => posting.id
-      );
-      setFollowedPostingsIds(ids);
-    }
-  }, [data]);
 
   return (
     <GridList cellHeight={200} className={classes.gridList}>
