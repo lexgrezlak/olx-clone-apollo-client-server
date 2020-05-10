@@ -28,7 +28,6 @@ export const postingTypeDefs = gql`
     city: String!
     phone: Int
     updatedAt: DateTime!
-    user: User!
   }
 
   type File {
@@ -62,8 +61,19 @@ export const postingTypeDefs = gql`
       condition: String!
       city: String!
       phone: Int!
-    ): Posting
+    ): Posting!
 
+    editPosting(
+      id: ID!
+      title: String!
+      category: String!
+      description: String!
+      imageUrls: [String!]!
+      price: Int!
+      condition: String!
+      city: String!
+      phone: Int!
+    ): Posting!
     followPosting(id: ID!): Posting!
     unfollowPosting(id: ID!): Posting!
     deletePosting(id: ID!): Posting!
@@ -79,9 +89,19 @@ export const postingResolvers = {
     allPostings: () => Posting.find({}).sort({ updatedAt: -1 }),
     postingById: async (_parent: Parent, { id }: any) => Posting.findById(id),
     postingsByTitle: async (_parent: Parent, { title }: IPostingTitleArgs) => {
-      if (title === "") return Posting.find({});
-      // return Posting.find({ title: { $regex: title, $options: "i" } });
-      return Posting.find({ $text: { $search: title } });
+      // first postings are the latest updated
+      if (title === "") return Posting.find({}).sort({ updatedAt: -1 });
+      // first postings are the latest updated
+
+      const words = title.split(" ");
+      const queries: any = [];
+      words.forEach((word) => {
+        queries.push({ title: { $regex: word, $options: "i" } });
+      });
+
+      return Posting.find({ $and: queries }).sort({
+        updatedAt: -1,
+      });
     },
   },
 
@@ -99,6 +119,37 @@ export const postingResolvers = {
       }
 
       return newPosting;
+    },
+
+    editPosting: async (_parent: Parent, args: any, { user }: any) => {
+      const ids = user.ownPostings.map((posting: any) => posting.id);
+      console.log(args);
+
+      if (
+        !user ||
+        // own postings' ids
+        !user.ownPostings.map((posting: any) => posting._id).includes(args.id)
+      )
+        throw new AuthenticationError("Not authenticated");
+
+      const newPosting = { ...args };
+      console.log(newPosting);
+      const updatedPosting = await Posting.findByIdAndUpdate(
+        args.id,
+        newPosting,
+        { new: true }
+      );
+      console.log(updatedPosting);
+      user.ownPostings = user.ownPostings.map((posting: any) =>
+        posting.id === args.id ? updatedPosting : posting
+      );
+
+      try {
+        await user.save();
+      } catch (error) {
+        throw new Error(error.message);
+      }
+      return updatedPosting;
     },
 
     followPosting: async (
