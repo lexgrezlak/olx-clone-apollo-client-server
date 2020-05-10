@@ -9,7 +9,7 @@ function LastUpdated({ updatedAt }: any) {
   const daysSinceUpdated = Math.floor(msSinceUpdated / (1000 * 60 * 60 * 24));
 
   return (
-    <Typography variant="subtitle1" color="textSecondary">
+    <Typography variant="subtitle2" color="textSecondary">
       Last updated: {/* eslint-disable-next-line no-nested-ternary */}
       {daysSinceUpdated === 0
         ? "today"
