@@ -18,14 +18,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function Home() {
+export default function Home({ followedPostingsIds }: any) {
   const filter = useField("search");
   const classes = useStyles();
   const [postings, setPostings] = useState([]);
   const { data: postingsData } = useQuery(GET_POSTINGS_BY_TITLE, {
     variables: { title: filter.value },
     onError: (error) => {
-      console.log(error.graphQLErrors[0].message);
+      console.log(error);
     },
   });
 
@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <div className={classes.root}>
       <Search filter={filter} />
-      <Postings postings={postings} />
+      <Postings postings={postings} followedPostingsIds={followedPostingsIds} />
     </div>
   );
 }
