@@ -148,7 +148,7 @@ export const ADD_POSTING = gql`
     $price: Int!
     $condition: String!
     $city: String!
-    $phone: Int!
+    $phone: String!
   ) {
     addPosting(
       title: $title
@@ -165,9 +165,40 @@ export const ADD_POSTING = gql`
   }
 `;
 
+export const GET_CURRENT_USER_ID = gql`
+  query CurrentUser {
+    currentUser {
+      id
+    }
+  }
+`;
+
+export const SEND_MESSAGE = gql`
+  mutation SendMessage($content: String!, $postingId: ID!) {
+    sendMessage(content: $content, postingId: $postingId) {
+      id
+    }
+  }
+`;
+
+export const GET_CURRENT_USER_MESSAGES = gql`
+  query CurrentUserMessages {
+    currentUserMessages {
+      content
+      fromUser
+      posting {
+        id
+        title
+        imageUrls
+      }
+    }
+  }
+`;
+
 export const GET_POSTING_BY_ID = gql`
   query PostingById($id: ID!) {
     postingById(id: $id) {
+      id
       title
       category
       description
@@ -190,7 +221,7 @@ export const EDIT_POSTING = gql`
     $price: Int!
     $condition: String!
     $city: String!
-    $phone: Int!
+    $phone: String!
   ) {
     editPosting(
       id: $id
