@@ -1,6 +1,7 @@
 import { model, Schema, Document } from "mongoose";
-import uniqueValidator from "mongoose-unique-validator";
 import { IPosting } from "./Posting";
+import { IMessage } from "./Message";
+import validator from "validator";
 
 export interface IUser extends Document {
   name: string;
@@ -8,15 +9,21 @@ export interface IUser extends Document {
   passwordHash: string;
   ownPostings: [IPosting["_id"]];
   followedPostings: [IPosting["_id"]];
+  messages: [IMessage["_id"]];
 }
 
 const UserSchema = new Schema({
-  name: String,
+  name: {
+    type: String,
+    trim: true,
+  },
   email: {
     type: String,
     required: true,
+    trim: true,
     unique: true,
-    minlength: 5,
+    lowercase: true,
+    validate: (value: string) => validator.isEmail(value),
   },
   passwordHash: String,
   ownPostings: [
@@ -31,6 +38,12 @@ const UserSchema = new Schema({
       ref: "Posting",
     },
   ],
+  messages: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Message",
+    },
+  ],
 });
 
 UserSchema.set("toJSON", {
@@ -40,7 +53,5 @@ UserSchema.set("toJSON", {
     delete returnedObject.__v;
   },
 });
-
-UserSchema.plugin(uniqueValidator);
 
 export default model<IUser>("User", UserSchema);
