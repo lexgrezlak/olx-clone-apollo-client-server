@@ -1,7 +1,7 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { useQuery } from "@apollo/client";
-import { createStyles } from "@material-ui/core";
+import { Container, createStyles } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   GET_CURRENT_USER,
@@ -30,19 +30,17 @@ export default function Dashboard() {
   if (loading) return null;
 
   const user = data.currentUser;
-
-  console.log(user);
   const postings = user.ownPostings;
 
   return (
-    <div>
+    <Container>
       <div className={classes.header}>
         <Typography component="h5" variant="h5">
-          Welcome {user.name ? user.name : user.email}
+          Welcome {user.name || user.email}
         </Typography>
         <SignOutButton />
       </div>
       <OwnPostings postings={postings} />
-    </div>
+    </Container>
   );
 }
