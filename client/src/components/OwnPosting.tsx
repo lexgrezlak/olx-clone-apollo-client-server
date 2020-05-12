@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     rest: {
       display: "flex",
-      justifyContent: "space-between",
+      justifyContent: "flex-start",
       alignItems: "center",
     },
   })
@@ -64,7 +64,9 @@ function OwnPosting({ posting }: any) {
             <EditPostingButton id={posting.id} css={classes.icon} />
             <DeletePostingButton postingId={posting.id} css={classes.icon} />
           </div>
-          <LastUpdated updatedAt={posting.updatedAt} />
+          <div>
+            <LastUpdated updatedAt={posting.updatedAt} />
+          </div>
         </div>
       </div>
     </Card>
