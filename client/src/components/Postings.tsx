@@ -10,6 +10,7 @@ import { useApolloClient, useQuery } from "@apollo/client";
 import { GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS } from "../graphql/queries";
 import FollowButton from "./FollowButton";
 import UnfollowButton from "./UnfollowButton";
+import LaunchButton from "./LaunchButton";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -18,8 +19,8 @@ const useStyles = makeStyles(() =>
       height: "auto",
       transform: "translateZ(0)",
     },
-    launch: {
-      color: "deepskyblue",
+    action: {
+      display: "flex",
     },
   })
 );
@@ -36,15 +37,8 @@ function Postings({ postings, followedPostingsIds }: any) {
             title={`$${posting.price}`}
             subtitle={<span>{posting.title}</span>}
             actionIcon={
-              <div>
-                <IconButton
-                  className={classes.launch}
-                  aria-label={`open the posting: ${posting.title}`}
-                  component={Link}
-                  to={`/posting/${posting.id}`}
-                >
-                  <LaunchIcon />
-                </IconButton>
+              <div className={classes.action}>
+                <LaunchButton id={posting.id} />
                 {followedPostingsIds.includes(posting.id) ? (
                   <UnfollowButton
                     postingTitle={posting.title}
