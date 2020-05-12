@@ -33,10 +33,12 @@ export const SIGN_UP = gql`
 export const GET_POSTINGS_BY_TITLE = gql`
   query PostingsByTitle($title: String!) {
     postingsByTitle(title: $title) {
-      id
-      title
-      imageUrls
-      price
+      edges {
+        title
+        id
+        imageUrls
+        price
+      }
     }
   }
 `;
@@ -177,6 +179,14 @@ export const SEND_MESSAGE = gql`
   mutation SendMessage($content: String!, $postingId: ID!) {
     sendMessage(content: $content, postingId: $postingId) {
       id
+      content
+      fromUser
+      toUser
+      posting {
+        id
+        title
+        imageUrls
+      }
     }
   }
 `;
@@ -184,6 +194,7 @@ export const SEND_MESSAGE = gql`
 export const GET_CURRENT_USER_MESSAGES = gql`
   query CurrentUserMessages {
     currentUserMessages {
+      id
       content
       fromUser
       posting {
