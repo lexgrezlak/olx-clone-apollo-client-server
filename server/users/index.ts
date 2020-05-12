@@ -9,6 +9,7 @@ export const userTypeDefs = gql`
     name: String
     ownPostings: [Posting!]!
     followedPostings: [Posting!]!
+    messages: [Message!]!
   }
 
   extend type Query {
