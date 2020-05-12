@@ -28,9 +28,15 @@ export default async ({ req }: any): Promise<IContext> => {
     return { user };
   }
 
-  const user = await User.findById(decodedUser.id)
+  const user = (await User.findById(decodedUser.id)
     .populate("ownPostings")
-    .populate("followedPostings");
+    .populate("followedPostings")
+    .populate({
+      path: "messages",
+      populate: {
+        path: "posting",
+      },
+    })) as any;
 
   return { user };
 };
