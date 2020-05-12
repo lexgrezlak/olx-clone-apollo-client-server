@@ -13,8 +13,9 @@ const MessageSchema = new Schema(
   {
     content: {
       type: String,
+      trim: true,
       minlength: 1,
-      maxlength: 250,
+      maxlength: 280,
       required: true,
     },
     posting: {
