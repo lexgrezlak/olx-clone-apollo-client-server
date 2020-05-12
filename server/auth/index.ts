@@ -88,7 +88,7 @@ export const authResolvers = {
 
       const newUser = new User({
         name,
-        email: email.toLowerCase(),
+        email,
         passwordHash,
       });
 
