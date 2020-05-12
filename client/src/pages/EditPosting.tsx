@@ -90,7 +90,7 @@ function EditPosting({ id }: any) {
         price: +price,
         condition,
         city,
-        phone: +phone,
+        phone,
       },
     });
     await client.resetStore();
@@ -102,7 +102,7 @@ function EditPosting({ id }: any) {
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Add new posting
+          Edit this posting
         </Typography>
         <form noValidate onSubmit={handleSubmit} className={classes.form}>
           <TextField
@@ -138,7 +138,7 @@ function EditPosting({ id }: any) {
           </FormControl>
           <TextField
             margin="normal"
-            rows={4}
+            rows={5}
             multiline
             fullWidth
             variant="outlined"
@@ -186,7 +186,7 @@ function EditPosting({ id }: any) {
             fullWidth
             variant="outlined"
             label="Phone"
-            type="number"
+            type="tel"
             value={phone}
             onChange={({ target: { value } }: any) => setPhone(value)}
           />
