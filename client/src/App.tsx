@@ -19,6 +19,7 @@ import FullPosting from "./pages/FullPosting";
 import PrivateRoute from "./components/PrivateRoute";
 import Footer from "./components/Footer";
 import EditPosting from "./pages/EditPosting";
+import NewMessage from "./pages/NewMessage";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -32,8 +33,9 @@ export default function App() {
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState<null | boolean>(null);
   const { data: loggedData } = useQuery(GET_IS_LOGGED_IN);
-  const fullMatch = useRouteMatch("/posting/:id") as any;
+  const postingMatch = useRouteMatch("/posting/:id") as any;
   const editMatch = useRouteMatch("/edit/:id") as any;
+  const messageMatch = useRouteMatch("/account/messages/:id") as any;
   const [followedPostingsIds, setFollowedPostingsIds] = useState<string[]>([]);
 
   const { data: followedData } = useQuery(
@@ -67,46 +69,47 @@ export default function App() {
       <header>
         <Navigation />
       </header>
-      <main>
-        <Switch>
-          <PrivateRoute isLoggedIn={isLoggedIn} path="/newposting">
-            <NewPosting />
-          </PrivateRoute>
-          <Route path="/posting/:id">
-            <FullPosting
-              id={fullMatch ? fullMatch.params.id : null}
-              followedPostingsIds={followedPostingsIds}
-            />
-          </Route>
-          <PrivateRoute isLoggedIn={isLoggedIn} path="/account/messages">
-            <Messages />
-          </PrivateRoute>
-          <PrivateRoute isLoggedIn={isLoggedIn} path="/account/followed">
-            <Followed />
-          </PrivateRoute>
-          <PrivateRoute isLoggedIn={isLoggedIn} path="/account">
-            <Dashboard />
-          </PrivateRoute>
-          <PrivateRoute isLoggedIn={isLoggedIn} path="/edit/:id">
-            <EditPosting id={editMatch ? editMatch.params.id : null} />
-          </PrivateRoute>
-          <Route path="/filters">
-            <Filters />
-          </Route>
-          <Route path="/signin">
-            <SignIn isLoggedIn={isLoggedIn} />
-          </Route>
-          <Route path="/signup">
-            {!isLoggedIn ? <SignUp /> : <Redirect to="/account" />}
-          </Route>
-          <Route exact path="/">
-            <Home followedPostingsIds={followedPostingsIds} />
-          </Route>
-          <Route path="/">
-            <div>Page not found</div>
-          </Route>
-        </Switch>
-      </main>
+      <Switch>
+        <PrivateRoute isLoggedIn={isLoggedIn} path="/newposting">
+          <NewPosting />
+        </PrivateRoute>
+        <Route path="/posting/:id">
+          <FullPosting
+            id={postingMatch ? postingMatch.params.id : null}
+            followedPostingsIds={followedPostingsIds}
+          />
+        </Route>
+        <PrivateRoute isLoggedIn={isLoggedIn} path="/account/messages/:id">
+          <NewMessage id={messageMatch ? messageMatch.params.id : null} />
+        </PrivateRoute>
+        <PrivateRoute isLoggedIn={isLoggedIn} path="/account/messages">
+          <Messages />
+        </PrivateRoute>
+        <PrivateRoute isLoggedIn={isLoggedIn} path="/account/followed">
+          <Followed />
+        </PrivateRoute>
+        <PrivateRoute isLoggedIn={isLoggedIn} path="/account">
+          <Dashboard />
+        </PrivateRoute>
+        <PrivateRoute isLoggedIn={isLoggedIn} path="/edit/:id">
+          <EditPosting id={editMatch ? editMatch.params.id : null} />
+        </PrivateRoute>
+        <Route path="/filters">
+          <Filters />
+        </Route>
+        <Route path="/signin">
+          <SignIn isLoggedIn={isLoggedIn} />
+        </Route>
+        <Route path="/signup">
+          {!isLoggedIn ? <SignUp /> : <Redirect to="/account" />}
+        </Route>
+        <Route exact path="/">
+          <Home followedPostingsIds={followedPostingsIds} />
+        </Route>
+        <Route path="/">
+          <div>Page not found</div>
+        </Route>
+      </Switch>
       <Footer />
     </div>
   );
