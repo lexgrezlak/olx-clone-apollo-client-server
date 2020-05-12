@@ -19,7 +19,6 @@ import FullPosting from "./pages/FullPosting";
 import PrivateRoute from "./components/PrivateRoute";
 import Footer from "./components/Footer";
 import EditPosting from "./pages/EditPosting";
-import NewMessage from "./pages/NewMessage";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -79,9 +78,6 @@ export default function App() {
             followedPostingsIds={followedPostingsIds}
           />
         </Route>
-        <PrivateRoute isLoggedIn={isLoggedIn} path="/account/messages/:id">
-          <NewMessage id={messageMatch ? messageMatch.params.id : null} />
-        </PrivateRoute>
         <PrivateRoute isLoggedIn={isLoggedIn} path="/account/messages">
           <Messages />
         </PrivateRoute>
