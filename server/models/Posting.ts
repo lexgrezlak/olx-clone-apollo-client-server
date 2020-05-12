@@ -1,5 +1,8 @@
 import { Schema, Document, model } from "mongoose";
 import { IUser } from "./User";
+import validator from "validator";
+
+const CATEGORIES = ["Health", "Electronics", "Fashion"];
 
 export interface IPosting extends Document {
   title: string;
@@ -18,17 +21,20 @@ const PostingSchema = new Schema(
     title: {
       type: String,
       required: true,
+      trim: true,
       minlength: 3,
       maxlength: 30,
     },
     category: {
       type: String,
       required: true,
+      validate: (value: string) => validator.isIn(value, CATEGORIES),
     },
     description: {
       type: String,
       required: true,
-      maxlength: 200,
+      trim: true,
+      maxlength: 1000,
     },
     imageUrls: {
       type: [String],
@@ -47,12 +53,14 @@ const PostingSchema = new Schema(
     city: {
       type: String,
       required: true,
-      maxlength: 20,
+      trim: true,
+      maxlength: 30,
     },
     phone: {
-      type: Number,
+      type: String,
       required: true,
-      maxlength: 20,
+      trim: true,
+      validate: (value: string) => validator.isMobilePhone(value),
     },
     user: {
       type: Schema.Types.ObjectId,
