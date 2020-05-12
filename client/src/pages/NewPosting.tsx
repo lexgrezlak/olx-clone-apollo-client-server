@@ -14,11 +14,11 @@ import {
   CssBaseline,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
 import { ADD_POSTING } from "../graphql/queries";
 import { useField } from "../hooks";
 import UploadPhotos from "../components/UploadPhotos";
 import UploadedPhotos from "../components/UploadedPhotos";
-import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -34,8 +34,6 @@ const useStyles = makeStyles((theme) =>
     },
     submit: {
       margin: theme.spacing(3, 0, 2),
-      // marginTop: "16px",
-      // marginBottom: "8px",
     },
   })
 );
@@ -69,7 +67,7 @@ function NewPosting() {
         price: +price.value,
         condition: condition.value,
         city: city.value,
-        phone: +phone.value,
+        phone: phone.value,
       },
     });
     await client.resetStore();
@@ -108,7 +106,7 @@ function NewPosting() {
           </FormControl>
           <TextField
             margin="normal"
-            rows={4}
+            rows={5}
             multiline
             fullWidth
             variant="outlined"
