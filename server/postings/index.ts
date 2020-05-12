@@ -16,6 +16,11 @@ const cloudinaryUploader = new CloudinaryUploader({
   apiSecret: CLOUDINARY_API_SECRET,
 });
 
+const toCursorHash = (string: string) => Buffer.from(string).toString("base64");
+
+const fromCursorHash = (string: string) =>
+  Buffer.from(string, "base64").toString("ascii");
+
 export const postingTypeDefs = gql`
   type Posting {
     id: ID!
@@ -26,7 +31,7 @@ export const postingTypeDefs = gql`
     price: Int!
     condition: String!
     city: String!
-    phone: Int
+    phone: String!
     updatedAt: DateTime!
   }
 
@@ -43,11 +48,25 @@ export const postingTypeDefs = gql`
     url: String!
   }
 
+  type PageInfo {
+    hasNextPage: Boolean!
+    endCursor: String!
+  }
+
+  type PostingConnection {
+    edges: [Posting!]!
+    pageInfo: PageInfo!
+  }
+
   scalar DateTime
 
   extend type Query {
     allPostings: [Posting!]!
-    postingsByTitle(title: String!): [Posting!]!
+    postingsByTitle(
+      title: String!
+      cursor: String
+      limit: Int
+    ): PostingConnection!
     postingById(id: ID!): Posting
   }
 
@@ -60,7 +79,7 @@ export const postingTypeDefs = gql`
       price: Int!
       condition: String!
       city: String!
-      phone: Int!
+      phone: String!
     ): Posting!
 
     editPosting(
@@ -72,7 +91,7 @@ export const postingTypeDefs = gql`
       price: Int!
       condition: String!
       city: String!
-      phone: Int!
+      phone: String!
     ): Posting!
     followPosting(id: ID!): Posting!
     unfollowPosting(id: ID!): Posting!
@@ -88,20 +107,40 @@ export const postingResolvers = {
   Query: {
     allPostings: () => Posting.find({}).sort({ updatedAt: -1 }),
     postingById: async (_parent: Parent, { id }: any) => Posting.findById(id),
-    postingsByTitle: async (_parent: Parent, { title }: IPostingTitleArgs) => {
-      // first postings are the latest updated
-      if (title === "") return Posting.find({}).sort({ updatedAt: -1 });
-      // first postings are the latest updated
-
+    postingsByTitle: async (
+      _parent: Parent,
+      { title, cursor, limit = 3 }: any
+    ) => {
       const words = title.split(" ");
       const queries: any = [];
-      words.forEach((word) => {
+      words.forEach((word: string) => {
         queries.push({ title: { $regex: word, $options: "i" } });
       });
 
-      return Posting.find({ $and: queries }).sort({
-        updatedAt: -1,
+      const cursorOptions = cursor
+        ? {
+            updatedAt: {
+              $lt: fromCursorHash(cursor),
+            },
+            $and: queries,
+          }
+        : { $and: queries };
+
+      const postings = await Posting.find(cursorOptions, null, {
+        sort: { updatedAt: -1 },
+        limit: limit + 1,
       });
+
+      const hasNextPage = postings.length > limit;
+      const edges = hasNextPage ? postings.slice(0, -1) : postings;
+
+      return {
+        edges,
+        pageInfo: {
+          hasNextPage,
+          endCursor: toCursorHash(edges[edges.length - 1].updatedAt.toString()),
+        },
+      };
     },
   },
 
@@ -109,11 +148,10 @@ export const postingResolvers = {
     addPosting: async (_parent: Parent, args: any, { user }: any) => {
       if (!user) throw new AuthenticationError("Not authenticated");
       const newPosting = new Posting({ ...args });
+      user.ownPostings = user.ownPostings.concat(newPosting);
 
       try {
-        await newPosting.save();
-        user.ownPostings = user.ownPostings.concat(newPosting);
-        await user.save();
+        await Promise.all([newPosting.save(), user.save()]);
       } catch (error) {
         throw new UserInputError(error.message, { invalidArgs: args });
       }
@@ -122,9 +160,6 @@ export const postingResolvers = {
     },
 
     editPosting: async (_parent: Parent, args: any, { user }: any) => {
-      const ids = user.ownPostings.map((posting: any) => posting.id);
-      console.log(args);
-
       if (
         !user ||
         // own postings' ids
@@ -133,13 +168,11 @@ export const postingResolvers = {
         throw new AuthenticationError("Not authenticated");
 
       const newPosting = { ...args };
-      console.log(newPosting);
       const updatedPosting = await Posting.findByIdAndUpdate(
         args.id,
         newPosting,
         { new: true }
       );
-      console.log(updatedPosting);
       user.ownPostings = user.ownPostings.map((posting: any) =>
         posting.id === args.id ? updatedPosting : posting
       );

@@ -22,7 +22,7 @@ export default function Home({ followedPostingsIds }: any) {
   const filter = useField("search");
   const classes = useStyles();
   const [postings, setPostings] = useState([]);
-  const { data: postingsData } = useQuery(GET_POSTINGS_BY_TITLE, {
+  const { data } = useQuery(GET_POSTINGS_BY_TITLE, {
     variables: { title: filter.value },
     onError: (error) => {
       console.log(error);
@@ -30,10 +30,10 @@ export default function Home({ followedPostingsIds }: any) {
   });
 
   useEffect(() => {
-    if (postingsData?.postingsByTitle) {
-      setPostings(postingsData.postingsByTitle);
+    if (data?.postingsByTitle) {
+      setPostings(data.postingsByTitle.edges);
     }
-  }, [postingsData]);
+  }, [data]);
 
   return (
     <div className={classes.root}>
