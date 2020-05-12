@@ -1,27 +1,36 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
+import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
+import { Grid, Paper } from "@material-ui/core";
 import {
   GET_CURRENT_USER_ID,
   GET_CURRENT_USER_MESSAGES,
 } from "../graphql/queries";
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Divider from "@material-ui/core/Divider";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
+import MessageDialog from "../components/MessageDialog";
+import LaunchButton from "../components/LaunchButton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: "100%",
-      maxWidth: "36ch",
-      backgroundColor: theme.palette.background.paper,
+      flexGrow: 1,
+      overflow: "hidden",
+      padding: theme.spacing(0, 3),
     },
-    inline: {
-      display: "inline",
+    paper: {
+      maxWidth: 400,
+      margin: `${theme.spacing(1)}px auto`,
+      padding: theme.spacing(2),
+    },
+    misc: {
+      display: "flex",
+      justifyContent: "space-between",
+    },
+    actions: {
+      display: "flex",
+      justifyContent: "flex-end",
+      alignItems: "center",
     },
   })
 );
@@ -50,37 +59,41 @@ function Messages() {
   const userId = userIdData.currentUser.id;
 
   return (
-    <List className={classes.root}>
+    <div className={classes.root}>
       {messages.map((message: any) => (
-        <div key={message.posting.id}>
-          <ListItem alignItems="flex-start">
-            <ListItemAvatar>
+        <Paper key={message.id} className={classes.paper}>
+          <Grid container wrap="nowrap" spacing={2}>
+            <Grid item>
               <Avatar
                 alt={message.posting.title}
                 src={message.posting.imageUrls[0]}
               />
-            </ListItemAvatar>
-            <ListItemText
-              primary={message.posting.title}
-              secondary={
-                <React.Fragment>
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    className={classes.inline}
-                    color="textPrimary"
-                  >
-                    {message.fromUser === userId ? "you sent" : "you received"}
-                  </Typography>
-                  <Typography>{message.content}</Typography>
-                </React.Fragment>
-              }
-            />
-          </ListItem>
-          <Divider variant="inset" component="li" />
-        </div>
+            </Grid>
+            <Grid item xs>
+              <div className={classes.misc}>
+                <Typography variant="h6" noWrap>
+                  {message.posting.title}
+                </Typography>
+                <Typography variant="subtitle2">
+                  {userId === message.fromUser ? "sent" : "received"}
+                </Typography>
+              </div>
+              <Typography variant="body2" gutterBottom>
+                {message.content}
+              </Typography>
+              <div className={classes.actions}>
+                <LaunchButton />
+                <MessageDialog
+                  id={message.posting.id}
+                  title={message.posting.title}
+                  text="Reply"
+                />
+              </div>
+            </Grid>
+          </Grid>
+        </Paper>
       ))}
-    </List>
+    </div>
   );
 }
 
