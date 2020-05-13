@@ -8,6 +8,7 @@ import FollowButton from "./FollowButton";
 import UnfollowButton from "./UnfollowButton";
 import LaunchButton from "./LaunchButton";
 import { GET_POSTINGS_BY_TITLE } from "../graphql/queries";
+import { useQuery } from "@apollo/client";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -22,14 +23,21 @@ const useStyles = makeStyles(() =>
   })
 );
 
-function Postings({
-  postings,
-  followedPostingsIds,
-  fetchMore,
-  title,
-  cursor,
-}: any) {
+function Postings({ followedPostingsIds, title }: any) {
   const classes = useStyles();
+  const { data, loading, fetchMore } = useQuery(GET_POSTINGS_BY_TITLE, {
+    variables: { title },
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message);
+    },
+  });
+
+  if (loading) return null;
+
+  const {
+    edges: postings,
+    pageInfo: { endCursor: cursor, hasNextPage },
+  } = data.postingsByTitle;
 
   return (
     <GridList cellHeight={200} className={classes.gridList}>
@@ -56,7 +64,7 @@ function Postings({
               </div>
             }
           />
-          {i === postings.length - 1 && (
+          {hasNextPage && i === postings.length - 1 && (
             <Waypoint
               onEnter={() =>
                 fetchMore({
@@ -66,6 +74,7 @@ function Postings({
                     previousResult: any,
                     { fetchMoreResult }: any
                   ) => {
+                    console.log(fetchMoreResult);
                     if (!fetchMoreResult) return previousResult;
                     console.log(previousResult);
                     console.log(fetchMoreResult);
