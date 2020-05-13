@@ -108,7 +108,7 @@ export const postingResolvers = {
     postingById: async (_parent: Parent, { id }: any) => Posting.findById(id),
     postingsByTitle: async (
       _parent: Parent,
-      { title, cursor, limit = 3 }: any
+      { title, cursor, limit = 10 }: any
     ) => {
       const words = title.split(" ");
       const queries: any = [];
