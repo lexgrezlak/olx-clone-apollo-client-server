@@ -8,6 +8,7 @@
     "@apollo/react-hooks": "^3.1.5",
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.53",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -21,6 +22,7 @@
     "apollo-link-error": "^1.1.13",
     "apollo-link-http": "^1.5.17",
     "apollo-upload-client": "^13.0.0",
+    "formik": "^2.1.4",
     "graphql": "^15.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -29,7 +31,8 @@
     "react-scripts": "3.4.1",
     "react-waypoint": "^9.0.2",
     "styled-components": "^5.1.0",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "yup": "^0.28.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -60,6 +63,7 @@
     "@types/react-infinite-scroller": "^1.2.1",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-select": "^3.0.12",
+    "@types/yup": "^0.28.3",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^2.30.0",
     "babel-eslint": "^10.1.0",

@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -11,8 +10,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useApolloClient, useMutation } from "@apollo/client";
 import { Link as RouterLink, useHistory } from "react-router-dom";
-import { useField } from "../hooks";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
 import { SIGN_IN } from "../graphql/queries";
+import BasicInputField from "../components/BasicInputField";
+import ErrorNotification from "../components/ErrorNotification";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,18 +36,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn({ isLoggedIn }: any) {
+interface SignInProps {
+  isLoggedIn: boolean | null;
+}
+
+interface SignInFormFields {
+  email: string;
+  password: string;
+}
+
+export default function SignIn({ isLoggedIn }: SignInProps) {
   const history = useHistory();
   if (isLoggedIn) history.goBack();
-
   const classes = useStyles();
-  const email = useField("email");
-  const password = useField("password");
   const client = useApolloClient();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [signIn, { data }] = useMutation(SIGN_IN, {
     onError: (error) => {
-      console.log(error.graphQLErrors[0].message);
+      setErrorMessage(error.graphQLErrors[0].message);
     },
   });
 
@@ -53,76 +62,77 @@ export default function SignIn({ isLoggedIn }: any) {
     if (data && data.signIn) {
       const { token } = data.signIn;
       localStorage.setItem("token", token);
-      client.resetStore().then((_) => history.goBack());
+      client.resetStore().then(() => history.goBack());
     }
   }, [client, data, history]);
 
   if (isLoggedIn !== false) return null;
 
-  function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    signIn({
-      variables: { input: { email: email.value, password: password.value } },
+  function handleSubmit({ email, password }: SignInFormFields) {
+    // event.preventDefault();
+    return signIn({
+      variables: { input: { email, password } },
     });
   }
 
+  const initialValues: SignInFormFields = { email: "", password: "" };
+
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            {...email}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            id="password"
-            autoComplete="current-password"
-            {...password}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
+    <>
+      {errorMessage && <ErrorNotification message={errorMessage} />}
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Formik
+            initialValues={initialValues as any}
+            onSubmit={handleSubmit}
+            validationSchema={Yup.object().shape({
+              email: Yup.string().email().required("Required"),
+              password: Yup.string().required("Required"),
+            })}
           >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="/forgotpassword" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link variant="body2" component={RouterLink} to="/signup">
-                Don&apos;t have an account? Sign Up
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+            {({ isSubmitting }) => (
+              <Form noValidate>
+                <BasicInputField name="email" type="email" label="Email" />
+                <BasicInputField
+                  name="password"
+                  type="password"
+                  label="Password"
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  disabled={isSubmitting}
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Sign In
+                </Button>
+
+                <Grid container>
+                  <Grid item xs>
+                    <Link href="/forgotpassword" variant="body2">
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link variant="body2" component={RouterLink} to="/signup">
+                      Don&apos;t have an account? Sign Up
+                    </Link>
+                  </Grid>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </Container>
+    </>
   );
 }
