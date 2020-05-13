@@ -65,11 +65,12 @@ function Postings({ followedPostingsIds, title }: PostingsProps) {
           pageStart={0}
           loadMore={loadMore}
           hasMore={hasNextPage}
-          loader={<div>Loading...</div>}
+          loader={<div key={postings.length}>Loading...</div>}
         >
           <Grid container justify="center" spacing={2}>
             {postings.map((posting: any) => (
               <Posting
+                key={posting.id}
                 posting={posting}
                 isFollowed={followedPostingsIds.includes(posting.id)}
               />
