@@ -34,7 +34,6 @@ export default function App() {
   const { data: loggedData } = useQuery(GET_IS_LOGGED_IN);
   const postingMatch = useRouteMatch("/posting/:id") as any;
   const editMatch = useRouteMatch("/edit/:id") as any;
-  const messageMatch = useRouteMatch("/account/messages/:id") as any;
   const [followedPostingsIds, setFollowedPostingsIds] = useState<string[]>([]);
 
   const { data: followedData } = useQuery(

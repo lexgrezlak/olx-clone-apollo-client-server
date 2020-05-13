@@ -105,7 +105,6 @@ export const postingTypeDefs = gql`
 export const postingResolvers = {
   DateTime: GraphQLDateTime,
   Query: {
-    allPostings: () => Posting.find({}).sort({ updatedAt: -1 }),
     postingById: async (_parent: Parent, { id }: any) => Posting.findById(id),
     postingsByTitle: async (
       _parent: Parent,
@@ -133,12 +132,17 @@ export const postingResolvers = {
 
       const hasNextPage = postings.length > limit;
       const edges = hasNextPage ? postings.slice(0, -1) : postings;
+      const endCursor = toCursorHash(
+        edges[edges.length - 1]
+          ? edges[edges.length - 1].updatedAt.toString()
+          : ""
+      );
 
       return {
         edges,
         pageInfo: {
           hasNextPage,
-          endCursor: toCursorHash(edges[edges.length - 1].updatedAt.toString()),
+          endCursor,
         },
       };
     },

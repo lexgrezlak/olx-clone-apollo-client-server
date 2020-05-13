@@ -5,6 +5,7 @@ import validator from "validator";
 const CATEGORIES = ["Health", "Electronics", "Fashion"];
 
 export interface IPosting extends Document {
+  updatedAt: any;
   title: string;
   category: string;
   description: string;

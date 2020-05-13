@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import { useField } from "../hooks";
-import { GET_ALL_POSTINGS, GET_POSTINGS_BY_TITLE } from "../graphql/queries";
+import { GET_POSTINGS_BY_TITLE } from "../graphql/queries";
 import Search from "../components/Search";
 import Postings from "../components/Postings";
 
@@ -21,8 +21,9 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Home({ followedPostingsIds }: any) {
   const filter = useField("search");
   const classes = useStyles();
+  const [cursor, setCursor] = useState();
   const [postings, setPostings] = useState([]);
-  const { data } = useQuery(GET_POSTINGS_BY_TITLE, {
+  const { data, fetchMore } = useQuery(GET_POSTINGS_BY_TITLE, {
     variables: { title: filter.value },
     onError: (error) => {
       console.log(error);
@@ -31,14 +32,22 @@ export default function Home({ followedPostingsIds }: any) {
 
   useEffect(() => {
     if (data?.postingsByTitle) {
-      setPostings(data.postingsByTitle.edges);
+      const { postingsByTitle } = data;
+      setPostings(postingsByTitle.edges);
+      setCursor(postingsByTitle.pageInfo.endCursor);
     }
   }, [data]);
 
   return (
     <div className={classes.root}>
       <Search filter={filter} />
-      <Postings postings={postings} followedPostingsIds={followedPostingsIds} />
+      <Postings
+        postings={postings}
+        followedPostingsIds={followedPostingsIds}
+        fetchMore={fetchMore}
+        title={filter.value}
+        cursor={cursor}
+      />
     </div>
   );
 }

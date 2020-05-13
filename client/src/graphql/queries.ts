@@ -31,13 +31,17 @@ export const SIGN_UP = gql`
 `;
 
 export const GET_POSTINGS_BY_TITLE = gql`
-  query PostingsByTitle($title: String!) {
-    postingsByTitle(title: $title) {
+  query PostingsByTitle($title: String!, $cursor: String) {
+    postingsByTitle(title: $title, cursor: $cursor) {
       edges {
         title
         id
         imageUrls
         price
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }
@@ -83,28 +87,6 @@ export const GET_CURRENT_USER_FOLLOWED_POSTINGS = gql`
       imageUrls
       price
       updatedAt
-    }
-  }
-`;
-
-export const GET_ALL_POSTINGS = gql`
-  query AllPostings {
-    allPostings {
-      id
-      title
-      imageUrls
-      price
-    }
-  }
-`;
-
-export const GET_CURRENT_USER_POSTINGS = gql`
-  query CurrentUserPostings {
-    currentUserPostings {
-      id
-      title
-      imageUrls
-      price
     }
   }
 `;
