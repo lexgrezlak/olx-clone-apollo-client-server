@@ -1,46 +1,6 @@
 import React from "react";
-import {
-  createStyles,
-  fade,
-  Theme,
-  makeStyles,
-} from "@material-ui/core/styles";
-import TextField, { TextFieldProps } from "@material-ui/core/TextField";
-import { OutlinedInputProps } from "@material-ui/core/OutlinedInput";
-
-const useStylesReddit = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      border: "1px solid #e2e2e1",
-      overflow: "hidden",
-      borderRadius: 4,
-      backgroundColor: "#fcfcfb",
-      transition: theme.transitions.create(["border-color", "box-shadow"]),
-      "&:hover": {
-        backgroundColor: "#fff",
-      },
-      "&$focused": {
-        backgroundColor: "#fff",
-        boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
-        borderColor: theme.palette.primary.main,
-      },
-    },
-    focused: {},
-  })
-);
-
-function RedditTextField(props: TextFieldProps) {
-  const classes = useStylesReddit();
-
-  return (
-    <TextField
-      InputProps={
-        { classes, disableUnderline: true } as Partial<OutlinedInputProps>
-      }
-      {...props}
-    />
-  );
-}
+import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
+import RedditTextField from "./RedditTextField";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,7 +14,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function Search({ filter }: any) {
+interface SearchProps {
+  filter: {
+    value: string;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    type: string;
+  };
+}
+
+function Search({ filter }: SearchProps) {
   const classes = useStyles();
 
   return (
@@ -68,3 +36,5 @@ export default function Search({ filter }: any) {
     />
   );
 }
+
+export default Search;
