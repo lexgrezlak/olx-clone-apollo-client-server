@@ -41,11 +41,7 @@ function Posting({ posting, isFollowed }: any) {
         />
         <div className={classes.bottom}>
           <div className={classes.header}>
-            <CardHeader
-              noWrap
-              title={`$${posting.price}`}
-              subheader={posting.title}
-            />
+            <CardHeader title={`$${posting.price}`} subheader={posting.title} />
           </div>
           <div className={classes.action}>
             <LaunchButton id={posting.id} />
