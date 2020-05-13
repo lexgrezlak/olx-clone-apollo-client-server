@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import React from "react";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import { useField } from "../hooks";
-import { GET_POSTINGS_BY_TITLE } from "../graphql/queries";
 import Search from "../components/Search";
 import Postings from "../components/Postings";
 
@@ -18,7 +16,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function Home({ followedPostingsIds }: any) {
+interface HomeProps {
+  followedPostingsIds: string[];
+}
+
+function Home({ followedPostingsIds }: HomeProps) {
   const filter = useField("search");
   const classes = useStyles();
 
@@ -32,3 +34,5 @@ export default function Home({ followedPostingsIds }: any) {
     </div>
   );
 }
+
+export default Home;
