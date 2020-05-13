@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { GET_CURRENT_USER_FOLLOWED_POSTINGS } from "../graphql/queries";
 import LastUpdated from "../components/LastUpdated";
 import UnfollowButton from "../components/UnfollowButton";
+import LaunchButton from "../components/LaunchButton";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,14 +80,7 @@ export default function Followed() {
                   <LastUpdated updatedAt={posting.updatedAt} />
                 </CardContent>
                 <div className={classes.controls}>
-                  <IconButton
-                    aria-label={`open the posting: ${posting.title}`}
-                    className={classes.launch}
-                    component={Link}
-                    to={`/posting/${posting.id}`}
-                  >
-                    <LaunchIcon />
-                  </IconButton>
+                  <LaunchButton id={posting.id} />
                   <UnfollowButton
                     postingTitle={posting.title}
                     postingId={posting.id}
