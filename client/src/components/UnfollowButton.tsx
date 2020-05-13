@@ -58,7 +58,7 @@ function UnfollowButton({ postingId, postingTitle }: any) {
       className={classes.icon}
       onClick={() => handleUnfollow(postingId)}
     >
-      <Star />
+      <Star fontSize="large" />
     </IconButton>
   );
 }

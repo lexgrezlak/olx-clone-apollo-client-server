@@ -33,7 +33,7 @@ export default function PhonePopover({ phone }: any) {
   return (
     <div>
       <IconButton onClick={handleClick} aria-label="see the phone number">
-        <PhoneIcon />
+        <PhoneIcon fontSize="large" />
       </IconButton>
       <Popover
         id={id}

@@ -59,7 +59,7 @@ function FollowButton({ postingId, postingTitle }: any) {
       className={classes.icon}
       onClick={() => handleFollow(postingId)}
     >
-      <StarBorder />
+      <StarBorder fontSize="large" />
     </IconButton>
   );
 }

@@ -22,7 +22,7 @@ function LaunchButton({ id }: any) {
       component={Link}
       to={`/posting/${id}`}
     >
-      <LaunchIcon />
+      <LaunchIcon fontSize="large" />
     </IconButton>
   );
 }
