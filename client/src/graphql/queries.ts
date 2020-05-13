@@ -1,5 +1,14 @@
 import { gql } from "@apollo/client";
 
+const POSTING_PREVIEW = gql`
+  fragment PostingPreview on Posting {
+    id
+    title
+    price
+    imageUrls
+  }
+`;
+
 export const GET_IS_LOGGED_IN = gql`
   query IsLoggedIn {
     isLoggedIn
@@ -62,33 +71,26 @@ export const GET_CURRENT_USER = gql`
       email
       name
       ownPostings {
-        id
-        title
-        imageUrls
-        price
+        ...PostingPreview
         updatedAt
       }
       followedPostings {
-        id
-        title
-        imageUrls
-        price
+        ...PostingPreview
         updatedAt
       }
     }
   }
+  ${POSTING_PREVIEW}
 `;
 
 export const GET_CURRENT_USER_FOLLOWED_POSTINGS = gql`
   query CurrentUserFollowedPostings {
     currentUserFollowedPostings {
-      id
-      title
-      imageUrls
-      price
+      ...PostingPreview
       updatedAt
     }
   }
+  ${POSTING_PREVIEW}
 `;
 
 export const GET_CURRENT_USER_AND_OWN_POSTINGS = gql`
@@ -97,14 +99,12 @@ export const GET_CURRENT_USER_AND_OWN_POSTINGS = gql`
       name
       email
       ownPostings {
-        id
-        title
-        price
+        ...PostingPreview
         updatedAt
-        imageUrls
       }
     }
   }
+  ${POSTING_PREVIEW}
 `;
 
 export const FOLLOW_POSTING = gql`
@@ -191,17 +191,15 @@ export const GET_CURRENT_USER_MESSAGES = gql`
 export const GET_POSTING_BY_ID = gql`
   query PostingById($id: ID!) {
     postingById(id: $id) {
-      id
-      title
+      ...PostingPreview
       category
       description
-      imageUrls
-      price
       condition
       city
       phone
     }
   }
+  ${POSTING_PREVIEW}
 `;
 
 export const EDIT_POSTING = gql`
