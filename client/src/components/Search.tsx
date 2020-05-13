@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     margin: {
       margin: theme.spacing(0.05),
+      marginBottom: theme.spacing(1),
     },
   })
 );

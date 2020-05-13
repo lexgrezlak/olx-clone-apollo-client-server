@@ -1,30 +1,27 @@
 import React from "react";
-import GridListTile from "@material-ui/core/GridListTile";
-import GridListTileBar from "@material-ui/core/GridListTileBar";
-import GridList from "@material-ui/core/GridList";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { useQuery } from "@apollo/client";
 import InfiniteScroll from "react-infinite-scroller";
-import { CircularProgress } from "@material-ui/core";
-import FollowButton from "./FollowButton";
-import UnfollowButton from "./UnfollowButton";
-import LaunchButton from "./LaunchButton";
+import { CircularProgress, Container, Grid } from "@material-ui/core";
 import { GET_POSTINGS_BY_TITLE } from "../graphql/queries";
+import Posting from "./Posting";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme) =>
   createStyles({
-    gridList: {
-      width: 500,
-      height: "auto",
-      transform: "translateZ(0)",
-    },
-    action: {
-      display: "flex",
+    root: {
+      flexGrow: 1,
+      overflow: "hidden",
+      padding: theme.spacing(2),
     },
   })
 );
 
-function Postings({ followedPostingsIds, title }: any) {
+interface PostingsProps {
+  followedPostingsIds: string[];
+  title: string;
+}
+
+function Postings({ followedPostingsIds, title }: PostingsProps) {
   const classes = useStyles();
   const { data, loading, fetchMore } = useQuery(GET_POSTINGS_BY_TITLE, {
     variables: { title },
@@ -40,7 +37,7 @@ function Postings({ followedPostingsIds, title }: any) {
     pageInfo: { endCursor: cursor, hasNextPage },
   } = data.postingsByTitle;
 
-  const loadMore = async () => {
+  async function loadMore() {
     await fetchMore({
       query: GET_POSTINGS_BY_TITLE,
       variables: { cursor, title },
@@ -59,43 +56,28 @@ function Postings({ followedPostingsIds, title }: any) {
         };
       },
     });
-  };
+  }
 
   return (
-    <InfiniteScroll
-      pageStart={0}
-      loadMore={loadMore}
-      hasMore={hasNextPage}
-      loader={<div>Loading...</div>}
-    >
-      <GridList cellHeight={200} className={classes.gridList}>
-        {postings.map((posting: any) => (
-          <GridListTile key={posting.id} cols={1} rows={1}>
-            <img src={posting.imageUrls[0] || ""} alt={posting.title} />
-            <GridListTileBar
-              title={`$${posting.price}`}
-              subtitle={<span>{posting.title}</span>}
-              actionIcon={
-                <div className={classes.action}>
-                  <LaunchButton id={posting.id} />
-                  {followedPostingsIds.includes(posting.id) ? (
-                    <UnfollowButton
-                      postingTitle={posting.title}
-                      postingId={posting.id}
-                    />
-                  ) : (
-                    <FollowButton
-                      postingTitle={posting.title}
-                      postingId={posting.id}
-                    />
-                  )}
-                </div>
-              }
-            />
-          </GridListTile>
-        ))}
-      </GridList>
-    </InfiniteScroll>
+    <Container maxWidth="md">
+      <div className={classes.root}>
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={loadMore}
+          hasMore={hasNextPage}
+          loader={<div>Loading...</div>}
+        >
+          <Grid container justify="center" spacing={2}>
+            {postings.map((posting: any) => (
+              <Posting
+                posting={posting}
+                isFollowed={followedPostingsIds.includes(posting.id)}
+              />
+            ))}
+          </Grid>
+        </InfiniteScroll>
+      </div>
+    </Container>
   );
 }
 
