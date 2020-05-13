@@ -46,7 +46,11 @@ function NewPosting() {
   const city = useField("text");
   const [urls, setUrls] = useState<string[]>([]);
   const category = useField("radio");
-  const [addPosting] = useMutation(ADD_POSTING);
+  const [addPosting] = useMutation(ADD_POSTING, {
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message);
+    },
+  });
   const condition = useField("radio");
   const history = useHistory();
   const client = useApolloClient();
@@ -58,7 +62,7 @@ function NewPosting() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
-    const addedPosting = await addPosting({
+    const response = await addPosting({
       variables: {
         title: title.value,
         category: category.value,
@@ -71,7 +75,7 @@ function NewPosting() {
       },
     });
     await client.resetStore();
-    history.push(`/posting/${addedPosting.data.addPosting.id}`);
+    history.push(`/posting/${response.data.addPosting.id}`);
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -131,9 +135,9 @@ function NewPosting() {
             {
               // @ts-ignore
               <Select labelId="condition-label" id="condition" {...condition}>
-                {CONDITIONS.map((thisCondition) => (
-                  <MenuItem key={thisCondition} value={thisCondition}>
-                    {thisCondition}
+                {CONDITIONS.map((CONDITION) => (
+                  <MenuItem key={CONDITION} value={CONDITION}>
+                    {CONDITION}
                   </MenuItem>
                 ))}
               </Select>

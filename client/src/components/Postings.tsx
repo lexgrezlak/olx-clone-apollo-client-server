@@ -69,7 +69,7 @@ function Postings({ followedPostingsIds, title }: any) {
       loader={<div>Loading...</div>}
     >
       <GridList cellHeight={200} className={classes.gridList}>
-        {postings.map((posting: any, i: number) => (
+        {postings.map((posting: any) => (
           <GridListTile key={posting.id} cols={1} rows={1}>
             <img src={posting.imageUrls[0] || ""} alt={posting.title} />
             <GridListTileBar
