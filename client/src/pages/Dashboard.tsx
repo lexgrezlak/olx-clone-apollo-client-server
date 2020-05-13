@@ -3,10 +3,7 @@ import Typography from "@material-ui/core/Typography";
 import { useQuery } from "@apollo/client";
 import { Container, createStyles } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  GET_CURRENT_USER,
-  GET_CURRENT_USER_AND_OWN_POSTINGS,
-} from "../graphql/queries";
+import { GET_CURRENT_USER_AND_OWN_POSTINGS } from "../graphql/queries";
 import SignOutButton from "../components/SignOutButton";
 import OwnPostings from "../components/OwnPostings";
 

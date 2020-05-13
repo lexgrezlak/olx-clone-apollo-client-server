@@ -51,6 +51,7 @@ function NewPosting() {
       console.log(error.graphQLErrors[0].message);
     },
   });
+
   const condition = useField("radio");
   const history = useHistory();
   const client = useApolloClient();
@@ -74,9 +75,11 @@ function NewPosting() {
         phone: phone.value,
       },
     });
+
     await client.resetStore();
     history.push(`/posting/${response.data.addPosting.id}`);
   }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />

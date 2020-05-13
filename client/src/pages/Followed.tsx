@@ -1,16 +1,8 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  createStyles,
-  IconButton,
-} from "@material-ui/core";
+import { Card, CardContent, CardMedia, createStyles } from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useQuery } from "@apollo/client";
-import LaunchIcon from "@material-ui/icons/Launch";
-import { Link } from "react-router-dom";
 import { GET_CURRENT_USER_FOLLOWED_POSTINGS } from "../graphql/queries";
 import LastUpdated from "../components/LastUpdated";
 import UnfollowButton from "../components/UnfollowButton";
