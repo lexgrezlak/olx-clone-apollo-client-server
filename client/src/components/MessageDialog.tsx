@@ -23,7 +23,6 @@ export default function MessageDialog({ title, id, text }: any) {
   const classes = useStyles();
   const [content, setContent] = useState("");
   const [sendMessage] = useMutation(SEND_MESSAGE, {
-    // refetchQueries: [{ query: GET_CURRENT_USER_MESSAGES }],
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
@@ -31,7 +30,6 @@ export default function MessageDialog({ title, id, text }: any) {
       const dataInStore = store.readQuery({
         query: GET_CURRENT_USER_MESSAGES,
       }) as any;
-      console.log(dataInStore);
       store.writeQuery({
         query: GET_CURRENT_USER_MESSAGES,
         data: {
@@ -54,7 +52,7 @@ export default function MessageDialog({ title, id, text }: any) {
   }
 
   async function handleSend() {
-    await sendMessage({
+    sendMessage({
       variables: {
         postingId: id,
         content,
