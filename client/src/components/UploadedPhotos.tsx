@@ -3,8 +3,7 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
+import DeletePhotoButton from "./DeletePhotoButton";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -33,7 +32,7 @@ const useStyles = makeStyles(() =>
 
 type Props = { urls: string[]; setUrls: Function };
 
-export default function Photos({ urls, setUrls }: Props) {
+export default function UploadedPhotos({ urls, setUrls }: Props) {
   const classes = useStyles();
 
   return (
@@ -45,15 +44,11 @@ export default function Photos({ urls, setUrls }: Props) {
             <GridListTileBar
               className={classes.tileBar}
               actionIcon={
-                <IconButton
-                  onClick={() =>
-                    setUrls(urls.filter((oldUrl: string) => oldUrl !== url))
-                  }
-                  aria-label="delete button"
-                  className={classes.icon}
-                >
-                  <DeleteIcon />
-                </IconButton>
+                <DeletePhotoButton
+                  urls={urls}
+                  setUrls={setUrls}
+                  deletedUrl={url}
+                />
               }
             />
           </GridListTile>
