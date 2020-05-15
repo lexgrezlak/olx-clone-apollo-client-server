@@ -6,7 +6,9 @@
   "scripts": {
     "test": "NODE_ENV=test jest --verbose --runInBand",
     "dev": "ts-node-dev index.ts",
-    "start": "ts-node index.ts"
+    "start": "node build/index.js",
+    "build": "tsc",
+    "postinstall": "npm run build"
   },
   "author": "",
   "license": "ISC",
