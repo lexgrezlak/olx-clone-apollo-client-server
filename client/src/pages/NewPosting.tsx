@@ -1,24 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { useApolloClient, useMutation } from "@apollo/client";
 import {
   Button,
-  TextField,
   Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   createStyles,
   Container,
   CssBaseline,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
 import { ADD_POSTING } from "../graphql/queries";
-import { useField } from "../hooks";
-import UploadPhotos from "../components/UploadPhotos";
-import UploadedPhotos from "../components/UploadedPhotos";
+import MyTextField from "../components/MyTextField";
+import MySelect from "../components/MySelect";
+import MyUploadField from "../components/MyUploadField";
+import {
+  invalidValue,
+  maxMessage,
+  minMessage,
+  requiredMessage,
+} from "../common/validationMessages";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -38,47 +41,102 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
+export interface NewPostingFormFields {
+  title: string;
+  category: string;
+  description: string;
+  price: string;
+  condition: string;
+  phone: string;
+  city: string;
+  urls: string[];
+}
+
+export const CATEGORIES = ["Fashion", "Electronics", "Health"];
+export const CONDITIONS = ["New", "Used"];
+
+export const postingValidationSchema = Yup.object().shape({
+  title: Yup.string()
+    .min(2, minMessage(2))
+    .max(15, maxMessage(15))
+    .required(requiredMessage),
+  category: Yup.string()
+    .oneOf(CATEGORIES, invalidValue("category"))
+    .required(requiredMessage),
+  description: Yup.string()
+    .min(10, minMessage(10))
+    .max(250, maxMessage(250))
+    .required(requiredMessage),
+  price: Yup.number()
+    .positive(invalidValue("price"))
+    .integer(invalidValue("price"))
+    .required(requiredMessage),
+  condition: Yup.string()
+    .oneOf(CONDITIONS, invalidValue("condition"))
+    .required(requiredMessage),
+  phone: Yup.number()
+    .positive(invalidValue("phone number"))
+    .integer(invalidValue("phone number"))
+    .required(requiredMessage),
+  urls: Yup.array()
+    .of(Yup.string())
+    .min(1, "Minimum 1 photo allowed")
+    .max(2, "Maximum 2 photos allowed")
+    .required(requiredMessage),
+  city: Yup.string()
+    .min(2, minMessage(2))
+    .max(50, maxMessage(2))
+    .required(requiredMessage),
+});
+
 function NewPosting() {
-  const title = useField("text");
-  const description = useField("text");
-  const price = useField("number");
-  const phone = useField("tel");
-  const city = useField("text");
-  const [urls, setUrls] = useState<string[]>([]);
-  const category = useField("radio");
   const [addPosting] = useMutation(ADD_POSTING, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
   });
 
-  const condition = useField("radio");
   const history = useHistory();
   const client = useApolloClient();
   const classes = useStyles();
 
-  const CATEGORIES = ["Fashion", "Electronics", "Health"];
-  const CONDITIONS = ["New", "Used"];
-
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-
+  async function handleSubmit({
+    title,
+    category,
+    description,
+    urls: imageUrls,
+    price,
+    condition,
+    city,
+    phone,
+  }: NewPostingFormFields) {
     const response = await addPosting({
       variables: {
-        title: title.value,
-        category: category.value,
-        description: description.value,
-        imageUrls: urls,
-        price: +price.value,
-        condition: condition.value,
-        city: city.value,
-        phone: phone.value,
+        title,
+        category,
+        description,
+        imageUrls,
+        price: +price,
+        condition,
+        city,
+        phone,
       },
     });
 
     await client.resetStore();
     history.push(`/posting/${response.data.addPosting.id}`);
   }
+
+  const initialValues: NewPostingFormFields = {
+    title: "",
+    category: "",
+    description: "",
+    price: "",
+    condition: "",
+    phone: "",
+    city: "",
+    urls: [],
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -87,92 +145,60 @@ function NewPosting() {
         <Typography component="h1" variant="h5">
           Add new posting
         </Typography>
-        <form onSubmit={handleSubmit} noValidate className={classes.form}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            variant="outlined"
-            label="Title"
-            {...title}
-          />
-          <FormControl margin="normal" fullWidth variant="outlined">
-            <InputLabel id="category-label" required>
-              Category
-            </InputLabel>
-            {
-              // @ts-ignore
-              <Select labelId="category-label" id="category" {...category}>
-                {CATEGORIES.map((CATEGORY: string) => (
-                  <MenuItem key={CATEGORY} value={CATEGORY}>
-                    {CATEGORY}
-                  </MenuItem>
-                ))}
-              </Select>
-            }
-          </FormControl>
-          <TextField
-            margin="normal"
-            rows={5}
-            multiline
-            fullWidth
-            variant="outlined"
-            label="Description"
-            {...description}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            required
-            variant="outlined"
-            label="Price"
-            {...price}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">$</InputAdornment>
-              ),
-            }}
-          />
-          <FormControl margin="normal" fullWidth variant="outlined" required>
-            <InputLabel id="category-label">Condition</InputLabel>
-            {
-              // @ts-ignore
-              <Select labelId="condition-label" id="condition" {...condition}>
-                {CONDITIONS.map((CONDITION) => (
-                  <MenuItem key={CONDITION} value={CONDITION}>
-                    {CONDITION}
-                  </MenuItem>
-                ))}
-              </Select>
-            }
-          </FormControl>
-          <TextField
-            margin="normal"
-            fullWidth
-            variant="outlined"
-            label="Phone"
-            {...phone}
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            variant="outlined"
-            label="City"
-            {...city}
-          />
-          <UploadPhotos urls={urls} setUrls={setUrls} />
-          <UploadedPhotos urls={urls} setUrls={setUrls} />
-          <Button
-            color="primary"
-            size="large"
-            variant="contained"
-            type="submit"
-            fullWidth
-            className={classes.submit}
-          >
-            Add
-          </Button>
-        </form>
+        <Formik
+          initialValues={initialValues as any}
+          onSubmit={handleSubmit}
+          validationSchema={postingValidationSchema}
+        >
+          {({ isSubmitting }) => (
+            <Form noValidate className={classes.form}>
+              <MyTextField name="title" type="title" label="Title" autoFocus />
+              <MySelect
+                name="category"
+                type="text"
+                label="Category"
+                selectValues={CATEGORIES}
+              />
+              <MyTextField
+                name="description"
+                type="text"
+                label="Description"
+                multiline
+                rows={5}
+              />
+              <MyTextField
+                name="price"
+                type="number"
+                label="Price"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">$</InputAdornment>
+                  ),
+                }}
+              />
+              <MySelect
+                name="condition"
+                type="text"
+                label="Condition"
+                selectValues={CONDITIONS}
+              />
+              <MyTextField name="phone" type="tel" label="Phone" />
+              <MyTextField name="city" type="text" label="City" />
+              <MyUploadField name="urls" />
+              <Button
+                color="primary"
+                size="large"
+                variant="contained"
+                type="submit"
+                fullWidth
+                className={classes.submit}
+                disabled={isSubmitting}
+              >
+                Add
+              </Button>
+            </Form>
+          )}
+        </Formik>
       </div>
     </Container>
   );

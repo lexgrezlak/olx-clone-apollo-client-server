@@ -13,7 +13,7 @@ import { Link as RouterLink, useHistory } from "react-router-dom";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { SIGN_IN } from "../graphql/queries";
-import BasicInputField from "../components/BasicInputField";
+import MyTextField from "../components/MyTextField";
 import ErrorNotification from "../components/ErrorNotification";
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +62,7 @@ export default function SignIn({ isLoggedIn }: SignInProps) {
     if (data && data.signIn) {
       const { token } = data.signIn;
       localStorage.setItem("token", token);
-      client.resetStore().then(() => history.goBack());
+      client.resetStore();
     }
   }, [client, data, history]);
 
@@ -70,6 +70,7 @@ export default function SignIn({ isLoggedIn }: SignInProps) {
 
   function handleSubmit({ email, password }: SignInFormFields) {
     // event.preventDefault();
+    console.log(email);
     return signIn({
       variables: { input: { email, password } },
     });
@@ -98,13 +99,14 @@ export default function SignIn({ isLoggedIn }: SignInProps) {
             })}
           >
             {({ isSubmitting }) => (
-              <Form noValidate>
-                <BasicInputField name="email" type="email" label="Email" />
-                <BasicInputField
-                  name="password"
-                  type="password"
-                  label="Password"
+              <Form noValidate className={classes.form}>
+                <MyTextField
+                  name="email"
+                  type="email"
+                  label="Email"
+                  autoFocus
                 />
+                <MyTextField name="password" type="password" label="Password" />
                 <Button
                   type="submit"
                   fullWidth

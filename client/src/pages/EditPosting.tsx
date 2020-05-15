@@ -3,21 +3,19 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import {
   Button,
-  TextField,
   Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   createStyles,
   Container,
   CssBaseline,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
+import { Form, Formik } from "formik";
 import { EDIT_POSTING, GET_POSTING_BY_ID } from "../graphql/queries";
-import UploadPhotos from "../components/UploadPhotos";
-import UploadedPhotos from "../components/UploadedPhotos";
+import MyTextField from "../components/MyTextField";
+import MySelect from "../components/MySelect";
+import MyUploadField from "../components/MyUploadField";
+import { NewPostingFormFields, postingValidationSchema } from "./NewPosting";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -32,7 +30,6 @@ const useStyles = makeStyles((theme) =>
       marginTop: theme.spacing(1),
     },
     submit: {
-      // margin: theme.spacing(3, 0, 2),
       marginTop: "16px",
       marginBottom: "8px",
     },
@@ -40,46 +37,68 @@ const useStyles = makeStyles((theme) =>
 );
 
 function EditPosting({ id }: any) {
-  const { data, loading } = useQuery(GET_POSTING_BY_ID, {
+  const { data, loading, error } = useQuery(GET_POSTING_BY_ID, {
     variables: { id },
-    onError: (error) => {
-      console.log(error.graphQLErrors[0].message);
-    },
   });
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [phone, setPhone] = useState("");
-  const [city, setCity] = useState("");
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [category, setCategory] = useState("");
-  const [condition, setCondition] = useState("");
+
   const history = useHistory();
   const client = useApolloClient();
   const classes = useStyles();
   const [editPosting] = useMutation(EDIT_POSTING);
+  const [initialValues, setInitialValues] = useState<NewPostingFormFields>({
+    title: "",
+    category: "",
+    description: "",
+    price: "",
+    condition: "",
+    phone: "",
+    city: "",
+    urls: [],
+  });
 
   useEffect(() => {
     if (data?.postingById) {
-      const { postingById: posting } = data;
-      setTitle(posting.title);
-      setCategory(posting.category);
-      setDescription(posting.description);
-      setPrice(posting.price);
-      setCondition(posting.condition);
-      setPhone(posting.phone);
-      setCity(posting.city);
-      setImageUrls(posting.imageUrls);
+      const {
+        postingById: {
+          title,
+          category,
+          description,
+          price,
+          condition,
+          phone,
+          city,
+          imageUrls: urls,
+        },
+      } = data;
+
+      setInitialValues({
+        title,
+        category,
+        description,
+        price,
+        condition,
+        phone,
+        city,
+        urls,
+      });
     }
   }, [data]);
 
   if (loading) return null;
+  if (error) return <div>Something went wrong...</div>;
   const CATEGORIES = ["Fashion", "Electronics", "Health"];
   const CONDITIONS = ["New", "Used"];
 
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-
+  async function handleSubmit({
+    title,
+    category,
+    description,
+    urls: imageUrls,
+    price,
+    condition,
+    city,
+    phone,
+  }: NewPostingFormFields) {
     const editedPosting = await editPosting({
       variables: {
         id,
@@ -97,121 +116,70 @@ function EditPosting({ id }: any) {
     history.push(`/posting/${editedPosting.data.editPosting.id}`);
   }
 
+  console.log(initialValues);
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Edit this posting
+          Add new posting
         </Typography>
-        <form noValidate onSubmit={handleSubmit} className={classes.form}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            variant="outlined"
-            label="Title"
-            value={title}
-            onChange={({ target: { value } }: any) => setTitle(value)}
-            type="text"
-          />
-          <FormControl margin="normal" fullWidth variant="outlined">
-            <InputLabel id="category-label" required>
-              Category
-            </InputLabel>
-            {
-              // @ts-ignore
-              <Select
-                labelId="category-label"
-                id="category"
-                value={category}
-                type="radio"
-                onChange={({ target: { value } }: any) => setCategory(value)}
+        <Formik
+          initialValues={initialValues as any}
+          onSubmit={handleSubmit}
+          enableReinitialize
+          validationSchema={postingValidationSchema}
+        >
+          {({ isSubmitting }) => (
+            <Form noValidate className={classes.form}>
+              <MyTextField name="title" type="title" label="Title" autoFocus />
+              <MySelect
+                name="category"
+                type="text"
+                label="Category"
+                selectValues={CATEGORIES}
+              />
+              <MyTextField
+                name="description"
+                type="text"
+                label="Description"
+                multiline
+                rows={5}
+              />
+              <MyTextField
+                name="price"
+                type="number"
+                label="Price"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">$</InputAdornment>
+                  ),
+                }}
+              />
+              <MySelect
+                name="condition"
+                type="text"
+                label="Condition"
+                selectValues={CONDITIONS}
+              />
+              <MyTextField name="phone" type="tel" label="Phone" />
+              <MyTextField name="city" type="text" label="City" />
+              <MyUploadField name="urls" />
+              <Button
+                color="primary"
+                size="large"
+                variant="contained"
+                type="submit"
+                fullWidth
+                className={classes.submit}
+                disabled={isSubmitting}
               >
-                {CATEGORIES.map((CATEGORY: string) => (
-                  <MenuItem key={CATEGORY} value={CATEGORY}>
-                    {CATEGORY}
-                  </MenuItem>
-                ))}
-              </Select>
-            }
-          </FormControl>
-          <TextField
-            margin="normal"
-            rows={5}
-            multiline
-            fullWidth
-            variant="outlined"
-            label="Description"
-            type="text"
-            value={description}
-            onChange={({ target: { value } }: any) => setDescription(value)}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            required
-            variant="outlined"
-            label="Price"
-            type="number"
-            value={price}
-            onChange={({ target: { value } }: any) => setPrice(value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">$</InputAdornment>
-              ),
-            }}
-          />
-          <FormControl margin="normal" fullWidth variant="outlined" required>
-            <InputLabel id="category-label">Condition</InputLabel>
-            {
-              // @ts-ignore
-              <Select
-                labelId="condition-label"
-                id="condition"
-                value={condition}
-                type="radio"
-                onChange={({ target: { value } }: any) => setCondition(value)}
-              >
-                {CONDITIONS.map((thisCondition) => (
-                  <MenuItem key={thisCondition} value={thisCondition}>
-                    {thisCondition}
-                  </MenuItem>
-                ))}
-              </Select>
-            }
-          </FormControl>
-          <TextField
-            margin="normal"
-            fullWidth
-            variant="outlined"
-            label="Phone"
-            type="tel"
-            value={phone}
-            onChange={({ target: { value } }: any) => setPhone(value)}
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            variant="outlined"
-            label="City"
-            type="text"
-            value={city}
-            onChange={({ target: { value } }: any) => setCity(value)}
-          />
-          <UploadPhotos urls={imageUrls} setUrls={setImageUrls} />
-          <UploadedPhotos urls={imageUrls} setUrls={setImageUrls} />
-          <Button
-            color="primary"
-            size="large"
-            variant="contained"
-            type="submit"
-            fullWidth
-            className={classes.submit}
-          >
-            Add
-          </Button>
-        </form>
+                Add
+              </Button>
+            </Form>
+          )}
+        </Formik>
       </div>
     </Container>
   );

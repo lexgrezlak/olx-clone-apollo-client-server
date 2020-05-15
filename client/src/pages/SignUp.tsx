@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -11,8 +10,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useApolloClient, useMutation } from "@apollo/client";
 import { Link as RouterLink, useHistory } from "react-router-dom";
-import { useField } from "../hooks";
+import * as Yup from "yup";
+import { Form, Formik } from "formik";
 import { SIGN_UP } from "../graphql/queries";
+import ErrorNotification from "../components/ErrorNotification";
+import MyTextField from "../components/MyTextField";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,16 +36,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+interface SignUpFormFields {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+}
+
 export default function SignUp() {
   const classes = useStyles();
   const client = useApolloClient();
   const history = useHistory();
-  const name = useField("text");
-  const email = useField("email");
-  const password = useField("password");
+  const [errorMessage, setErrorMessage] = useState<null | string>(null);
   const [signUp, { data }] = useMutation(SIGN_UP, {
     onError: (error) => {
-      console.log(error.graphQLErrors[0].message);
+      setErrorMessage(error.graphQLErrors[0].message);
     },
   });
 
@@ -57,87 +64,96 @@ export default function SignUp() {
     }
   }, [client, data, history]);
 
-  function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    signUp({
+  function handleSubmit({ name, email, password }: SignUpFormFields) {
+    return signUp({
       variables: {
         input: {
-          name: name.value,
-          email: email.value,
-          password: password.value,
+          name,
+          email,
+          password,
         },
       },
     });
   }
 
+  const initialValues: SignUpFormFields = {
+    name: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+  };
+  const lowercaseRegex = /(?=.*[a-z])/;
+  const uppercaseRegex = /(?=.*[A-Z])/;
+  const numericRegex = /(?=.*[0-9])/;
+
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-                {...name}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                {...email}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                {...password}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
+    <>
+      {errorMessage && <ErrorNotification message={errorMessage} />}
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <Formik
+            initialValues={initialValues as any}
+            onSubmit={handleSubmit}
+            validationSchema={Yup.object().shape({
+              name: Yup.string().min(2, "Too short").nullable(),
+              email: Yup.string().email().required("Required"),
+              password: Yup.string()
+                .matches(lowercaseRegex, "One lowercase required")
+                .matches(uppercaseRegex, "One uppercase required")
+                .matches(numericRegex, "One numeric required")
+                .min(8, "Minimum 8 characters required")
+                .max(50, "Maximum 50 characters allowed")
+                .required("Required"),
+              passwordConfirm: Yup.string()
+                .oneOf([Yup.ref("password")], "Password must be the same")
+                .required("Required"),
+            })}
           >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link variant="body2" component={RouterLink} to="/signin">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+            {({ isSubmitting }) => (
+              <Form noValidate className={classes.form}>
+                <MyTextField name="name" type="text" label="Name" autoFocus />
+                <MyTextField name="email" type="email" label="Email" required />
+                <MyTextField
+                  name="password"
+                  type="password"
+                  label="Password"
+                  required
+                />
+                <MyTextField
+                  name="passwordConfirm"
+                  type="password"
+                  label="Confirm password"
+                  required
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  disabled={isSubmitting}
+                >
+                  Sign Up
+                </Button>
+                <Grid container justify="flex-end">
+                  <Grid item>
+                    <Link variant="body2" component={RouterLink} to="/signin">
+                      Already have an account? Sign in
+                    </Link>
+                  </Grid>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </Container>
+    </>
   );
 }
