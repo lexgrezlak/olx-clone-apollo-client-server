@@ -6,7 +6,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
-import { Container } from "@material-ui/core";
+import { Chip, Container } from "@material-ui/core";
 import { useQuery } from "@apollo/client";
 import { GET_POSTING_BY_ID } from "../graphql/queries";
 import FollowButton from "../components/FollowButton";
@@ -35,10 +35,20 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "space-between",
     },
-
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
     iconActions: {
       display: "flex",
       flexDirection: "row",
+    },
+    chips: {
+      display: "flex",
+      "& > *": {
+        marginRight: theme.spacing(1),
+      },
     },
   })
 );
@@ -56,7 +66,14 @@ export default function FullPosting({ id, followedPostingsIds }: any) {
   return (
     <Container component="main" maxWidth="sm">
       <Card className={classes.root}>
-        <CardHeader title={posting.title} subheader={`$${posting.price}`} />
+        <div className={classes.header}>
+          <CardHeader title={posting.title} subheader={`$${posting.price}`} />
+          <div className={classes.chips}>
+            <Chip label={posting.condition} color="primary" />
+            <Chip label={posting.city} />
+            <Chip label={posting.category} />
+          </div>
+        </div>
         {posting.imageUrls.map((url: string) => (
           <CardMedia
             key={url}
