@@ -65,7 +65,7 @@ export default function App() {
   return (
     <div className={classes.root}>
       <header>
-        <Navigation />
+        <Navigation followedPostingsLength={followedPostingsIds.length} />
       </header>
       <main>
         <Switch>

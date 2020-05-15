@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import AddIcon from "@material-ui/icons/Add";
 import EmailIcon from "@material-ui/icons/Email";
 import StarIcon from "@material-ui/icons/Star";
+import { Badge } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,7 +27,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function Navigation() {
+interface Props {
+  followedPostingsLength: number;
+}
+
+export default function Navigation({ followedPostingsLength }: Props) {
   const classes = useStyles();
 
   return (
@@ -92,7 +97,9 @@ export default function Navigation() {
             component={Link}
             to="/account/followed"
           >
-            <StarIcon fontSize="large" />
+            <Badge color="secondary" badgeContent={followedPostingsLength}>
+              <StarIcon fontSize="large" />
+            </Badge>
           </IconButton>
         </Toolbar>
       </AppBar>
