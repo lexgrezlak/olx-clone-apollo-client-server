@@ -3,9 +3,11 @@ import { IUser } from "./User";
 import validator from "validator";
 
 const CATEGORIES = ["Health", "Electronics", "Fashion"];
+const CONDITIONS = ["New", "Used"];
 
 export interface IPosting extends Document {
-  updatedAt: any;
+  updatedAt: Date;
+  createdAt: Date;
   title: string;
   category: string;
   description: string;
@@ -23,8 +25,8 @@ const PostingSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-      minlength: 3,
-      maxlength: 30,
+      minlength: 2,
+      maxlength: 15,
     },
     category: {
       type: String,
@@ -35,13 +37,14 @@ const PostingSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-      maxlength: 1000,
+      min: 10,
+      maxlength: 250,
     },
     imageUrls: {
       type: [String],
       required: true,
       minlength: 1,
-      maxlength: 8,
+      maxlength: 2,
     },
     price: {
       type: Number,
@@ -50,12 +53,14 @@ const PostingSchema = new Schema(
     condition: {
       type: String,
       required: true,
+      validate: (value: string) => validator.isIn(value, CONDITIONS),
     },
     city: {
       type: String,
       required: true,
       trim: true,
-      maxlength: 30,
+      minlength: 2,
+      maxlength: 50,
     },
     phone: {
       type: String,

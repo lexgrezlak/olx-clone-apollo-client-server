@@ -12,6 +12,7 @@ const useStyles = makeStyles(() =>
     header: {
       display: "flex",
       justifyContent: "space-between",
+      alignItems: "center",
     },
   })
 );
@@ -30,7 +31,7 @@ export default function Dashboard() {
   const postings = user.ownPostings;
 
   return (
-    <Container>
+    <Container component="main" maxWidth="md">
       <div className={classes.header}>
         <Typography component="h5" variant="h5">
           Welcome {user.name || user.email}
