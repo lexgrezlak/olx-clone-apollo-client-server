@@ -10,6 +10,7 @@ import {
 } from "../graphql/queries";
 import MessageDialog from "../components/MessageDialog";
 import LaunchButton from "../components/LaunchButton";
+import EmptyPostingsMessage from "../components/EmptyPostingsMessage";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,8 +59,11 @@ function Messages() {
   const messages = data.currentUserMessages;
   const userId = userIdData.currentUser.id;
 
+  if (messages.length === 0)
+    return <EmptyPostingsMessage message={"You don't have any messages"} />;
+
   return (
-    <div className={classes.root}>
+    <main className={classes.root}>
       {messages.map((message: any) => (
         <Paper key={message.id} className={classes.paper}>
           <Grid container wrap="nowrap" spacing={2}>
@@ -82,7 +86,7 @@ function Messages() {
                 {message.content}
               </Typography>
               <div className={classes.actions}>
-                <LaunchButton />
+                <LaunchButton id={message.posting.id} />
                 <MessageDialog
                   id={message.posting.id}
                   title={message.posting.title}
@@ -93,7 +97,7 @@ function Messages() {
           </Grid>
         </Paper>
       ))}
-    </div>
+    </main>
   );
 }
 

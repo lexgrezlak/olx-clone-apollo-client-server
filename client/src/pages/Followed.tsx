@@ -1,12 +1,19 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { Card, CardContent, CardMedia, createStyles } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Container,
+  createStyles,
+} from "@material-ui/core";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useQuery } from "@apollo/client";
 import { GET_CURRENT_USER_FOLLOWED_POSTINGS } from "../graphql/queries";
 import LastUpdated from "../components/LastUpdated";
 import UnfollowButton from "../components/UnfollowButton";
 import LaunchButton from "../components/LaunchButton";
+import EmptyPostingsMessage from "../components/EmptyPostingsMessage";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,8 +54,11 @@ export default function Followed() {
 
   const followedPostings = data.currentUserFollowedPostings;
 
+  if (followedPostings.length === 0)
+    return <EmptyPostingsMessage message={"You don't follow any postings"} />;
+
   return (
-    <div>
+    <Container maxWidth="md" component="main">
       <Typography component="h5" variant="h5">
         Your followed postings
       </Typography>
@@ -82,6 +92,6 @@ export default function Followed() {
             </Card>
           ))}
       </div>
-    </div>
+    </Container>
   );
 }
