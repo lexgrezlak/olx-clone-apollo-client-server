@@ -1,14 +1,26 @@
-import { gql, AuthenticationError, UserInputError } from "apollo-server";
-import Posting from "../models/Posting";
-import { CloudinaryUploader } from "../lib/cloudinary";
 import {
-  CLOUDINARY_API_KEY,
-  CLOUDINARY_API_SECRET,
-  CLOUDINARY_CLOUD_NAME,
-} from "../utils/config";
+  gql,
+  AuthenticationError,
+  UserInputError,
+} from "apollo-server-express";
+import Posting, { IPosting } from "../models/Posting";
+import { CloudinaryUploader } from "../lib/cloudinary";
 import { Parent } from "../types";
-import { IPostingIdArgs, IPostingTitleArgs } from "./types";
+import {
+  IAddPostingArgs,
+  IEditPostingArgs,
+  IPostingIdArgs,
+  IPostingTitleArgs,
+  IQueries,
+} from "./types";
 import { GraphQLDateTime } from "graphql-iso-date";
+import { IContext } from "../context";
+
+const {
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_SECRET,
+} = process.env;
 
 const cloudinaryUploader = new CloudinaryUploader({
   cloudName: CLOUDINARY_CLOUD_NAME,
@@ -105,13 +117,14 @@ export const postingTypeDefs = gql`
 export const postingResolvers = {
   DateTime: GraphQLDateTime,
   Query: {
-    postingById: async (_parent: Parent, { id }: any) => Posting.findById(id),
+    postingById: async (_parent: Parent, { id }: IPostingIdArgs) =>
+      Posting.findById(id),
     postingsByTitle: async (
       _parent: Parent,
-      { title, cursor, limit = 12 }: any
+      { title, cursor, limit = 12 }: IPostingTitleArgs
     ) => {
       const words = title.split(" ");
-      const queries: any = [];
+      const queries: IQueries[] = [];
       words.forEach((word: string) => {
         queries.push({ title: { $regex: word, $options: "i" } });
       });
@@ -125,7 +138,7 @@ export const postingResolvers = {
           }
         : { $and: queries };
 
-      const postings = await Posting.find(cursorOptions, null, {
+      const postings = await Posting.find(cursorOptions as any, null, {
         sort: { updatedAt: -1 },
         limit: limit + 1,
       });
@@ -149,10 +162,14 @@ export const postingResolvers = {
   },
 
   Mutation: {
-    addPosting: async (_parent: Parent, args: any, { user }: any) => {
+    addPosting: async (
+      _parent: Parent,
+      args: IAddPostingArgs,
+      { user }: IContext
+    ) => {
       if (!user) throw new AuthenticationError("Not authenticated");
       const newPosting = new Posting({ ...args });
-      user.ownPostings = user.ownPostings.concat(newPosting);
+      user.ownPostings = user.ownPostings.concat(newPosting) as any;
 
       try {
         await Promise.all([newPosting.save(), user.save()]);
@@ -163,7 +180,11 @@ export const postingResolvers = {
       return newPosting;
     },
 
-    editPosting: async (_parent: Parent, args: any, { user }: any) => {
+    editPosting: async (
+      _parent: Parent,
+      args: IEditPostingArgs,
+      { user }: IContext
+    ) => {
       if (
         !user ||
         // own postings' ids
@@ -177,9 +198,9 @@ export const postingResolvers = {
         newPosting,
         { new: true }
       );
-      user.ownPostings = user.ownPostings.map((posting: any) =>
+      user.ownPostings = user.ownPostings.map((posting: IPosting) =>
         posting.id === args.id ? updatedPosting : posting
-      );
+      ) as any;
 
       try {
         await user.save();
@@ -192,7 +213,7 @@ export const postingResolvers = {
     followPosting: async (
       _parent: Parent,
       { id }: IPostingIdArgs,
-      { user }: any
+      { user }: IContext
     ) => {
       if (!user) throw new AuthenticationError("Not authenticated");
 
@@ -204,7 +225,7 @@ export const postingResolvers = {
       );
 
       if (!userFollowedPostingsIds.includes(posting.id)) {
-        user.followedPostings = user.followedPostings.concat(posting);
+        user.followedPostings = user.followedPostings.concat(posting) as any;
       }
 
       try {
@@ -218,7 +239,7 @@ export const postingResolvers = {
     unfollowPosting: async (
       _parent: Parent,
       { id }: IPostingIdArgs,
-      { user }: any
+      { user }: IContext
     ) => {
       if (!user) throw new AuthenticationError("Not authenticated");
 
@@ -231,7 +252,7 @@ export const postingResolvers = {
       if (userFollowedPostingsIds.includes(posting.id)) {
         user.followedPostings = user.followedPostings.filter(
           (userFollowedPosting: any) => userFollowedPosting.id !== posting.id
-        );
+        ) as any;
       }
       try {
         await user.save();
@@ -244,7 +265,7 @@ export const postingResolvers = {
     deletePosting: async (
       _parent: Parent,
       { id }: IPostingIdArgs,
-      { user }: any
+      { user }: IContext
     ) => {
       if (!user) throw new AuthenticationError("Not authenticated");
 
@@ -260,7 +281,7 @@ export const postingResolvers = {
           await Posting.deleteOne(posting);
           user.ownPostings = user.ownPostings.filter(
             (userPosting: any) => userPosting.id !== posting.id
-          );
+          ) as any;
 
           await user.save();
 

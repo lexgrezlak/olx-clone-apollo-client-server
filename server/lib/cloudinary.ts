@@ -7,6 +7,8 @@ type CloudinaryUploadConfig = {
   apiSecret: string;
 };
 
+console.log(cloudinary.v2.utils.api_url);
+
 export class CloudinaryUploader implements ApolloServerFileUploads.IUploader {
   constructor(config: CloudinaryUploadConfig) {
     cloudinary.v2.config({
@@ -44,7 +46,7 @@ export class CloudinaryUploader implements ApolloServerFileUploads.IUploader {
             filename,
             mimetype,
             encoding,
-            url: result.url,
+            url: result.secure_url,
           } as ApolloServerFileUploads.UploadedFileResponse);
         }
       );

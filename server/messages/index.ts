@@ -1,6 +1,6 @@
 import { Parent } from "../types";
 import { IContext } from "../context";
-import { gql, AuthenticationError } from "apollo-server";
+import { gql, AuthenticationError } from "apollo-server-express";
 import User from "../models/User";
 import Message from "../models/Message";
 import Posting from "../models/Posting";

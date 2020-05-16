@@ -60,7 +60,7 @@ const PostingSchema = new Schema(
       required: true,
       trim: true,
       minlength: 2,
-      maxlength: 50,
+      maxlength: 15,
     },
     phone: {
       type: String,

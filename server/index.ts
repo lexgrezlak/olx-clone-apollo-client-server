@@ -1,9 +1,18 @@
-import { MONGODB_URI } from "./utils/config";
-import { ApolloServer } from "apollo-server";
+import dotenv from "dotenv";
+dotenv.config({ path: ".env" });
 import typeDefs from "./typeDefs";
 import resolvers from "./resolvers";
 import mongoose from "mongoose";
 import context from "./context";
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import path from "path";
+import cors from "cors";
+import bodyParser from "body-parser";
+
+const app = express();
+
+const MONGODB_URI = process.env.MONGODB_URI;
 
 console.log("connecting to", MONGODB_URI);
 
@@ -19,12 +28,23 @@ mongoose
     console.log("connecting to MongoDB failed:", error.message)
   );
 
-export const server = new ApolloServer({
+const server = new ApolloServer({
   typeDefs,
   resolvers,
   context,
+  playground: true,
+  introspection: true,
 });
 
-server.listen().then(({ url }: any) => {
-  console.log(`Server ready at ${url}`);
+server.applyMiddleware({ app, path: "/graphql" });
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.static("build"));
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "build", "index.html"));
+});
+
+app.listen({ port: process.env.PORT || 4000 }, () => {
+  console.log(`Server ready!`);
 });

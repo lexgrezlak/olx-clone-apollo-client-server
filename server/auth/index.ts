@@ -1,9 +1,10 @@
-import { gql, UserInputError } from "apollo-server";
+import { gql, UserInputError } from "apollo-server-express";
 import { Parent } from "../types";
 import User from "../models/User";
 import { compare, hash } from "bcrypt";
-import { JWT_SECRET } from "../utils/config";
 import { sign } from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 interface ISignInInput {
   input: {

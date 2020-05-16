@@ -1,6 +1,6 @@
 import { Parent } from "../types";
 import { IContext } from "../context";
-import { gql } from "apollo-server";
+import { gql } from "apollo-server-express";
 
 export const userTypeDefs = gql`
   type User {
