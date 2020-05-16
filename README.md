@@ -18,11 +18,12 @@ React, Express, TypeScript, Apollo Client, Apollo Server, GraphQL, Formik, React
 
 ## Screenshots
 <p align="center">
-<img src="https://imgur.com/eapWNCh.png" width="400">
+<img src="https://i.imgur.com/q4ETGez.png" width="400">
+<img src="https://i.imgur.com/eapWNCh.png" width="400">
+<img src="https://i.imgur.com/D0aPkj1.png" width="400">
+<img src="https://i.imgur.com/Pljk7Ll.png" width="400">
+<img src="https://i.imgur.com/RMNH1WB.png" width="400">
+<img src="https://i.imgur.com/Pljk7Ll.png" width="400">
+<img src="https://i.imgur.com/Q3rNzcU.png" width="400">
+<img src="https://i.imgur.com/VPsHfDM.png" width="400">
 </p>
-![alt text](https://imgur.com/5YSACEs.png "Clolx - the Olx clone")
-![alt text](https://imgur.com/D0aPkj1.png "Clolx - the Olx clone")
-![alt text](https://imgur.com/VPsHfDM.png "Clolx - the Olx clone")
-![alt text](https://imgur.com/Q3rNzcU.png "Clolx - the Olx clone")
-![alt text](https://imgur.com/Pljk7Ll.png "Clolx - the Olx clone")
-![alt text](https://imgur.com/RMNH1WB.png "Clolx - the Olx clone")
