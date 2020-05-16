@@ -3,7 +3,7 @@ import { Card, CardContent, CardMedia, createStyles } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import DeletePostingButton from "./DeletePostingButton";
-import LastUpdated from "./LastUpdated";
+import LastUpdated from "../../components/postingInfo/LastUpdated";
 import EditPostingButton from "./EditPostingButton";
 
 const useStyles = makeStyles((theme: Theme) =>

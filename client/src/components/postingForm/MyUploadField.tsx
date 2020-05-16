@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import { PhotoCamera } from "@material-ui/icons";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { useMutation } from "@apollo/client";
-import { MULTIPLE_UPLOAD } from "../graphql/queries";
+import { MULTIPLE_UPLOAD } from "../../graphql/queries";
 import UploadedPhotos from "./UploadedPhotos";
 
 const useStyles = makeStyles(() =>
@@ -69,7 +69,7 @@ function MyUploadField({ name }: Props) {
     return validity.valid && uploadPhotos({ variables: { files } });
   }
 
-  if (error) return <div>{JSON.stringify(error)}</div>;
+  if (error) return <div>Something went wrong...</div>;
 
   const isError = formikError && touched;
 

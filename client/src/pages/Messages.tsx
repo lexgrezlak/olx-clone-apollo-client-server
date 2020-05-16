@@ -9,7 +9,7 @@ import {
   GET_CURRENT_USER_MESSAGES,
 } from "../graphql/queries";
 import MessageDialog from "../components/MessageDialog";
-import LaunchButton from "../components/LaunchButton";
+import LaunchButton from "../components/postingInfo/LaunchButton";
 import EmptyPostingsMessage from "../components/EmptyPostingsMessage";
 
 const useStyles = makeStyles((theme: Theme) =>

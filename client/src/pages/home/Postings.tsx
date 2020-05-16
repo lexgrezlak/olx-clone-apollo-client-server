@@ -3,7 +3,7 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { useQuery } from "@apollo/client";
 import InfiniteScroll from "react-infinite-scroller";
 import { CircularProgress, Container, Grid } from "@material-ui/core";
-import { GET_POSTINGS_BY_TITLE } from "../graphql/queries";
+import { GET_POSTINGS_BY_TITLE } from "../../graphql/queries";
 import Posting from "./Posting";
 
 const useStyles = makeStyles((theme) =>

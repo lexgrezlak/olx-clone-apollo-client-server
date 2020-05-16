@@ -1,8 +1,8 @@
 import React from "react";
 import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
 import { useField } from "../hooks";
-import Search from "../components/Search";
-import Postings from "../components/Postings";
+import Search from "./home/Search";
+import Postings from "./home/Postings";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

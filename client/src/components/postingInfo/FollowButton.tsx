@@ -1,12 +1,12 @@
 import React from "react";
 import IconButton from "@material-ui/core/IconButton";
-import { Star } from "@material-ui/icons";
+import { StarBorder } from "@material-ui/icons";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { useMutation } from "@apollo/client";
 import {
+  FOLLOW_POSTING,
   GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS,
-  UNFOLLOW_POSTING,
-} from "../graphql/queries";
+} from "../../graphql/queries";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -16,35 +16,37 @@ const useStyles = makeStyles(() =>
   })
 );
 
-function UnfollowButton({ postingId, postingTitle }: any) {
+function FollowButton({ postingId, postingTitle }: any) {
   const classes = useStyles();
-  const [unfollowPosting] = useMutation(UNFOLLOW_POSTING, {
+  const [followPosting] = useMutation(FOLLOW_POSTING, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
   });
 
-  async function handleUnfollow(id: string) {
-    await unfollowPosting({
+  async function handleFollow(id: string) {
+    await followPosting({
       variables: { id },
       optimisticResponse: {
         __typename: "Mutation",
-        unfollowPosting: {
+        followPosting: {
           __typename: "Posting",
           id,
         },
       },
       // eslint-disable-next-line no-shadow
-      update: (proxy, { data: { unfollowPosting } }: any) => {
+      update: (proxy, { data: { followPosting } }: any) => {
         const data = proxy.readQuery({
           query: GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS,
         }) as any;
         proxy.writeQuery({
           query: GET_CURRENT_USER_FOLLOWED_POSTINGS_IDS,
           data: {
-            currentUserFollowedPostings: data.currentUserFollowedPostings.filter(
-              (posting: any) => posting.id !== unfollowPosting.id
-            ),
+            ...data,
+            currentUserFollowedPostings: [
+              ...data.currentUserFollowedPostings,
+              followPosting,
+            ],
           },
         });
       },
@@ -55,11 +57,11 @@ function UnfollowButton({ postingId, postingTitle }: any) {
     <IconButton
       aria-label={`follow the posting: ${postingTitle}`}
       className={classes.icon}
-      onClick={() => handleUnfollow(postingId)}
+      onClick={() => handleFollow(postingId)}
     >
-      <Star fontSize="large" />
+      <StarBorder fontSize="large" />
     </IconButton>
   );
 }
 
-export default UnfollowButton;
+export default FollowButton;

@@ -9,9 +9,9 @@ import Typography from "@material-ui/core/Typography";
 import { Chip, Container } from "@material-ui/core";
 import { useQuery } from "@apollo/client";
 import { GET_POSTING_BY_ID } from "../graphql/queries";
-import FollowButton from "../components/FollowButton";
-import UnfollowButton from "../components/UnfollowButton";
-import PhonePopover from "../components/PhonePopover";
+import FollowButton from "../components/postingInfo/FollowButton";
+import UnfollowButton from "../components/postingInfo/UnfollowButton";
+import PhonePopover from "./fullPosting/PhonePopover";
 import MessageDialog from "../components/MessageDialog";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,6 +46,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chips: {
       display: "flex",
+      flexDirection: "row",
+      flexWrap: "wrap",
       "& > *": {
         marginRight: theme.spacing(1),
       },
@@ -53,7 +55,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function FullPosting({ id, followedPostingsIds }: any) {
+interface Props {
+  id: string;
+  followedPostingsIds: string[];
+}
+
+export default function FullPosting({ id, followedPostingsIds }: Props) {
   const classes = useStyles();
   const { data, loading, error } = useQuery(GET_POSTING_BY_ID, {
     variables: { id },
@@ -71,7 +78,6 @@ export default function FullPosting({ id, followedPostingsIds }: any) {
           <div className={classes.chips}>
             <Chip label={posting.condition} color="primary" />
             <Chip label={posting.city} />
-            <Chip label={posting.category} />
           </div>
         </div>
         {posting.imageUrls.map((url: string) => (

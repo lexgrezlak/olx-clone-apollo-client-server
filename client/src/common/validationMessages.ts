@@ -6,4 +6,4 @@ export const maxMessage = (number: number) =>
 
 export const requiredMessage = "Required";
 
-export const invalidValue = (value: string) => `Invalid ${value}`;
+export const invalidMessage = (value: string) => `Invalid ${value}`;

@@ -13,7 +13,7 @@ import { Link as RouterLink, useHistory } from "react-router-dom";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { SIGN_IN } from "../graphql/queries";
-import MyTextField from "../components/MyTextField";
+import MyTextField from "../components/postingForm/MyTextField";
 import ErrorNotification from "../components/ErrorNotification";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,18 +36,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface SignInProps {
-  isLoggedIn: boolean | null;
-}
-
 interface SignInFormFields {
   email: string;
   password: string;
 }
 
-export default function SignIn({ isLoggedIn }: SignInProps) {
+export default function SignIn() {
   const history = useHistory();
-  if (isLoggedIn) history.goBack();
   const classes = useStyles();
   const client = useApolloClient();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -59,18 +54,14 @@ export default function SignIn({ isLoggedIn }: SignInProps) {
   });
 
   useEffect(() => {
-    if (data && data.signIn) {
+    if (data?.signIn) {
       const { token } = data.signIn;
       localStorage.setItem("token", token);
       client.resetStore();
     }
   }, [client, data, history]);
 
-  if (isLoggedIn !== false) return null;
-
   function handleSubmit({ email, password }: SignInFormFields) {
-    // event.preventDefault();
-    console.log(email);
     return signIn({
       variables: { input: { email, password } },
     });
@@ -120,8 +111,17 @@ export default function SignIn({ isLoggedIn }: SignInProps) {
 
                 <Grid container>
                   <Grid item xs>
-                    <Link href="/forgotpassword" variant="body2">
-                      Forgot password?
+                    <Link
+                      variant="body2"
+                      href="#"
+                      onClick={() =>
+                        handleSubmit({
+                          email: "demo@demo.demo",
+                          password: "Demo1234",
+                        })
+                      }
+                    >
+                      Too busy? Demo sign in
                     </Link>
                   </Grid>
                   <Grid item>

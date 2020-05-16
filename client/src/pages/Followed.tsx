@@ -10,9 +10,9 @@ import {
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import { useQuery } from "@apollo/client";
 import { GET_CURRENT_USER_FOLLOWED_POSTINGS } from "../graphql/queries";
-import LastUpdated from "../components/LastUpdated";
-import UnfollowButton from "../components/UnfollowButton";
-import LaunchButton from "../components/LaunchButton";
+import LastUpdated from "../components/postingInfo/LastUpdated";
+import UnfollowButton from "../components/postingInfo/UnfollowButton";
+import LaunchButton from "../components/postingInfo/LaunchButton";
 import EmptyPostingsMessage from "../components/EmptyPostingsMessage";
 
 const useStyles = makeStyles((theme: Theme) =>

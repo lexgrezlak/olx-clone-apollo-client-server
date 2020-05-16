@@ -5,7 +5,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Home from "./pages/Home";
 import NewPosting from "./pages/NewPosting";
 import Dashboard from "./pages/Dashboard";
-import Filters from "./components/Filters";
 import Messages from "./pages/Messages";
 import Followed from "./pages/Followed";
 import SignIn from "./pages/SignIn";
@@ -28,6 +27,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+interface Posting {
+  id: string;
+}
+
 export default function App() {
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState<null | boolean>(null);
@@ -48,7 +51,7 @@ export default function App() {
   useEffect(() => {
     if (followedData?.currentUserFollowedPostings) {
       const ids = followedData.currentUserFollowedPostings.map(
-        (posting: any) => posting.id
+        (posting: Posting) => posting.id
       );
       setFollowedPostingsIds(ids);
     }
@@ -90,13 +93,10 @@ export default function App() {
           <PrivateRoute isLoggedIn={isLoggedIn} path="/edit/:id">
             <EditPosting id={editMatch ? editMatch.params.id : null} />
           </PrivateRoute>
-          <Route path="/filters">
-            <Filters />
+          <Route exact path="/signin">
+            {!isLoggedIn ? <SignIn /> : <Redirect to="/account" />}
           </Route>
-          <Route path="/signin">
-            <SignIn isLoggedIn={isLoggedIn} />
-          </Route>
-          <Route path="/signup">
+          <Route exact path="/signup">
             {!isLoggedIn ? <SignUp /> : <Redirect to="/account" />}
           </Route>
           <Route exact path="/">

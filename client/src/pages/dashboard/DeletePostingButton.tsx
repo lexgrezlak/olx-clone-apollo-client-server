@@ -1,8 +1,8 @@
 import React from "react";
 import { useApolloClient, useMutation } from "@apollo/client";
-import { DELETE_POSTING } from "../graphql/queries";
 import { IconButton } from "@material-ui/core";
 import { Delete } from "@material-ui/icons";
+import { DELETE_POSTING } from "../../graphql/queries";
 
 function DeletePostingButton({ postingId, css }: any) {
   const client = useApolloClient();

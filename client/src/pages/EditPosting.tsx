@@ -12,9 +12,9 @@ import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik } from "formik";
 import { EDIT_POSTING, GET_POSTING_BY_ID } from "../graphql/queries";
-import MyTextField from "../components/MyTextField";
-import MySelect from "../components/MySelect";
-import MyUploadField from "../components/MyUploadField";
+import MyTextField from "../components/postingForm/MyTextField";
+import MySelect from "../components/postingForm/MySelect";
+import MyUploadField from "../components/postingForm/MyUploadField";
 import { NewPostingFormFields, postingValidationSchema } from "./NewPosting";
 
 const useStyles = makeStyles((theme) =>

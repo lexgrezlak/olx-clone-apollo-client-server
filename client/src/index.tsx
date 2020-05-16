@@ -30,9 +30,7 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const uploadLink = createUploadLink({
-  uri: "http://localhost:4000",
-});
+const uploadLink = createUploadLink();
 
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   cache: new InMemoryCache(),

@@ -1,6 +1,6 @@
 import React from "react";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import RedditTextField from "./RedditTextField";
+import RedditTextField from "./search/RedditTextField";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

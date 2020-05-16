@@ -13,11 +13,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { ADD_POSTING } from "../graphql/queries";
-import MyTextField from "../components/MyTextField";
-import MySelect from "../components/MySelect";
-import MyUploadField from "../components/MyUploadField";
+import MyTextField from "../components/postingForm/MyTextField";
+import MySelect from "../components/postingForm/MySelect";
+import MyUploadField from "../components/postingForm/MyUploadField";
 import {
-  invalidValue,
+  invalidMessage,
   maxMessage,
   minMessage,
   requiredMessage,
@@ -61,22 +61,22 @@ export const postingValidationSchema = Yup.object().shape({
     .max(15, maxMessage(15))
     .required(requiredMessage),
   category: Yup.string()
-    .oneOf(CATEGORIES, invalidValue("category"))
+    .oneOf(CATEGORIES, invalidMessage("category"))
     .required(requiredMessage),
   description: Yup.string()
     .min(10, minMessage(10))
     .max(250, maxMessage(250))
     .required(requiredMessage),
   price: Yup.number()
-    .positive(invalidValue("price"))
-    .integer(invalidValue("price"))
+    .positive(invalidMessage("price"))
+    .integer(invalidMessage("price"))
     .required(requiredMessage),
   condition: Yup.string()
-    .oneOf(CONDITIONS, invalidValue("condition"))
+    .oneOf(CONDITIONS, invalidMessage("condition"))
     .required(requiredMessage),
   phone: Yup.number()
-    .positive(invalidValue("phone number"))
-    .integer(invalidValue("phone number"))
+    .positive(invalidMessage("phone number"))
+    .integer(invalidMessage("phone number"))
     .required(requiredMessage),
   urls: Yup.array()
     .of(Yup.string())
@@ -85,7 +85,7 @@ export const postingValidationSchema = Yup.object().shape({
     .required(requiredMessage),
   city: Yup.string()
     .min(2, minMessage(2))
-    .max(50, maxMessage(2))
+    .max(15, maxMessage(15))
     .required(requiredMessage),
 });
 
@@ -140,7 +140,6 @@ function NewPosting() {
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
           Add new posting

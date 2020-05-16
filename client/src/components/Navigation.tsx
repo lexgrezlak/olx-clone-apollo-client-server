@@ -5,7 +5,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import TuneIcon from "@material-ui/icons/Tune";
 import { Link } from "react-router-dom";
 import AddIcon from "@material-ui/icons/Add";
 import EmailIcon from "@material-ui/icons/Email";
@@ -38,17 +37,16 @@ export default function Navigation({ followedPostingsLength }: Props) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="filters"
-            component={Link}
-            to="/filters"
-          >
-            <TuneIcon fontSize="large" />
-          </IconButton>
-
+          {/*<IconButton*/}
+          {/*  edge="start"*/}
+          {/*  className={classes.menuButton}*/}
+          {/*  color="inherit"*/}
+          {/*  aria-label="filters"*/}
+          {/*  component={Link}*/}
+          {/*  to="/filters"*/}
+          {/*>*/}
+          {/*  <TuneIcon fontSize="large" />*/}
+          {/*</IconButton>*/}
           <Typography
             component={Link}
             to="/"

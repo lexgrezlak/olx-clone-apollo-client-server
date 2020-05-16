@@ -14,7 +14,13 @@ import * as Yup from "yup";
 import { Form, Formik } from "formik";
 import { SIGN_UP } from "../graphql/queries";
 import ErrorNotification from "../components/ErrorNotification";
-import MyTextField from "../components/MyTextField";
+import MyTextField from "../components/postingForm/MyTextField";
+import {
+  invalidMessage,
+  maxMessage,
+  minMessage,
+  requiredMessage,
+} from "../common/validationMessages";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -102,18 +108,23 @@ export default function SignUp() {
             initialValues={initialValues as any}
             onSubmit={handleSubmit}
             validationSchema={Yup.object().shape({
-              name: Yup.string().min(2, "Too short").nullable(),
-              email: Yup.string().email().required("Required"),
+              name: Yup.string()
+                .min(2, minMessage(2))
+                .max(50, maxMessage(50))
+                .nullable(),
+              email: Yup.string()
+                .email(invalidMessage("email"))
+                .required(requiredMessage),
               password: Yup.string()
                 .matches(lowercaseRegex, "One lowercase required")
                 .matches(uppercaseRegex, "One uppercase required")
                 .matches(numericRegex, "One numeric required")
-                .min(8, "Minimum 8 characters required")
-                .max(50, "Maximum 50 characters allowed")
-                .required("Required"),
+                .min(8, minMessage(8))
+                .max(50, maxMessage(50))
+                .required(requiredMessage),
               passwordConfirm: Yup.string()
-                .oneOf([Yup.ref("password")], "Password must be the same")
-                .required("Required"),
+                .oneOf([Yup.ref("password")], "Passwords are not the same")
+                .required(requiredMessage),
             })}
           >
             {({ isSubmitting }) => (

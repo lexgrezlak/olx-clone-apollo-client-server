@@ -1,9 +1,9 @@
 import React from "react";
 import { Card, CardHeader, CardMedia, Grid } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import UnfollowButton from "./UnfollowButton";
-import FollowButton from "./FollowButton";
-import LaunchButton from "./LaunchButton";
+import UnfollowButton from "../../components/postingInfo/UnfollowButton";
+import FollowButton from "../../components/postingInfo/FollowButton";
+import LaunchButton from "../../components/postingInfo/LaunchButton";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -15,7 +15,7 @@ const useStyles = makeStyles(() =>
       width: 322,
     },
     card: { maxWidth: 322 },
-    header: { maxWidth: 50, display: "flex" },
+    header: { maxWidth: 322, display: "flex" },
     item: {
       display: "flex",
       justifyContent: "center",
@@ -28,7 +28,17 @@ const useStyles = makeStyles(() =>
   })
 );
 
-function Posting({ posting, isFollowed }: any) {
+interface Props {
+  isFollowed: boolean;
+  posting: {
+    id: string;
+    title: string;
+    imageUrls: string[];
+    price: number;
+  };
+}
+
+function Posting({ posting, isFollowed }: Props) {
   const classes = useStyles();
 
   return (
