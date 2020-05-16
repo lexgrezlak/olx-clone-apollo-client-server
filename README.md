@@ -18,7 +18,7 @@ React, Express, TypeScript, Apollo Client, Apollo Server, GraphQL, Formik, React
 
 ## Screenshots
 <p align="center">
-<img src="https://i.imgur.com/q4ETGez.png" width="500">
+<img style="margin: 10px" src="https://i.imgur.com/q4ETGez.png" width="500">
 <img src="https://i.imgur.com/eapWNCh.png" width="500">
 <img src="https://i.imgur.com/D0aPkj1.png" width="500">
 <img src="https://i.imgur.com/Pljk7Ll.png" width="500">
