@@ -17,7 +17,7 @@
 React, Express, TypeScript, Apollo Client, Apollo Server, GraphQL, Formik, React Router, Yup, Git, Material UI
 
 ## Screenshots
-![alt text](https://imgur.com/eapWNCh.png=250x250 "Clolx - the Olx clone")
+![](https://imgur.com/eapWNCh.png =250x250)
 ![alt text](https://imgur.com/5YSACEs.png "Clolx - the Olx clone")
 ![alt text](https://imgur.com/D0aPkj1.png "Clolx - the Olx clone")
 ![alt text](https://imgur.com/VPsHfDM.png "Clolx - the Olx clone")
